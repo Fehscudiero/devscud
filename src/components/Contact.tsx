@@ -4,13 +4,18 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Github, Linkedin, Instagram, Mail, Send } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const Contact = () => {
+  const { toast } = useToast();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
   });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const socialLinks = [
     {
@@ -48,6 +53,49 @@ const Contact = () => {
     }));
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    const formDataToSend = new FormData();
+    formDataToSend.append("name", formData.name);
+    formDataToSend.append("email", formData.email);
+    formDataToSend.append("message", formData.message);
+    formDataToSend.append("_captcha", "false");
+    formDataToSend.append("_subject", "Novo contato via portfólio");
+
+    try {
+      const response = await fetch("https://formsubmit.co/scudiero.dev@yahoo.com", {
+        method: "POST",
+        body: formDataToSend,
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Mensagem enviada!",
+          description: "Obrigado pelo contato. Responderei em breve!",
+          className: "bg-purple-600 text-white",
+        });
+
+        setFormData({ name: "", email: "", message: "" });
+      } else {
+        toast({
+          title: "Erro ao enviar",
+          description: "Não foi possível enviar sua mensagem. Tente novamente.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Erro inesperado",
+        description: "Verifique sua conexão ou tente mais tarde.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <section id="contact" className="py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -63,16 +111,7 @@ const Contact = () => {
 
           <div className="grid lg:grid-cols-5 gap-8">
             <Card className="lg:col-span-3 p-8 bg-card border-border">
-              <form
-                action="https://formsubmit.co/scudiero.dev@yahoo.com"
-                method="POST"
-                className="space-y-6"
-              >
-                {/* Oculta redirecionamento e desativa captcha */}
-                <input type="hidden" name="_next" value="https://seusite.com/obrigado" />
-                <input type="hidden" name="_captcha" value="false" />
-                <input type="hidden" name="_subject" value="Novo contato via portfólio" />
-
+              <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
                   <label htmlFor="name" className="text-sm font-medium">
                     Nome
@@ -125,10 +164,15 @@ const Contact = () => {
 
                 <Button
                   type="submit"
+                  disabled={isSubmitting}
                   className="w-full bg-primary hover:bg-primary/90 glow-purple transition-all duration-300"
                 >
-                  <Send className="w-4 h-4 mr-2" />
-                  Enviar Mensagem
+                  {isSubmitting ? "Enviando..." : (
+                    <>
+                      <Send className="w-4 h-4 mr-2" />
+                      Enviar Mensagem
+                    </>
+                  )}
                 </Button>
               </form>
             </Card>
