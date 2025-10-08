@@ -1,5 +1,7 @@
 import { Code2, Sparkles, Zap } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import Eu from "../assets/eu.jpg";
+
 
 const About = () => {
   const highlights = [
@@ -36,7 +38,7 @@ const About = () => {
           <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
             <div className="space-y-6">
               <p className="text-lg text-muted-foreground leading-relaxed">
-                Sou um desenvolvedor front-end com foco em criar interfaces intuitivas
+                Sou um desenvolvedor com foco em criar interfaces intuitivas
                 e experiências digitais que fazem a diferença. Especializado em{" "}
                 <span className="text-primary font-semibold">React</span>,{" "}
                 <span className="text-primary font-semibold">JavaScript</span> e{" "}
@@ -55,10 +57,15 @@ const About = () => {
             </div>
 
             <div className="relative">
-              <div className="aspect-square rounded-2xl bg-gradient-to-br from-primary/20 to-purple-500/20 border border-primary/30 flex items-center justify-center glow-purple">
-                <Code2 className="w-32 h-32 text-primary" />
+              <div className="aspect-square rounded-2xl overflow-hidden border border-primary/30 glow-purple">
+                <img
+                  src={Eu}
+                  alt="Felipe Scudiero"
+                  className="w-full h-full object-cover"
+                />
               </div>
             </div>
+
           </div>
 
           <div className="grid sm:grid-cols-3 gap-6">

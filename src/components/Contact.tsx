@@ -196,9 +196,9 @@ const Contact = () => {
                   Vamos trabalhar juntos?
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  Estou sempre aberto a novos projetos e oportunidades. Entre em
-                  contato e vamos criar algo incrível!
+                  Aberto a colaborações que impulsionem resultados reais. Se você busca soluções digitais com impacto nos negócios, vamos conversar e construir algo de valor juntos.
                 </p>
+
               </Card>
             </div>
           </div>
