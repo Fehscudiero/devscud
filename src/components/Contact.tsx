@@ -1,13 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Github, Linkedin, Instagram, Mail, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const Contact = () => {
   const { toast } = useToast();
+
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: false,
+      mirror: true,
+    });
+    AOS.refresh();
+  }, []);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -101,16 +112,28 @@ const Contact = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16 space-y-4">
-            <h2 className="text-4xl sm:text-5xl font-bold">
+            <h2
+              className="text-4xl sm:text-5xl font-bold"
+              data-aos="fade-down"
+              data-aos-once="false"
+            >
               Entre em <span className="text-gradient">Contato</span>
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p
+              className="text-lg text-muted-foreground max-w-2xl mx-auto"
+              data-aos="fade-up"
+              data-aos-once="false"
+            >
               Tem um projeto em mente? Vamos conversar!
             </p>
           </div>
 
           <div className="grid lg:grid-cols-5 gap-8">
-            <Card className="lg:col-span-3 p-8 bg-card border-border">
+            <Card
+              className="lg:col-span-3 p-8 bg-card border-border"
+              data-aos="fade-right"
+              data-aos-once="false"
+            >
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
                   <label htmlFor="name" className="text-sm font-medium">
@@ -178,7 +201,11 @@ const Contact = () => {
             </Card>
 
             <div className="lg:col-span-2 space-y-6">
-              <Card className="p-8 bg-card border-border">
+              <Card
+                className="p-8 bg-card border-border"
+                data-aos="fade-left"
+                data-aos-once="false"
+              >
                 <h3 className="text-xl font-semibold mb-6">Redes Sociais</h3>
                 <div className="space-y-4">
                   {socialLinks.map((link, index) => (
@@ -198,7 +225,11 @@ const Contact = () => {
                 </div>
               </Card>
 
-              <Card className="p-8 bg-gradient-to-br from-primary/10 to-purple-500/10 border-primary/30">
+              <Card
+                className="p-8 bg-gradient-to-br from-primary/10 to-purple-500/10 border-primary/30"
+                data-aos="zoom-in-up"
+                data-aos-once="false"
+              >
                 <h3 className="text-xl font-semibold mb-3">
                   Vamos trabalhar juntos?
                 </h3>
