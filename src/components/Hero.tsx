@@ -38,7 +38,7 @@ const Hero = () => {
             fullScreen: { enable: false },
             particles: {
               number: { value: 80 },
-              color: { value: ["#ff007f", "#00ffff", "#ffff00"] }, // verde água
+              color: { value: ["#ff007f", "#00ffff", "#ffff00"] },
               shape: { type: "polygon" },
               opacity: { value: 0.2 },
               size: { value: 3 },
@@ -95,19 +95,17 @@ const Hero = () => {
         <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in">
           <div className="space-y-4">
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight">
-              Impulsione sua presença  {" "}
+              Impulsione sua presença{" "}
               <span className="text-gradient">Online!</span>
             </h1>
-            <p className="text-xl sm:text-2xl text-muted-foreground font-medium">
-              {""}
-            </p>
+            <p className="text-xl sm:text-2xl text-muted-foreground font-medium"></p>
           </div>
 
           <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Não basta estar online. Conquiste o digital com sites que entregam performance e autoridade.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-6">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-">
             <Button
               size="lg"
               onClick={() => scrollToSection("projects")}
@@ -123,12 +121,11 @@ const Hero = () => {
             >
               <span className="flicker-text">Entre em Contato</span>
             </Button>
-
           </div>
 
           <div className="flex items-center justify-center gap-6 pt-8">
             <a
-              href="https://github.com"
+              href="https://github.com/fehscudiero"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-primary transition-colors"
@@ -137,7 +134,7 @@ const Hero = () => {
               <Github className="h-6 w-6" />
             </a>
             <a
-              href="https://linkedin.com"
+              href="https://www.linkedin.com/in/felipe-scudiero-5513261b3/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-primary transition-colors"
@@ -146,7 +143,7 @@ const Hero = () => {
               <Linkedin className="h-6 w-6" />
             </a>
             <a
-              href="https://instagram.com"
+              href="https://www.instagram.com/scudiero.js/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-primary transition-colors"
