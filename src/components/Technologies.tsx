@@ -1,7 +1,19 @@
+import { useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Code2, Palette, Blocks, Rocket } from "lucide-react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const Technologies = () => {
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: false,
+      mirror: true,
+    });
+    AOS.refresh();
+  }, []);
+
   const techCategories = [
     {
       icon: Code2,
@@ -25,15 +37,25 @@ const Technologies = () => {
     },
   ];
 
+  const effects = ["zoom-in", "flip-up", "fade-up", "fade-down"];
+
   return (
     <section className="py-20 bg-gradient-to-b from-background to-secondary/20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16 space-y-4">
-            <h2 className="text-4xl sm:text-5xl font-bold">
+            <h2
+              className="text-4xl sm:text-5xl font-bold"
+              data-aos="fade-right"
+              data-aos-once="false"
+            >
               Minha <span className="text-gradient">Stack Técnica</span>
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p
+              className="text-lg text-muted-foreground max-w-2xl mx-auto"
+              data-aos="fade-left"
+              data-aos-once="false"
+            >
               Domínio de tecnologias modernas para desenvolver soluções digitais eficientes e escaláveis
             </p>
           </div>
@@ -41,9 +63,13 @@ const Technologies = () => {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 justify-center text-center">
             {techCategories.map((category, index) => {
               const Icon = category.icon;
+              const effect = effects[index % effects.length];
+
               return (
                 <div
                   key={index}
+                  data-aos={effect}
+                  data-aos-once="false"
                   className="space-y-4 p-6 rounded-lg bg-card border border-border hover:border-primary/50 transition-all duration-300 group"
                 >
                   <div className="flex flex-col items-center gap-3">
