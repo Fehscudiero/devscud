@@ -4,23 +4,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Github, Linkedin, Instagram, Mail, Send } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { z } from "zod";
-
-const contactSchema = z.object({
-  name: z.string().trim().min(1, "Nome é obrigatório").max(100),
-  email: z.string().trim().email("Email inválido").max(255),
-  message: z.string().trim().min(1, "Mensagem é obrigatória").max(1000),
-});
 
 const Contact = () => {
-  const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const socialLinks = [
     {
@@ -49,66 +39,6 @@ const Contact = () => {
     },
   ];
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      const validatedData = contactSchema.parse(formData);
-
-      const message = `Novo contato via portfólio:\n\nNome: ${validatedData.name}\nEmail: ${validatedData.email}\nMensagem: ${validatedData.message}`;
-
-      const response = await fetch(
-        "https://api.z-api.io/instances/3E864455D8A4613EBDD666F3CD400517/token/E0843D250FBEE056B4A5991E/send-text",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            phone: "5511984623116",
-            message,
-          }),
-        }
-      );
-
-
-      const result = await response.json();
-      console.log("Z-API response:", result);
-
-      if (response.ok && result?.messageId) {
-        toast({
-          title: "Mensagem enviada!",
-          description: "Obrigado pelo contato. Responderei em breve!",
-          className: "bg-purple-600 text-white",
-        });
-
-        setFormData({ name: "", email: "", message: "" });
-      } else {
-        toast({
-          title: "Falha no envio",
-          description: "Não foi possível enviar para o WhatsApp.",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      console.error("Erro no envio:", error);
-      if (error instanceof z.ZodError) {
-        toast({
-          title: "Erro no formulário",
-          description: error.errors[0].message,
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Erro inesperado",
-          description: "Verifique sua conexão ou tente novamente.",
-          variant: "destructive",
-        });
-      }
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -133,7 +63,16 @@ const Contact = () => {
 
           <div className="grid lg:grid-cols-5 gap-8">
             <Card className="lg:col-span-3 p-8 bg-card border-border">
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form
+                action="https://formsubmit.co/scudiero.dev@yahoo.com"
+                method="POST"
+                className="space-y-6"
+              >
+                {/* Oculta redirecionamento e desativa captcha */}
+                <input type="hidden" name="_next" value="https://seusite.com/obrigado" />
+                <input type="hidden" name="_captcha" value="false" />
+                <input type="hidden" name="_subject" value="Novo contato via portfólio" />
+
                 <div className="space-y-2">
                   <label htmlFor="name" className="text-sm font-medium">
                     Nome
@@ -186,17 +125,10 @@ const Contact = () => {
 
                 <Button
                   type="submit"
-                  disabled={isSubmitting}
                   className="w-full bg-primary hover:bg-primary/90 glow-purple transition-all duration-300"
                 >
-                  {isSubmitting ? (
-                    "Enviando..."
-                  ) : (
-                    <>
-                      <Send className="w-4 h-4 mr-2" />
-                      Enviar Mensagem
-                    </>
-                  )}
+                  <Send className="w-4 h-4 mr-2" />
+                  Enviar Mensagem
                 </Button>
               </form>
             </Card>
