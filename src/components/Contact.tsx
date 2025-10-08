@@ -59,16 +59,17 @@ const Contact = () => {
       const message = `Novo contato via portfólio:\n\nNome: ${validatedData.name}\nEmail: ${validatedData.email}\nMensagem: ${validatedData.message}`;
 
       const response = await fetch(
-        "https://api.z-api.io/instances/3E864455D8A4613EBDD666F3CD400517/token/E0843D250FBEE056B4A5991E/send-message",
+        "https://api.z-api.io/instances/3E864455D8A4613EBDD666F3CD400517/token/E0843D250FBEE056B4A5991E/send-text",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            phone: "5511984623116", // ✅ sem o sinal de "+"
+            phone: "5511984623116",
             message,
           }),
         }
       );
+
 
       const result = await response.json();
       console.log("Z-API response:", result);
