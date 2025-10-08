@@ -11,7 +11,10 @@ const Navigation = () => {
   const navItems = [
     { id: "home", label: "Home" },
     { id: "about", label: "Sobre" },
+    { id: "stats", label: "Estatísticas" },
+    { id: "technologies", label: "Tecnologias" },
     { id: "projects", label: "Projetos" },
+    { id: "testimonials", label: "Depoimentos" },
     { id: "contact", label: "Contato" },
   ];
 
@@ -51,7 +54,7 @@ const Navigation = () => {
         top: offsetPosition,
         behavior: "smooth",
       });
-      setMobileMenuOpen(false); // fecha menu ao clicar
+      setMobileMenuOpen(false);
     }
   };
 

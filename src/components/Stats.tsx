@@ -32,6 +32,7 @@ const Stats = () => {
 
   return (
     <section
+      id="stats"
       ref={sectionRef}
       className="py-20 bg-gradient-to-b from-background via-secondary/20 to-background"
     >
