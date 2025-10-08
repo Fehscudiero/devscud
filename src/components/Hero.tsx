@@ -95,20 +95,19 @@ const Hero = () => {
         <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in">
           <div className="space-y-4">
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight">
-              Olá, eu sou{" "}
-              <span className="text-gradient">Felipe Scudiero</span>
+              Impulsione sua presença  {" "}
+              <span className="text-gradient">Online!</span>
             </h1>
             <p className="text-xl sm:text-2xl text-muted-foreground font-medium">
-              Desenvolvedor Front-End
+              {""}
             </p>
           </div>
 
           <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Apaixonado por criar interfaces intuitivas e experiências digitais
-            marcantes que transformam ideias em realidade.
+            Não basta estar online. Conquiste o digital com sites que entregam performance e autoridade.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-6">
             <Button
               size="lg"
               onClick={() => scrollToSection("projects")}
@@ -120,10 +119,11 @@ const Hero = () => {
               size="lg"
               variant="outline"
               onClick={() => scrollToSection("contact")}
-              className="border-primary/50 hover:bg-primary/10 hover:border-primary transition-all duration-300"
+              className="border-primary/50 hover:bg-primary/10 hover:border-primary transition-all duration-300 flicker"
             >
-              Entre em Contato
+              <span className="flicker-text">Entre em Contato</span>
             </Button>
+
           </div>
 
           <div className="flex items-center justify-center gap-6 pt-8">

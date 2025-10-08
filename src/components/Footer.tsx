@@ -11,7 +11,7 @@ const Footer = () => {
           </div>
 
           <p className="text-sm text-muted-foreground text-center sm:text-left">
-            {new Date().getFullYear()}  Felipe Scudiero | Todos os direitos reservados.©
+            {new Date().getFullYear()}  Felipe Scudiero | Todos os direitos reservados. ©
           </p>
         </div>
       </div>
