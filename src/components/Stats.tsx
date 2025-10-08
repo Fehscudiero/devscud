@@ -5,10 +5,10 @@ const Stats = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
 
   const stats = [
-    { value: 20, label: "Projetos Entregues", suffix: "+" },
-    { value: 30, label: "Sites Desenvolvidos", suffix: "+" },
-    { value: 5, label: "Anos de Experiência", suffix: "+" },
-    { value: 10, label: "Clientes Recorrentes", suffix: "+" },
+    { value: 35, label: "Projetos Entregues", suffix: "+" },
+    { value: 20, label: "Sites Desenvolvidos", suffix: "+" },
+    { value: 2, label: "Anos de Experiência", suffix: "+" },
+    { value: 15, label: "Clientes Recorrentes", suffix: "+" },
   ];
 
   useEffect(() => {

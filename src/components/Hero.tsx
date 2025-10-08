@@ -1,6 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Github, Linkedin, Instagram, ArrowDown } from "lucide-react";
 import heroBg from "@/assets/hero-bg.jpg";
+import Particles from "react-tsparticles";
+import { loadSlim } from "tsparticles-slim";
+import { useCallback } from "react";
 
 const Hero = () => {
   const scrollToSection = (id: string) => {
@@ -17,12 +20,63 @@ const Hero = () => {
     }
   };
 
+  const particlesInit = useCallback(async (engine: any) => {
+    await loadSlim(engine);
+  }, []);
+
   return (
     <section
       id="home"
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
-      <div className="absolute inset-0 z-0 animated-particles">
+      {/* Fundo com partículas e imagem */}
+      <div className="absolute inset-0 z-0">
+        <Particles
+          id="tsparticles"
+          init={particlesInit}
+          options={{
+            fullScreen: { enable: false },
+            particles: {
+              number: { value: 80 },
+              color: { value: "#ffffff" },
+              shape: { type: "circle" },
+              opacity: { value: 0.3 },
+              size: { value: 2 },
+              move: {
+                enable: true,
+                speed: 1.5,
+                direction: "none",
+                outModes: { default: "out" },
+              },
+              links: {
+                enable: true,
+                distance: 120,
+                color: "#ffffff",
+                opacity: 0.2,
+                width: 1,
+              },
+            },
+            interactivity: {
+              events: {
+                onHover: { enable: true, mode: "repulse" },
+                onClick: { enable: true, mode: "push" },
+              },
+              modes: {
+                repulse: { distance: 100 },
+                push: { quantity: 4 },
+              },
+            },
+            retina_detect: true,
+          }}
+          style={{
+            position: "absolute",
+            width: "100%",
+            height: "100%",
+            zIndex: 1,
+            pointerEvents: "none",
+          }}
+        />
+
         <div
           className="absolute inset-0"
           style={{
@@ -36,12 +90,13 @@ const Hero = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-background/95 via-background/85 to-background" />
       </div>
 
+      {/* Conteúdo principal */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
         <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in">
           <div className="space-y-4">
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight">
               Olá, eu sou{" "}
-              <span className="text-gradient">Felipe Mathias Scudiero</span>
+              <span className="text-gradient">Felipe Scudiero</span>
             </h1>
             <p className="text-xl sm:text-2xl text-muted-foreground font-medium">
               Desenvolvedor Front-End
