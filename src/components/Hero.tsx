@@ -24,6 +24,10 @@ const Hero = () => {
     await loadSlim(engine);
   }, []);
 
+  // Detecta se é mobile e ajusta quantidade de partículas
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+  const particleCount = isMobile ? 25 : 80;
+
   return (
     <section
       id="home"
@@ -37,7 +41,7 @@ const Hero = () => {
           options={{
             fullScreen: { enable: false },
             particles: {
-              number: { value: 80 },
+              number: { value: particleCount },
               color: { value: ["#ff007f", "#00ffff", "#ffff00"] },
               shape: { type: "polygon" },
               opacity: { value: 0.2 },
