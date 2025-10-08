@@ -38,20 +38,20 @@ const Hero = () => {
             fullScreen: { enable: false },
             particles: {
               number: { value: 80 },
-              color: { value: "#ffffff" },
-              shape: { type: "circle" },
-              opacity: { value: 0.3 },
-              size: { value: 2 },
+              color: { value: ["#ff007f", "#00ffff", "#ffff00"] }, // verde água
+              shape: { type: "polygon" },
+              opacity: { value: 0.2 },
+              size: { value: 3 },
               move: {
                 enable: true,
-                speed: 1.5,
+                speed: 1.3,
                 direction: "none",
                 outModes: { default: "out" },
               },
               links: {
                 enable: true,
-                distance: 120,
-                color: "#ffffff",
+                distance: 150,
+                color: "#f5f5f5",
                 opacity: 0.2,
                 width: 1,
               },
