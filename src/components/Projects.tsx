@@ -1,7 +1,5 @@
 import { useEffect } from "react";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ExternalLink, Github } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
@@ -23,8 +21,6 @@ const Projects = () => {
       technologies: ["React", "TypeScript", "TailwindCSS", "API Integration"],
       image:
         "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop",
-      github: "https://github.com",
-      demo: "https://demo.com",
     },
     {
       title: "Portal Corporativo de Alta Performance",
@@ -33,8 +29,6 @@ const Projects = () => {
       technologies: ["React", "TypeScript", "UI/UX", "Performance"],
       image:
         "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=800&h=600&fit=crop",
-      github: "https://github.com",
-      demo: "https://demo.com",
     },
   ];
 
@@ -98,38 +92,6 @@ const Projects = () => {
                           {tech}
                         </span>
                       ))}
-                    </div>
-
-                    <div className="flex gap-3 pt-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="flex-1 border-primary/50 hover:bg-primary/10"
-                        asChild
-                      >
-                        <a
-                          href={project.github}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <Github className="w-4 h-4 mr-2" />
-                          Código
-                        </a>
-                      </Button>
-                      <Button
-                        size="sm"
-                        className="flex-1 bg-primary hover:bg-primary/90"
-                        asChild
-                      >
-                        <a
-                          href={project.demo}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <ExternalLink className="w-4 h-4 mr-2" />
-                          Demo
-                        </a>
-                      </Button>
                     </div>
                   </div>
                 </Card>
