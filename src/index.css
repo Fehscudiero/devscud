@@ -2,9 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. */
 
 @layer base {
 
@@ -188,10 +186,29 @@ All colors MUST be HSL.
 
   .flicker {
     animation: flicker 2.5s infinite;
-    color: #A020F0
+    color: #A020F0;
   }
+}
 
+/* Scrollbar personalizado — fora do @layer */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
 
+::-webkit-scrollbar-track {
+  background: transparent;
+}
 
+::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--primary));
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
 
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--primary)) transparent;
 }
