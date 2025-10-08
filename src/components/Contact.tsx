@@ -7,6 +7,7 @@ import { Github, Linkedin, Instagram, Mail, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import InputMask from "react-input-mask";
 
 const Contact = () => {
   const { toast } = useToast();
@@ -23,6 +24,7 @@ const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     message: "",
   });
 
@@ -71,6 +73,7 @@ const Contact = () => {
     const formDataToSend = new FormData();
     formDataToSend.append("name", formData.name);
     formDataToSend.append("email", formData.email);
+    formDataToSend.append("phone", formData.phone);
     formDataToSend.append("message", formData.message);
     formDataToSend.append("_captcha", "false");
     formDataToSend.append("_subject", "Novo contato via portfólio");
@@ -88,7 +91,7 @@ const Contact = () => {
           className: "bg-purple-600 text-white",
         });
 
-        setFormData({ name: "", email: "", message: "" });
+        setFormData({ name: "", email: "", phone: "", message: "" });
       } else {
         toast({
           title: "Erro ao enviar",
@@ -166,6 +169,34 @@ const Contact = () => {
                     maxLength={255}
                     className="bg-background border-border focus:border-primary"
                   />
+                </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="phone" className="text-sm font-medium">
+                    Celular
+                  </label>
+                  <InputMask
+                    mask="(99) 99999-9999"
+                    value={formData.phone}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        phone: e.target.value,
+                      }))
+                    }
+                  >
+                    {(inputProps) => (
+                      <Input
+                        {...inputProps}
+                        id="phone"
+                        name="phone"
+                        type="tel"
+                        placeholder="(11) 98462-3116"
+                        required
+                        className="bg-background border-border focus:border-primary"
+                      />
+                    )}
+                  </InputMask>
                 </div>
 
                 <div className="space-y-2">
