@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import Logo from "../assets/logo3.png"; // ajuste o caminho conforme necessário
+import Logo from "../assets/logo3.png";
+import { Menu, X } from "lucide-react";
 
 const Navigation = () => {
   const [activeSection, setActiveSection] = useState("home");
   const [scrolled, setScrolled] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
     { id: "home", label: "Home" },
@@ -16,7 +18,7 @@ const Navigation = () => {
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
-      setShowScrollTop(window.scrollY > 1); // mostra botão após 300px
+      setShowScrollTop(window.scrollY > 1);
 
       const sections = navItems.map((item) => ({
         id: item.id,
@@ -49,6 +51,7 @@ const Navigation = () => {
         top: offsetPosition,
         behavior: "smooth",
       });
+      setMobileMenuOpen(false); // fecha menu ao clicar
     }
   };
 
@@ -65,7 +68,7 @@ const Navigation = () => {
           }`}
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20 ">
+          <div className="flex items-center justify-between h-20">
             <button
               onClick={() => scrollToSection("home")}
               className="flex items-center transition-colors"
@@ -77,6 +80,7 @@ const Navigation = () => {
               />
             </button>
 
+            {/* Desktop Menu */}
             <ul className="hidden md:flex items-center gap-8">
               {navItems.map((item) => (
                 <li key={item.id}>
@@ -99,24 +103,41 @@ const Navigation = () => {
               ))}
             </ul>
 
-            <div className="md:hidden flex items-center gap-4">
-              {navItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => scrollToSection(item.id)}
-                  className={`text-xs font-medium transition-colors ${activeSection === item.id
-                    ? "text-primary"
-                    : "text-muted-foreground"
-                    }`}
-                >
-                  {item.label}
-                </button>
-              ))}
+            {/* Mobile Menu Toggle */}
+            <div className="md:hidden">
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
+                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
             </div>
           </div>
         </div>
+
+        {/* Mobile Menu Drawer */}
+        {mobileMenuOpen && (
+          <div className="md:hidden absolute top-20 left-0 w-full bg-background border-t border-border shadow-md z-40">
+            <ul className="flex flex-col items-center gap-6 py-6">
+              {navItems.map((item) => (
+                <li key={item.id}>
+                  <button
+                    onClick={() => scrollToSection(item.id)}
+                    className={`text-base font-medium transition-colors ${activeSection === item.id
+                      ? "text-primary"
+                      : "text-muted-foreground hover:text-foreground"
+                      }`}
+                  >
+                    {item.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </nav>
 
+      {/* Scroll to Top Button */}
       {showScrollTop && (
         <button
           onClick={scrollToTop}
