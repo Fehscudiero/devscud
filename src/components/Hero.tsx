@@ -46,7 +46,7 @@ const Hero = () => {
                 enable: true,
                 speed: 1.3,
                 direction: "none",
-                outModes: { default: "out" },
+                outModes: { default: "bounce" },
               },
               links: {
                 enable: true,
