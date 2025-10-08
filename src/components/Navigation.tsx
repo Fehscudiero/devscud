@@ -4,6 +4,7 @@ import Logo from "../assets/logo3.png"; // ajuste o caminho conforme necessário
 const Navigation = () => {
   const [activeSection, setActiveSection] = useState("home");
   const [scrolled, setScrolled] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   const navItems = [
     { id: "home", label: "Home" },
@@ -15,6 +16,7 @@ const Navigation = () => {
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
+      setShowScrollTop(window.scrollY > 1); // mostra botão após 300px
 
       const sections = navItems.map((item) => ({
         id: item.id,
@@ -50,65 +52,81 @@ const Navigation = () => {
     }
   };
 
-  return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
-        ? "bg-background/80 backdrop-blur-md border-b border-border"
-        : "bg-transparent"
-        }`}
-    >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20 ">
-          <button
-            onClick={() => scrollToSection("home")}
-            className="flex items-center transition-colors"
-          >
-            <img
-              src={Logo}
-              alt="Logo Felipe Scudiero"
-              className="max-h-20 sm:max-h-24 lg:max-h-28 w-auto object-contain flicker"
-            />
-          </button>
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
-          <ul className="hidden md:flex items-center gap-8">
-            {navItems.map((item) => (
-              <li key={item.id}>
+  return (
+    <>
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
+          ? "bg-background/80 backdrop-blur-md border-b border-border"
+          : "bg-transparent"
+          }`}
+      >
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-20 ">
+            <button
+              onClick={() => scrollToSection("home")}
+              className="flex items-center transition-colors"
+            >
+              <img
+                src={Logo}
+                alt="Logo Felipe Scudiero"
+                className="max-h-20 sm:max-h-24 lg:max-h-28 w-auto object-contain flicker"
+              />
+            </button>
+
+            <ul className="hidden md:flex items-center gap-8">
+              {navItems.map((item) => (
+                <li key={item.id}>
+                  <button
+                    onClick={() => scrollToSection(item.id)}
+                    className={`text-sm font-medium transition-colors relative group ${activeSection === item.id
+                      ? "text-primary"
+                      : "text-muted-foreground hover:text-foreground"
+                      }`}
+                  >
+                    {item.label}
+                    <span
+                      className={`absolute -bottom-1 left-0 h-0.5 bg-primary transition-all duration-300 ${activeSection === item.id
+                        ? "w-full"
+                        : "w-0 group-hover:w-full"
+                        }`}
+                    />
+                  </button>
+                </li>
+              ))}
+            </ul>
+
+            <div className="md:hidden flex items-center gap-4">
+              {navItems.map((item) => (
                 <button
+                  key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  className={`text-sm font-medium transition-colors relative group ${activeSection === item.id
+                  className={`text-xs font-medium transition-colors ${activeSection === item.id
                     ? "text-primary"
-                    : "text-muted-foreground hover:text-foreground"
+                    : "text-muted-foreground"
                     }`}
                 >
                   {item.label}
-                  <span
-                    className={`absolute -bottom-1 left-0 h-0.5 bg-primary transition-all duration-300 ${activeSection === item.id
-                      ? "w-full"
-                      : "w-0 group-hover:w-full"
-                      }`}
-                  />
                 </button>
-              </li>
-            ))}
-          </ul>
-
-          <div className="md:hidden flex items-center gap-4">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className={`text-xs font-medium transition-colors ${activeSection === item.id
-                  ? "text-primary"
-                  : "text-muted-foreground"
-                  }`}
-              >
-                {item.label}
-              </button>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-6 right-6 bg-primary text-white p-3 rounded-full shadow-lg hover:bg-primary/80 transition-all z-50"
+          aria-label="Voltar ao topo"
+        >
+          ↑
+        </button>
+      )}
+    </>
   );
 };
 
