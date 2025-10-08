@@ -123,12 +123,13 @@ const Hero = () => {
             </Button>
           </div>
 
+          {/* Ícones sociais com cor roxa */}
           <div className="flex items-center justify-center gap-6 pt-8">
             <a
               href="https://github.com/fehscudiero"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary transition-colors"
+              className="text-primary hover:text-primary/80 transition-colors"
               aria-label="GitHub"
             >
               <Github className="h-6 w-6" />
@@ -137,7 +138,7 @@ const Hero = () => {
               href="https://www.linkedin.com/in/felipe-scudiero-5513261b3/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary transition-colors"
+              className="text-primary hover:text-primary/80 transition-colors"
               aria-label="LinkedIn"
             >
               <Linkedin className="h-6 w-6" />
@@ -146,7 +147,7 @@ const Hero = () => {
               href="https://www.instagram.com/scudiero.js/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary transition-colors"
+              className="text-primary hover:text-primary/80 transition-colors"
               aria-label="Instagram"
             >
               <Instagram className="h-6 w-6" />
