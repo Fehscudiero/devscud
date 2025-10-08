@@ -2,7 +2,6 @@ import { Code2, Sparkles, Zap } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import Eu from "../assets/eu.jpg";
 
-
 const About = () => {
   const highlights = [
     {
@@ -65,17 +64,16 @@ const About = () => {
                 />
               </div>
             </div>
-
           </div>
 
-          <div className="grid sm:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-3 gap-6 justify-center text-center">
             {highlights.map((item, index) => (
               <Card
                 key={index}
                 className="p-6 bg-card border-border hover:border-primary/50 transition-all duration-300 hover:glow-purple group"
               >
                 <div className="space-y-4">
-                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                  <div className="w-12 h-12 mx-auto rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                     <item.icon className="w-6 h-6 text-primary" />
                   </div>
                   <h3 className="text-xl font-semibold">{item.title}</h3>
