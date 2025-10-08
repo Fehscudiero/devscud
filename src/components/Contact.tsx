@@ -56,7 +56,7 @@ const Contact = () => {
     try {
       const validatedData = contactSchema.parse(formData);
 
-      const message = ` Novo contato via portfólio:\n\n Nome: ${validatedData.name}\n Email: ${validatedData.email}\n Mensagem: ${validatedData.message}`;
+      const message = `Novo contato via portfólio:\n\nNome: ${validatedData.name}\nEmail: ${validatedData.email}\nMensagem: ${validatedData.message}`;
 
       const response = await fetch(
         "https://api.z-api.io/instances/3E864455D8A4613EBDD666F3CD400517/token/E0843D250FBEE056B4A5991E/send-message",
@@ -64,17 +64,16 @@ const Contact = () => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            phone: "+5511984623116",
+            phone: "5511984623116", // ✅ sem o sinal de "+"
             message,
           }),
         }
       );
 
-
       const result = await response.json();
       console.log("Z-API response:", result);
 
-      if (response.ok && result?.sent) {
+      if (response.ok && result?.messageId) {
         toast({
           title: "Mensagem enviada!",
           description: "Obrigado pelo contato. Responderei em breve!",
