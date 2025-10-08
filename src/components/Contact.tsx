@@ -56,19 +56,51 @@ const Contact = () => {
     try {
       const validatedData = contactSchema.parse(formData);
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const message = `📬 Novo contato via portfólio:\n\n👤 Nome: ${validatedData.name}\n📧 Email: ${validatedData.email}\n📝 Mensagem: ${validatedData.message}`;
 
-      toast({
-        title: "Mensagem enviada!",
-        description: "Obrigado pelo contato. Responderei em breve!",
-      });
+      const response = await fetch(
+        "https://api.z-api.io/instances/3E864455D8A4613EBDD666F3CD400517/token/FA7417D06BE34B4C16A55B53/send-message",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            phone: "5511984623116",
+            message,
+          }),
+        }
+      );
 
-      setFormData({ name: "", email: "", message: "" });
+
+      const result = await response.json();
+      console.log("Z-API response:", result);
+
+      if (response.ok && result?.sent) {
+        toast({
+          title: "Mensagem enviada!",
+          description: "Obrigado pelo contato. Responderei em breve!",
+          className: "bg-purple-600 text-white",
+        });
+
+        setFormData({ name: "", email: "", message: "" });
+      } else {
+        toast({
+          title: "Falha no envio",
+          description: "Não foi possível enviar para o WhatsApp.",
+          variant: "destructive",
+        });
+      }
     } catch (error) {
+      console.error("Erro no envio:", error);
       if (error instanceof z.ZodError) {
         toast({
           title: "Erro no formulário",
           description: error.errors[0].message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Erro inesperado",
+          description: "Verifique sua conexão ou tente novamente.",
           variant: "destructive",
         });
       }
