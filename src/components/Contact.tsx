@@ -26,25 +26,25 @@ const Contact = () => {
     {
       icon: Github,
       label: "GitHub",
-      href: "https://github.com",
+      href: "https://github.com/fehscudiero",
       color: "hover:text-primary",
     },
     {
       icon: Linkedin,
       label: "LinkedIn",
-      href: "https://linkedin.com",
+      href: "https://www.linkedin.com/in/felipe-scudiero-5513261b3/",
       color: "hover:text-primary",
     },
     {
       icon: Instagram,
       label: "Instagram",
-      href: "https://instagram.com",
+      href: "https://www.instagram.com/scudiero.js/",
       color: "hover:text-primary",
     },
     {
       icon: Mail,
       label: "Email",
-      href: "mailto:felipe@example.com",
+      href: "mailto:scudiero.dev@yahoo.com",
       color: "hover:text-primary",
     },
   ];
@@ -56,7 +56,6 @@ const Contact = () => {
     try {
       const validatedData = contactSchema.parse(formData);
 
-      // Simulate form submission
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       toast({
@@ -198,7 +197,6 @@ const Contact = () => {
                 <p className="text-sm text-muted-foreground">
                   Aberto a colaborações que impulsionem resultados reais. Se você busca soluções digitais com impacto nos negócios, vamos conversar e construir algo de valor juntos.
                 </p>
-
               </Card>
             </div>
           </div>

@@ -5,8 +5,8 @@ const Technologies = () => {
   const techCategories = [
     {
       icon: Code2,
-      title: "Frontend",
-      techs: ["React", "TypeScript", "JavaScript"],
+      title: "Linguagens",
+      techs: ["JavaScript", "TypeScript", "React"],
     },
     {
       icon: Palette,
@@ -31,14 +31,14 @@ const Technologies = () => {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16 space-y-4">
             <h2 className="text-4xl sm:text-5xl font-bold">
-              Tecnologias <span className="text-gradient">Dominadas</span>
+              Minha <span className="text-gradient">Stack Técnica</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Stack moderno para criar soluções digitais escaláveis
+              Domínio de tecnologias modernas para desenvolver soluções digitais eficientes e escaláveis
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 justify-center text-center">
             {techCategories.map((category, index) => {
               const Icon = category.icon;
               return (
@@ -46,14 +46,14 @@ const Technologies = () => {
                   key={index}
                   className="space-y-4 p-6 rounded-lg bg-card border border-border hover:border-primary/50 transition-all duration-300 group"
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-col items-center gap-3">
                     <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
                       <Icon className="w-6 h-6 text-primary" />
                     </div>
                     <h3 className="font-semibold text-lg">{category.title}</h3>
                   </div>
 
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap justify-center gap-2">
                     {category.techs.map((tech, i) => (
                       <Badge
                         key={i}
