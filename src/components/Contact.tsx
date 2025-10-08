@@ -56,7 +56,7 @@ const Contact = () => {
     try {
       const validatedData = contactSchema.parse(formData);
 
-      const message = `📬 Novo contato via portfólio:\n\n👤 Nome: ${validatedData.name}\n📧 Email: ${validatedData.email}\n📝 Mensagem: ${validatedData.message}`;
+      const message = ` Novo contato via portfólio:\n\n Nome: ${validatedData.name}\n Email: ${validatedData.email}\n Mensagem: ${validatedData.message}`;
 
       const response = await fetch(
         "https://api.z-api.io/instances/3E864455D8A4613EBDD666F3CD400517/token/FA7417D06BE34B4C16A55B53/send-message",
