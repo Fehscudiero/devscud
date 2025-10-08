@@ -22,15 +22,18 @@ const Hero = () => {
       id="home"
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
-      <div
-        className="absolute inset-0 z-0"
-        style={{
-          backgroundImage: `url(${heroBg})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/80 to-background" />
+      <div className="absolute inset-0 z-0 animated-particles">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `url(${heroBg})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            opacity: 0.15,
+          }}
+        />
+        <div className="absolute inset-0 animated-gradient" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/95 via-background/85 to-background" />
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">

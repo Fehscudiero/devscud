@@ -66,4 +66,71 @@ All colors MUST be HSL.
   .glow-purple {
     box-shadow: var(--glow-purple);
   }
+
+  .animated-gradient {
+    background: linear-gradient(
+      -45deg,
+      hsl(263 70% 65% / 0.2),
+      hsl(250 70% 60% / 0.3),
+      hsl(240 70% 55% / 0.2),
+      hsl(263 70% 65% / 0.3)
+    );
+    background-size: 400% 400%;
+    animation: gradient-shift 15s ease infinite;
+  }
+
+  .animated-particles {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .animated-particles::before,
+  .animated-particles::after {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+    animation: float 20s ease-in-out infinite;
+  }
+
+  .animated-particles::before {
+    background: hsl(263 70% 65% / 0.3);
+    top: -150px;
+    left: -150px;
+    animation-delay: -10s;
+  }
+
+  .animated-particles::after {
+    background: hsl(250 70% 60% / 0.3);
+    bottom: -150px;
+    right: -150px;
+    animation-delay: -5s;
+  }
+
+  @keyframes gradient-shift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translate(0, 0) scale(1);
+    }
+    33% {
+      transform: translate(30px, -30px) scale(1.1);
+    }
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+  }
 }
