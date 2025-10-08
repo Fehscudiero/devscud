@@ -14,9 +14,7 @@ const Stats = () => {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
+        setIsVisible(entry.isIntersecting); // ativa e desativa conforme entra/sai da tela
       },
       { threshold: 0.3 }
     );
@@ -33,7 +31,10 @@ const Stats = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-20 bg-gradient-to-b from-background via-secondary/20 to-background">
+    <section
+      ref={sectionRef}
+      className="py-20 bg-gradient-to-b from-background via-secondary/20 to-background"
+    >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
@@ -68,9 +69,14 @@ const StatCounter = ({
   delay: number;
 }) => {
   const [count, setCount] = useState(0);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    if (!isVisible) return;
+    if (!isVisible) {
+      setCount(0); // reinicia quando sai da tela
+      if (timerRef.current) clearInterval(timerRef.current);
+      return;
+    }
 
     const timeout = setTimeout(() => {
       let start = 0;
@@ -78,20 +84,21 @@ const StatCounter = ({
       const duration = 2000;
       const increment = end / (duration / 16);
 
-      const timer = setInterval(() => {
+      timerRef.current = setInterval(() => {
         start += increment;
         if (start >= end) {
           setCount(end);
-          clearInterval(timer);
+          if (timerRef.current) clearInterval(timerRef.current);
         } else {
           setCount(Math.floor(start));
         }
       }, 16);
-
-      return () => clearInterval(timer);
     }, delay);
 
-    return () => clearTimeout(timeout);
+    return () => {
+      clearTimeout(timeout);
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
   }, [isVisible, value, delay]);
 
   return (
