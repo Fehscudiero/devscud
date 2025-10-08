@@ -25,18 +25,20 @@
     content="Portfólio de Felipe Mathias Scudiero - Desenvolvedor especializado em interfaces intuitivas e experiências digitais marcantes." />
   <meta name="twitter:image" content="/social-preview.png" />
 
-  <!-- Fonts -->
+  <!-- Fonts: otimização para desempenho -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-    rel="stylesheet" />
+  <link rel="preload" as="style"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"
+    media="all" />
 </head>
 
 <body>
   <div id="root"></div>
 
   <!-- Segurança básica -->
-  <script src="/security.js"></script>
+  <script src="/security.js" defer></script>
 
   <!-- App principal -->
   <script type="module" src="/src/main.tsx"></script>
