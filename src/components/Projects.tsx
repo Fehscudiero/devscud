@@ -5,56 +5,20 @@ import { ExternalLink, Github } from "lucide-react";
 const Projects = () => {
   const projects = [
     {
-      title: "E-Commerce Platform",
+      title: "Plataforma SaaS de Gestão Empresarial",
       description:
-        "Plataforma completa de e-commerce com carrinho, checkout e integração de pagamento. Interface moderna e responsiva.",
-      technologies: ["React", "TypeScript", "Tailwind CSS", "Stripe"],
-      image: "https://images.unsplash.com/photo-1661956602116-aa6865609028?w=800&h=600&fit=crop",
+        "Sistema completo de gestão com dashboard analytics, controle de equipes, automações e integrações. Arquitetura escalável e interface intuitiva.",
+      technologies: ["React", "TypeScript", "TailwindCSS", "API Integration"],
+      image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop",
       github: "https://github.com",
       demo: "https://demo.com",
     },
     {
-      title: "Dashboard Analytics",
+      title: "Portal Corporativo de Alta Performance",
       description:
-        "Dashboard interativo para visualização de dados com gráficos dinâmicos e métricas em tempo real.",
-      technologies: ["React", "Chart.js", "API Integration", "CSS"],
-      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop",
-      github: "https://github.com",
-      demo: "https://demo.com",
-    },
-    {
-      title: "Task Management App",
-      description:
-        "Aplicativo de gerenciamento de tarefas com drag & drop, categorias e sincronização em tempo real.",
-      technologies: ["React", "Firebase", "DnD Kit", "Tailwind"],
-      image: "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=800&h=600&fit=crop",
-      github: "https://github.com",
-      demo: "https://demo.com",
-    },
-    {
-      title: "Portfolio Website",
-      description:
-        "Site de portfólio minimalista e elegante com animações suaves e design responsivo para fotógrafo profissional.",
-      technologies: ["React", "Framer Motion", "Next.js", "CSS"],
-      image: "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=800&h=600&fit=crop",
-      github: "https://github.com",
-      demo: "https://demo.com",
-    },
-    {
-      title: "Weather App",
-      description:
-        "Aplicativo de previsão do tempo com geolocalização, dados em tempo real e interface intuitiva.",
-      technologies: ["React", "OpenWeather API", "Geolocation", "CSS"],
-      image: "https://images.unsplash.com/photo-1592210454359-9043f067919b?w=800&h=600&fit=crop",
-      github: "https://github.com",
-      demo: "https://demo.com",
-    },
-    {
-      title: "Social Media Clone",
-      description:
-        "Clone de rede social com feed, posts, comentários e sistema de likes. Autenticação e perfis de usuários.",
-      technologies: ["React", "Firebase", "Authentication", "Tailwind"],
-      image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&h=600&fit=crop",
+        "Site institucional premium com CMS integrado, SEO avançado, animações sofisticadas e design responsivo. Focado em conversão e experiência do usuário.",
+      technologies: ["React", "TypeScript", "UI/UX", "Performance"],
+      image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=800&h=600&fit=crop",
       github: "https://github.com",
       demo: "https://demo.com",
     },
@@ -73,7 +37,7 @@ const Projects = () => {
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {projects.map((project, index) => (
               <Card
                 key={index}
