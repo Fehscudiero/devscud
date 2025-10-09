@@ -17,13 +17,7 @@ const Contact = () => {
     AOS.refresh();
   }, []);
 
-  const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
-    email: "",
-    message: "",
-  });
-
+  const [formData, setFormData] = useState({ name: "", phone: "", email: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const socialLinks = [
@@ -33,13 +27,8 @@ const Contact = () => {
     { icon: Mail, label: "Email", href: "mailto:scudiero.dev@yahoo.com" },
   ];
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -47,10 +36,7 @@ const Contact = () => {
     setIsSubmitting(true);
 
     const formDataToSend = new FormData();
-    formDataToSend.append("name", formData.name);
-    formDataToSend.append("email", formData.email);
-    formDataToSend.append("phone", formData.phone);
-    formDataToSend.append("message", formData.message);
+    Object.entries(formData).forEach(([key, value]) => formDataToSend.append(key, value));
     formDataToSend.append("_captcha", "false");
     formDataToSend.append("_subject", "Novo contato via portfólio");
 
@@ -60,21 +46,16 @@ const Contact = () => {
         body: formDataToSend,
       });
 
-      if (response.ok) {
-        toast({
-          title: "Mensagem enviada!",
-          description: "Obrigado pelo contato. Responderei em breve!",
-          className: "bg-purple-600 text-white",
-        });
+      toast({
+        title: response.ok ? "Mensagem enviada!" : "Erro ao enviar",
+        description: response.ok
+          ? "Obrigado pelo contato. Responderei em breve!"
+          : "Não foi possível enviar sua mensagem. Tente novamente.",
+        variant: response.ok ? undefined : "destructive",
+        className: response.ok ? "bg-purple-600 text-white" : undefined,
+      });
 
-        setFormData({ name: "", phone: "", email: "", message: "" });
-      } else {
-        toast({
-          title: "Erro ao enviar",
-          description: "Não foi possível enviar sua mensagem. Tente novamente.",
-          variant: "destructive",
-        });
-      }
+      if (response.ok) setFormData({ name: "", phone: "", email: "", message: "" });
     } catch {
       toast({
         title: "Erro inesperado",
@@ -102,46 +83,30 @@ const Contact = () => {
           <div className="grid lg:grid-cols-5 gap-8">
             <Card className="lg:col-span-3 p-8 bg-card border-border" data-aos="fade-right">
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-2">
-                  <label htmlFor="name" className="text-sm font-medium">Nome</label>
-                  <Input
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="Seu nome completo"
-                    required
-                    maxLength={100}
-                    className="bg-background border-border focus:border-primary"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="email" className="text-sm font-medium">Email</label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="seu.email@example.com"
-                    required
-                    maxLength={255}
-                    className="bg-background border-border focus:border-primary"
-                  />
-                </div>
+                {[
+                  { id: "name", label: "Nome", type: "text", placeholder: "Seu nome completo", maxLength: 100 },
+                  { id: "email", label: "Email", type: "email", placeholder: "seu.email@example.com", maxLength: 255 },
+                ].map(({ id, label, ...props }) => (
+                  <div key={id} className="space-y-2">
+                    <label htmlFor={id} className="text-sm font-medium">{label}</label>
+                    <Input
+                      id={id}
+                      name={id}
+                      value={formData[id as keyof typeof formData]}
+                      onChange={handleChange}
+                      required
+                      className="bg-background border-border focus:border-primary"
+                      {...props}
+                    />
+                  </div>
+                ))}
 
                 <div className="space-y-2">
                   <label htmlFor="phone" className="text-sm font-medium">Celular</label>
                   <InputMask
                     mask="(99) 99999-9999"
                     value={formData.phone}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        phone: e.target.value,
-                      }))
-                    }
+                    onChange={(e) => setFormData((prev) => ({ ...prev, phone: e.target.value }))}
                   >
                     {(inputProps) => (
                       <Input
@@ -163,12 +128,7 @@ const Contact = () => {
                     id="message"
                     name="message"
                     value={formData.message}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        message: e.target.value,
-                      }))
-                    }
+                    onChange={handleChange}
                     placeholder="Conte-me sobre seu projeto..."
                     required
                     maxLength={1000}
@@ -182,12 +142,7 @@ const Contact = () => {
                   disabled={isSubmitting}
                   className="w-full bg-primary hover:bg-primary/90 glow-purple transition-all duration-300"
                 >
-                  {isSubmitting ? "Enviando..." : (
-                    <>
-                      <Send className="w-4 h-4 mr-2" />
-                      Enviar Mensagem
-                    </>
-                  )}
+                  {isSubmitting ? "Enviando..." : <><Send className="w-4 h-4 mr-2" />Enviar Mensagem</>}
                 </Button>
               </form>
             </Card>

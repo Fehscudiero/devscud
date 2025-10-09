@@ -42,15 +42,15 @@ const Hero = () => {
             fullScreen: { enable: false },
             particles: {
               number: { value: particleCount },
-              color: { value: ["#ff007f", "#00ffff", "#ffff00"] },
-              shape: { type: "polygon" },
-              opacity: { value: 0.2 },
+              color: { value: "#3C096C" },
+              shape: { type: "circle" },
+              opacity: { value: 3.2 },
               size: { value: 3 },
               move: {
                 enable: true,
                 speed: 1.3,
                 direction: "none",
-                outModes: { default: "bounce" },
+                outModes: { default: "out" },
               },
               links: {
                 enable: true,
