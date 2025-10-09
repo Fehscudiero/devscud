@@ -62,8 +62,8 @@ const Hero = () => {
             },
             interactivity: {
               events: {
-                onHover: { enable: true, mode: "repulse" },
-                onClick: { enable: true, mode: "push" },
+                onHover: { enable: true, mode: "grab" },
+                onClick: { enable: true, mode: "repulse" },
               },
               modes: {
                 repulse: { distance: 100 },
