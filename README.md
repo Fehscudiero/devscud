@@ -20,15 +20,15 @@ Portfólio pessoal desenvolvido com foco em performance, responsividade e identi
 - Evita tarefas pesadas na thread principal
   
 
-## 📦 Estrutura 
+## 📦 Estrutura
 
+```plaintext
 src/
 ├── assets/         # Imagens e fundos
 ├── components/     # Componentes reutilizáveis
 ├── pages/          # Seções principais (Hero, About, Contact)
 ├── hooks/          # Hooks personalizados
-├── styles/         # Estilos globais e animações
-
+└── styles/         # Estilos globais e animações
 
 ## 📬 Contato
 
