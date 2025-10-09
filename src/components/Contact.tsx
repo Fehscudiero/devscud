@@ -13,11 +13,7 @@ const Contact = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    AOS.init({
-      duration: 1000,
-      once: false,
-      mirror: true,
-    });
+    AOS.init({ duration: 1000, once: false, mirror: true });
     AOS.refresh();
   }, []);
 
@@ -31,30 +27,10 @@ const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const socialLinks = [
-    {
-      icon: Github,
-      label: "GitHub",
-      href: "https://github.com/fehscudiero",
-      color: "hover:text-primary",
-    },
-    {
-      icon: Linkedin,
-      label: "LinkedIn",
-      href: "https://www.linkedin.com/in/felipe-scudiero-5513261b3/",
-      color: "hover:text-primary",
-    },
-    {
-      icon: Instagram,
-      label: "Instagram",
-      href: "https://www.instagram.com/scudiero.js/",
-      color: "hover:text-primary",
-    },
-    {
-      icon: Mail,
-      label: "Email",
-      href: "mailto:scudiero.dev@yahoo.com",
-      color: "hover:text-primary",
-    },
+    { icon: Github, label: "GitHub", href: "https://github.com/fehscudiero" },
+    { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/felipe-scudiero-5513261b3/" },
+    { icon: Instagram, label: "Instagram", href: "https://www.instagram.com/scudiero.js/" },
+    { icon: Mail, label: "Email", href: "mailto:scudiero.dev@yahoo.com" },
   ];
 
   const handleChange = (
@@ -99,7 +75,7 @@ const Contact = () => {
           variant: "destructive",
         });
       }
-    } catch (error) {
+    } catch {
       toast({
         title: "Erro inesperado",
         description: "Verifique sua conexão ou tente mais tarde.",
@@ -115,33 +91,19 @@ const Contact = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16 space-y-4">
-            <h2
-              className="text-4xl sm:text-5xl font-bold"
-              data-aos="fade-down"
-              data-aos-once="false"
-            >
+            <h2 className="text-4xl sm:text-5xl font-bold" data-aos="fade-down">
               Meu <span className="text-gradient">Contato</span>
             </h2>
-            <p
-              className="text-lg text-muted-foreground max-w-2xl mx-auto"
-              data-aos="fade-up"
-              data-aos-once="false"
-            >
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto" data-aos="fade-up">
               Tem um projeto em mente? Vamos conversar!
             </p>
           </div>
 
           <div className="grid lg:grid-cols-5 gap-8">
-            <Card
-              className="lg:col-span-3 p-8 bg-card border-border"
-              data-aos="fade-right"
-              data-aos-once="false"
-            >
+            <Card className="lg:col-span-3 p-8 bg-card border-border" data-aos="fade-right">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
-                  <label htmlFor="name" className="text-sm font-medium">
-                    Nome
-                  </label>
+                  <label htmlFor="name" className="text-sm font-medium">Nome</label>
                   <Input
                     id="name"
                     name="name"
@@ -155,9 +117,7 @@ const Contact = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="email" className="text-sm font-medium">
-                    Email
-                  </label>
+                  <label htmlFor="email" className="text-sm font-medium">Email</label>
                   <Input
                     id="email"
                     name="email"
@@ -172,9 +132,7 @@ const Contact = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="phone" className="text-sm font-medium">
-                    Celular
-                  </label>
+                  <label htmlFor="phone" className="text-sm font-medium">Celular</label>
                   <InputMask
                     mask="(99) 99999-9999"
                     value={formData.phone}
@@ -200,14 +158,17 @@ const Contact = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="message" className="text-sm font-medium">
-                    Mensagem
-                  </label>
+                  <label htmlFor="message" className="text-sm font-medium">Mensagem</label>
                   <Textarea
                     id="message"
                     name="message"
                     value={formData.message}
-                    onChange={handleChange}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        message: e.target.value,
+                      }))
+                    }
                     placeholder="Conte-me sobre seu projeto..."
                     required
                     maxLength={1000}
@@ -232,38 +193,28 @@ const Contact = () => {
             </Card>
 
             <div className="lg:col-span-2 space-y-6">
-              <Card
-                className="p-8 bg-card border-border"
-                data-aos="fade-left"
-                data-aos-once="false"
-              >
+              <Card className="p-8 bg-card border-border" data-aos="fade-left">
                 <h3 className="text-xl font-semibold mb-6">Redes Sociais</h3>
                 <div className="space-y-4">
-                  {socialLinks.map((link, index) => (
+                  {socialLinks.map(({ icon: Icon, label, href }, index) => (
                     <a
                       key={index}
-                      href={link.href}
+                      href={href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`flex items-center gap-3 text-muted-foreground ${link.color} transition-colors group`}
+                      className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors group"
                     >
                       <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                        <link.icon className="w-5 h-5" />
+                        <Icon className="w-5 h-5" />
                       </div>
-                      <span className="font-medium">{link.label}</span>
+                      <span className="font-medium">{label}</span>
                     </a>
                   ))}
                 </div>
               </Card>
 
-              <Card
-                className="p-8 bg-gradient-to-br from-primary/10 to-purple-500/10 border-primary/30"
-                data-aos="zoom-in-up"
-                data-aos-once="false"
-              >
-                <h3 className="text-xl font-semibold mb-3">
-                  Vamos trabalhar juntos?
-                </h3>
+              <Card className="p-8 bg-gradient-to-br from-primary/10 to-purple-500/10 border-primary/30" data-aos="zoom-in-up">
+                <h3 className="text-xl font-semibold mb-3">Vamos trabalhar juntos?</h3>
                 <p className="text-sm text-muted-foreground">
                   Aberto a colaborações que impulsionem resultados reais. Se você busca soluções digitais com impacto nos negócios, vamos conversar e construir algo de valor.
                 </p>
@@ -276,4 +227,4 @@ const Contact = () => {
   );
 };
 
-export default Contact;  
+export default Contact;
