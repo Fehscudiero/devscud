@@ -120,7 +120,7 @@ const Contact = () => {
               data-aos="fade-down"
               data-aos-once="false"
             >
-              Entre em <span className="text-gradient">Contato</span>
+              Meu <span className="text-gradient">Contato</span>
             </h2>
             <p
               className="text-lg text-muted-foreground max-w-2xl mx-auto"

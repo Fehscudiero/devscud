@@ -2,8 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. */
-
+/* ============================
+   🎨 Design System Variables
+   ============================ */
 @layer base {
 
   html,
@@ -62,6 +63,9 @@
   }
 }
 
+/* ============================
+   🧩 Utility Classes
+   ============================ */
 @layer utilities {
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400;
@@ -190,7 +194,9 @@
   }
 }
 
-/* Scrollbar personalizado — fora do @layer */
+/* ============================
+   🖱️ Scrollbar Customization
+   ============================ */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -207,8 +213,35 @@
   background-clip: content-box;
 }
 
-/* Firefox */
 * {
   scrollbar-width: thin;
   scrollbar-color: hsl(var(--primary)) transparent;
+}
+
+/* ============================
+   ⚡ Botão “Entre em Contato” Chamativo
+   ============================ */
+.aura-button::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, hsl(263, 70%, 65%) 0%, transparent 70%);
+  opacity: 0.4;
+  animation: auraPulse 2s infinite;
+  z-index: 0;
+}
+
+@keyframes auraPulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+
+  50% {
+    transform: scale(1.2);
+    opacity: 0.6;
+  }
 }

@@ -110,21 +110,30 @@ const Hero = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-">
+
             <Button
               size="lg"
-              onClick={() => scrollToSection("projects")}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground glow-purple transition-all duration-300 hover:scale-105"
-            >
-              Ver Projetos
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
               onClick={() => scrollToSection("contact")}
-              className="border-primary/50 hover:bg-primary/10 hover:border-primary transition-all duration-300 flicker"
+              className="relative px-6 py-3 font-semibold text-white rounded-lg bg-gradient-to-r from-purple-700 via-fuchsia-600 to-purple-700 shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 aura-button"
             >
-              <span className="flicker-text">Entre em Contato</span>
+              <span className="relative z-10 flex items-center gap-2">
+                <svg
+                  className="w-5 h-5 transition-transform duration-500 group-hover:rotate-180"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+                </svg>
+                Entre em Contato
+              </span>
             </Button>
+
+
+
+
+
           </div>
 
           {/* Ícones sociais com cor roxa */}
