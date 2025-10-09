@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import CardParticles from "@/components/CardParticles"; // ajuste o caminho conforme sua estrutura
 
 const services = [
   {
@@ -49,62 +50,65 @@ const services = [
   },
 ];
 
+const effects = [
+  "fade-up",
+  "fade-down",
+  "zoom-in",
+  "flip-up",
+  "fade-right",
+  "fade-left",
+];
+
 const Servicos = () => {
   useEffect(() => {
-    AOS.init({
-      duration: 1000,
-      once: false,
-      mirror: true,
-    });
+    AOS.init({ duration: 1000, once: false, mirror: true });
     AOS.refresh();
   }, []);
 
-  const effects = ["fade-up", "fade-down", "zoom-in", "flip-up", "fade-right", "fade-left"];
-
   return (
-    <section className="py-20 bg-secondary/30" id="servicos">
+    <section id="servicos" className="py-20 bg-secondary/30">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Título */}
         <div
           className="max-w-4xl mx-auto text-center mb-16 space-y-4"
           data-aos="fade-down"
-          data-aos-once="false"
         >
           <h2 className="text-4xl sm:text-5xl font-bold leading-tight">
             SOLUÇÕES COMPLETAS PARA{" "}
             <span className="text-gradient">IMPULSIONAR SEU SUCESSO DIGITAL</span>
           </h2>
-          <p
-            className="text-lg text-muted-foreground"
-            data-aos="fade-up"
-            data-aos-once="false"
-          >
+          <p className="text-lg text-muted-foreground" data-aos="fade-up">
             Serviços completos para impulsionar o seu negócio.
           </p>
         </div>
 
+        {/* Cards */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {services.map((service, index) => {
-            const Icon = service.icon;
+          {services.map(({ icon: Icon, title, description }, index) => {
             const effect = effects[index % effects.length];
+            const particleId = `cardParticles-${index}`; // ID único por card
 
             return (
               <div
                 key={index}
                 data-aos={effect}
-                data-aos-once="false"
-                className="p-6 rounded-xl bg-card border border-border hover:border-primary/50 transition-all duration-300 group space-y-4 text-center"
+                className="relative overflow-hidden p-6 rounded-xl bg-card border border-border hover:border-primary/50 transition-all duration-300 group"
               >
-                <div className="flex justify-center">
-                  <div className="p-4 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                    <Icon className="w-8 h-8 text-primary" />
+                {/* Partículas no fundo com ID único */}
+                <CardParticles id={particleId} />
+
+                {/* Conteúdo do card */}
+                <div className="relative z-10 space-y-4 text-center">
+                  <div className="flex justify-center">
+                    <div className="p-4 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                      <Icon className="w-8 h-8 text-primary" />
+                    </div>
                   </div>
+                  <h3 className="text-lg font-semibold text-foreground">{title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {description}
+                  </p>
                 </div>
-                <h3 className="text-lg font-semibold text-foreground">
-                  {service.title}
-                </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {service.description}
-                </p>
               </div>
             );
           })}
