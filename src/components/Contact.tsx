@@ -67,7 +67,7 @@ const Contact = () => {
           className: "bg-purple-600 text-white",
         });
 
-        setFormData({ name: "", email: "", phone: "", message: "" });
+        setFormData({ name: "", phone: "", email: "", message: "" });
       } else {
         toast({
           title: "Erro ao enviar",

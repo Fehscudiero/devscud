@@ -15,37 +15,37 @@ const services = [
     icon: Globe,
     title: "Criação de Websites",
     description:
-      "Aumentamos suas taxas de detecção, proporcionando uma experiência excepcional para seus clientes.",
+      "Aumento suas taxas de detecção, proporcionando uma experiência excepcional para seus clientes.",
   },
   {
     icon: Gauge,
     title: "Otimização de Sites",
     description:
-      "Melhoramos o tempo de resposta do seu site nas ferramentas de busca, garantindo uma navegação mais inteligente e qualificada.",
+      "Melhoro o tempo de resposta do seu site nas ferramentas de busca, garantindo uma navegação mais inteligente e qualificada.",
   },
   {
     icon: Settings,
     title: "Customização Avançada",
     description:
-      "Criamos soluções sob medida que atendem às necessidades específicas do seu negócio.",
+      "Crio soluções sob medida que atendem às necessidades específicas do seu negócio.",
   },
   {
     icon: LifeBuoy,
     title: "Suporte Personalizado",
     description:
-      "Oferecemos assistência técnica especializada para garantir o funcionamento contínuo e seguro do seu site.",
+      "Ofereço assistência técnica especializada para garantir o funcionamento contínuo e seguro do seu site.",
   },
   {
     icon: Search,
     title: "Otimização para SEO",
     description:
-      "Aumentamos a visibilidade do seu site nos mecanismos de busca, atraindo mais visitantes qualificados.",
+      "Aumento a visibilidade do seu site nos mecanismos de busca, atraindo mais visitantes qualificados.",
   },
   {
     icon: ShoppingCart,
     title: "E-commerce",
     description:
-      "Criamos soluções personalizadas de comércio eletrônico para expandir seu alcance e aumentar suas vendas.",
+      "Crio soluções personalizadas de comércio eletrônico para expandir seu alcance e aumentar suas vendas.",
   },
 ];
 
