@@ -23,20 +23,14 @@ const Navigation = () => {
       setScrolled(window.scrollY > 50);
       setShowScrollTop(window.scrollY > 1);
 
-      const sections = navItems.map((item) => ({
-        id: item.id,
-        element: document.getElementById(item.id),
-      }));
-
-      const current = sections.find((section) => {
-        if (!section.element) return false;
-        const rect = section.element.getBoundingClientRect();
+      const current = navItems.find(({ id }) => {
+        const el = document.getElementById(id);
+        if (!el) return false;
+        const rect = el.getBoundingClientRect();
         return rect.top <= 100 && rect.bottom >= 100;
       });
 
-      if (current) {
-        setActiveSection(current.id);
-      }
+      if (current) setActiveSection(current.id);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -44,94 +38,72 @@ const Navigation = () => {
   }, []);
 
   const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
+    const el = document.getElementById(id);
+    if (el) {
       const offset = 80;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
+      const position = el.getBoundingClientRect().top + window.pageYOffset - offset;
+      window.scrollTo({ top: position, behavior: "smooth" });
       setMobileMenuOpen(false);
     }
   };
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
     <>
-      <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
-          ? "bg-background/80 backdrop-blur-md border-b border-border"
-          : "bg-transparent"
-          }`}
-      >
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-background/80 backdrop-blur-md border-b border-border" : "bg-transparent"}`}>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
-            <button
-              onClick={() => scrollToSection("home")}
-              className="flex items-center transition-colors"
-            >
-              <img
-                src={Logo}
-                alt="Logo Felipe Scudiero"
-                className="max-h-20 sm:max-h-24 lg:max-h-28 w-auto object-contain flicker"
-              />
+            {/* Logo */}
+            <button onClick={() => scrollToSection("home")} className="flex items-center">
+              <img src={Logo} alt="Logo Felipe Scudiero" className="max-h-20 sm:max-h-24 lg:max-h-28 w-auto object-contain flicker" />
             </button>
 
-            {/* Desktop Menu */}
+            {/* Botão Fale comigo - apenas mobile */}
+            <div className="md:hidden">
+              <button
+                onClick={() => scrollToSection("contact")}
+                className="bg-gradient-to-r from-purple-700 via-fuchsia-600 to-purple-700 text-white font-semibold px-4 py-2 rounded-lg shadow-md hover:scale-105 active:scale-95 transition-all duration-300"
+              >
+                Fale comigo
+              </button>
+            </div>
+
+            {/* Menu Hamburguer */}
+            <div className="md:hidden">
+              <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-muted-foreground hover:text-primary transition-colors">
+                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
+            </div>
+
+            {/* Menu Desktop */}
             <ul className="hidden md:flex items-center gap-8">
-              {navItems.map((item) => (
-                <li key={item.id}>
+              {navItems.map(({ id, label }) => (
+                <li key={id}>
                   <button
-                    onClick={() => scrollToSection(item.id)}
-                    className={`text-sm font-medium transition-colors relative group ${activeSection === item.id
-                      ? "text-primary"
-                      : "text-muted-foreground hover:text-foreground"
-                      }`}
+                    onClick={() => scrollToSection(id)}
+                    className={`text-sm font-medium transition-colors relative group ${activeSection === id ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}
                   >
-                    {item.label}
-                    <span
-                      className={`absolute -bottom-1 left-0 h-0.5 bg-primary transition-all duration-300 ${activeSection === item.id
-                        ? "w-full"
-                        : "w-0 group-hover:w-full"
-                        }`}
-                    />
+                    {label}
+                    <span className={`absolute -bottom-1 left-0 h-0.5 bg-primary transition-all duration-300 ${activeSection === id ? "w-full" : "w-0 group-hover:w-full"}`} />
                   </button>
                 </li>
               ))}
             </ul>
-
-            {/* Mobile Menu Toggle */}
-            <div className="md:hidden">
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="text-muted-foreground hover:text-primary transition-colors"
-              >
-                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
-            </div>
           </div>
         </div>
 
-        {/* Mobile Menu Drawer */}
+        {/* Menu Mobile */}
         {mobileMenuOpen && (
           <div className="md:hidden absolute top-20 left-0 w-full bg-background border-t border-border shadow-md z-40">
             <ul className="flex flex-col items-center gap-6 py-6">
-              {navItems.map((item) => (
-                <li key={item.id}>
+              {navItems.map(({ id, label }) => (
+                <li key={id}>
                   <button
-                    onClick={() => scrollToSection(item.id)}
-                    className={`text-base font-medium transition-colors ${activeSection === item.id
-                      ? "text-primary"
-                      : "text-muted-foreground hover:text-foreground"
-                      }`}
+                    onClick={() => scrollToSection(id)}
+                    className={`text-base font-medium transition-colors ${activeSection === id ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}
                   >
-                    {item.label}
+                    {label}
                   </button>
                 </li>
               ))}
@@ -140,7 +112,7 @@ const Navigation = () => {
         )}
       </nav>
 
-      {/* Scroll to Top Button */}
+      {/* Botão Scroll to Top */}
       {showScrollTop && (
         <button
           onClick={scrollToTop}

@@ -27,7 +27,6 @@ const Footer = () => {
             },
             size: {
               value: { min: 1, max: 3 },
-              random: { enable: true },
               animation: { enable: true, speed: 1, sync: false },
             },
             move: {
