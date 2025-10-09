@@ -29,6 +29,7 @@ src/
 ├── pages/          # Seções principais (Hero, About, Contact)
 ├── hooks/          # Hooks personalizados
 └── styles/         # Estilos globais e animações
+``` 
 
 ## 📬 Contato
 
