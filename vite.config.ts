@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 
 // Plugins adicionados
-import viteImagemin from "vite-plugin-imagemin";
+import { imagetools } from "vite-imagetools";
 import purgeCss from "vite-plugin-purgecss";
 import compression from "vite-plugin-compression";
 
@@ -20,22 +20,10 @@ export default defineConfig({
       ext: ".br",
       threshold: 1024,
     }),
-    // Otimização de imagens
-    viteImagemin({
-      gifsicle: { optimizationLevel: 7 },
-      optipng: { optimizationLevel: 7 },
-      mozjpeg: { quality: 75 },
-      svgo: {
-        plugins: [
-          { name: "removeViewBox" },
-          { name: "removeEmptyAttrs", active: false },
-        ],
-      },
-    }),
     // Remoção de CSS não utilizado
-    purgeCss({
-      content: ["./index.html", "./src/**/*.{ts,tsx}"],
-    }),
+
+    // Geração de imagens otimizadas e responsivas
+    imagetools(),
   ],
   resolve: {
     alias: {
