@@ -11,7 +11,7 @@ const Navigation = () => {
   const navItems = [
     { id: "home", label: "Home" },
     { id: "about", label: "Sobre" },
-    { id: "stats", label: "Estatísticas" },
+    { id: "servicos", label: "Serviços" },
     { id: "technologies", label: "Tecnologias" },
     { id: "projects", label: "Projetos" },
     { id: "testimonials", label: "Depoimentos" },
