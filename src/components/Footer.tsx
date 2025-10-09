@@ -17,29 +17,28 @@ const Footer = () => {
         options={{
           fullScreen: { enable: false },
           particles: {
-            number: { value: 20 },
-            color: { value: ["#ff007f", "#00ffff", "#ffff00"] },
+            number: { value: 40 },
+            color: { value: ["#3C096C", "#5A189A", "#7B2CBF"] },
             shape: { type: "circle" },
-            opacity: { value: 0.15 },
+            opacity: {
+              value: 0.5,
+              random: { enable: true, minimumValue: 0.2 },
+              animation: { enable: true, speed: 0.3, sync: false },
+            },
             size: {
-              value: 2,
-              random: { enable: true, minimumValue: 1 },
+              value: { min: 1, max: 3 },
+              random: { enable: true },
+              animation: { enable: true, speed: 1, sync: false },
             },
             move: {
               enable: true,
-              speed: 0.5,
+              speed: 0.6,
               direction: "none",
               outModes: { default: "out" },
+              random: true,
+              straight: false,
             },
-
-            // 🔗 LINHAS ENTRE PARTÍCULAS
-            links: {
-              enable: true,
-              distance: 100,
-              color: "#ffffff",
-              opacity: 0.1,
-              width: 1,
-            },
+            links: { enable: false }, // ❌ Sem linhas entre partículas
           },
           interactivity: {
             events: {
