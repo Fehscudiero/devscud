@@ -68,10 +68,10 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-20 pb-8">
+    <section id="contact" className="scroll-mt-[500px] pt-2 pb-2">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16 space-y-4">
+          <div className="text-center mb-8 space-y-4">
             <h2 className="text-4xl sm:text-5xl font-bold" data-aos="fade-down">
               Meu <span className="text-gradient">Contato</span>
             </h2>
