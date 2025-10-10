@@ -39,7 +39,7 @@ const Technologies = () => {
     {
       icon: BarChart2,
       title: "Banco de Dados e Visualização",
-      techs: ["SQL", "PostgreSQL", "MySQL", "SQLite)", "Power BI", "Dashboards e KPIs"],
+      techs: ["SQL", "PostgreSQL", "MySQL", "SQLite", "Power BI", "Dashboards e KPIs"],
     },
     {
       icon: MonitorSmartphone,
