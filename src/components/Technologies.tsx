@@ -1,6 +1,17 @@
 import { useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Code2, Palette, Blocks, Rocket } from "lucide-react";
+import {
+  Code2,
+  Blocks,
+  Database,
+  Rocket,
+  Terminal,
+  Braces,
+  Server,
+  BarChart2,
+  MonitorSmartphone,
+  Settings2,
+} from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
@@ -16,24 +27,24 @@ const Technologies = () => {
 
   const techCategories = [
     {
-      icon: Code2,
-      title: "Linguagens",
-      techs: ["JavaScript", "TypeScript", "React"],
+      icon: Braces,
+      title: "Linguagens de Programação",
+      techs: ["JavaScript", "TypeScript", "Python", "Java", "PHP", "C"],
     },
     {
-      icon: Palette,
-      title: "Design",
-      techs: ["TailwindCSS", "UI/UX", "Responsive Design"],
+      icon: Server,
+      title: "Frameworks e Ferramentas",
+      techs: ["Node.js", "APIs RESTful", "HTML5", "CSS3", "Tailwind", "Git", "CI/CD"],
     },
     {
-      icon: Blocks,
-      title: "Arquitetura",
-      techs: ["SaaS Architecture", "API Integration", "Performance"],
+      icon: BarChart2,
+      title: "Banco de Dados e Visualização",
+      techs: ["SQL", "PostgreSQL", "MySQL", "SQLite)", "Power BI", "Dashboards e KPIs"],
     },
     {
-      icon: Rocket,
-      title: "Ferramentas",
-      techs: ["Git", "Vite", "Modern Workflow"],
+      icon: MonitorSmartphone,
+      title: "Práticas de Interface e Performance",
+      techs: ["Testes Automatizados", "UX/UI", "Design Responsivo", "Otimização de Performance"],
     },
   ];
 
@@ -60,7 +71,7 @@ const Technologies = () => {
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 justify-center text-center">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 justify-center text-center">
             {techCategories.map((category, index) => {
               const Icon = category.icon;
               const effect = effects[index % effects.length];
@@ -70,13 +81,13 @@ const Technologies = () => {
                   key={index}
                   data-aos={effect}
                   data-aos-once="false"
-                  className="space-y-4 p-6 rounded-lg bg-card border border-border hover:border-primary/50 transition-all duration-300 group"
+                  className="flex flex-col items-center space-y-6 p-6 rounded-xl bg-card border border-border hover:border-primary/50 transition-all duration-300 group shadow-md"
                 >
                   <div className="flex flex-col items-center gap-3">
-                    <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                      <Icon className="w-6 h-6 text-primary" />
+                    <div className="p-3 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                      <Icon className="w-7 h-7 text-primary" />
                     </div>
-                    <h3 className="font-semibold text-lg">{category.title}</h3>
+                    <h3 className="font-semibold text-xl text-foreground">{category.title}</h3>
                   </div>
 
                   <div className="flex flex-wrap justify-center gap-2">
@@ -84,7 +95,7 @@ const Technologies = () => {
                       <Badge
                         key={i}
                         variant="secondary"
-                        className="bg-primary/5 text-foreground border-primary/20 hover:bg-primary/10 transition-colors"
+                        className="bg-primary/5 text-sm text-foreground border-primary/20 hover:bg-primary/10 transition-colors px-3 py-1"
                       >
                         {tech}
                       </Badge>
