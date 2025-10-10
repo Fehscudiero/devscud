@@ -68,7 +68,7 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-20">
+    <section id="contact" className="py-20 pb-8">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16 space-y-4">
@@ -168,7 +168,7 @@ const Contact = () => {
                 </div>
               </Card>
 
-              <Card className="p-8 bg-gradient-to-br from-primary/10 to-purple-500/10 border-primary/30" data-aos="zoom-in-up">
+              <Card className="p-10 bg-gradient-to-br from-primary/10 to-purple-500/10 border-primary/30" data-aos="zoom-in-up">
                 <h3 className="text-xl font-semibold mb-3">Vamos trabalhar juntos?</h3>
                 <p className="text-sm text-muted-foreground">
                   Aberto a colaborações que impulsionem resultados reais. Se você busca soluções digitais com impacto nos negócios, vamos conversar e construir algo de valor.
