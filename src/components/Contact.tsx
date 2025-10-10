@@ -22,7 +22,7 @@ const Contact = () => {
 
   const socialLinks = [
     { icon: Github, label: "GitHub", href: "https://github.com/fehscudiero" },
-    { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/felipe-scudiero-5513261b3/" },
+    { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/devscud/" },
     { icon: Instagram, label: "Instagram", href: "https://www.instagram.com/scudiero.js/" },
     { icon: Mail, label: "Email", href: "mailto:scudiero.dev@yahoo.com" },
   ];
