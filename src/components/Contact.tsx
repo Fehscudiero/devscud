@@ -40,11 +40,29 @@ const Contact = () => {
     formDataToSend.append("_captcha", "false");
     formDataToSend.append("_subject", "Novo contato via portfólio");
 
+    // Toast de carregamento imediato
+    const loadingToast = toast({
+      title: "Enviando mensagem...",
+      description: "Aguarde enquanto processamos seu contato.",
+      duration: 10000,
+      className: "bg-muted text-muted-foreground",
+    });
+
+    // Timeout de segurança
+    const timeout = new Promise<Response>((_, reject) =>
+      setTimeout(() => reject(new Error("timeout")), 8000)
+    );
+
     try {
-      const response = await fetch("https://formsubmit.co/scudiero.dev@yahoo.com", {
-        method: "POST",
-        body: formDataToSend,
-      });
+      const response = await Promise.race([
+        fetch("https://formsubmit.co/scudiero.dev@yahoo.com", {
+          method: "POST",
+          body: formDataToSend,
+        }),
+        timeout,
+      ]);
+
+      loadingToast.dismiss(); // ✅ agora corretamente acessando o método do objeto retornado
 
       toast({
         title: response.ok ? "Mensagem enviada!" : "Erro ao enviar",
@@ -55,8 +73,13 @@ const Contact = () => {
         className: response.ok ? "bg-purple-600 text-white" : undefined,
       });
 
-      if (response.ok) setFormData({ name: "", phone: "", email: "", message: "" });
-    } catch {
+      if (response.ok) {
+        setFormData({ name: "", phone: "", email: "", message: "" });
+      }
+
+    } catch (error) {
+      loadingToast.dismiss();
+
       toast({
         title: "Erro inesperado",
         description: "Verifique sua conexão ou tente mais tarde.",
