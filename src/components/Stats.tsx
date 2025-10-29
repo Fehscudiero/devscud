@@ -6,9 +6,9 @@ const Stats = () => {
 
   const stats = [
     { value: 40, label: "Projetos Entregues", suffix: "+" },
-    { value: 35, label: "Sites Desenvolvidos", suffix: "+" },
+    { value: 30, label: "Sites Desenvolvidos", suffix: "+" },
     { value: 4, label: "Anos de Experiência", suffix: "+" },
-    { value: 16, label: "Clientes Recorrentes", suffix: "+" },
+    { value: 8, label: "Clientes Recorrentes", suffix: "+" },
   ];
 
   useEffect(() => {
