@@ -91,7 +91,7 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-6 pb-1">
+    <section id="contact" className="py-6 pb-4">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16 space-y-4">
