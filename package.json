@@ -66,7 +66,6 @@
     "vaul": "^0.9.9",
     "vite-imagetools": "^9.0.0",
     "vite-plugin-compression": "^0.5.1",
-    "vite-plugin-imagemin": "^0.4.0",
     "vite-plugin-purgecss": "^0.2.13",
     "zod": "^3.25.76"
   },
