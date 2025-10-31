@@ -59,7 +59,7 @@ const Footer = () => {
 
 
       {/* Conteúdo do footer */}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-2">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <Code2 className="h-5 w-5 text-primary" />
