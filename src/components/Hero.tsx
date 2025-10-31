@@ -1,11 +1,19 @@
 import { Button } from "@/components/ui/button";
-import { Github, Linkedin, Instagram, ArrowDown } from "lucide-react";
+import {
+  Github,
+  Linkedin,
+  Instagram,
+  ArrowDown,
+  Share,
+} from "lucide-react";
 import heroBg from "@/assets/hero-bg.jpg";
 import Particles from "react-tsparticles";
 import { loadSlim } from "tsparticles-slim";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
 const Hero = () => {
+  const [copied, setCopied] = useState(false);
+
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -24,9 +32,28 @@ const Hero = () => {
     await loadSlim(engine);
   }, []);
 
-  // Detecta se é mobile e ajusta quantidade de partículas
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
   const particleCount = isMobile ? 25 : 80;
+
+  const handleShareClick = () => {
+    const url = "https://seuportifolio.com";
+    const title = "Confira este portfólio incrível!";
+    const text = "Veja o trabalho do desenvolvedor Felipe Scudiero.";
+
+    if (navigator.share) {
+      navigator
+        .share({ title, text, url })
+        .catch(() => {
+          navigator.clipboard.writeText(url);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 4000);
+        });
+    } else {
+      navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 4000);
+    }
+  };
 
   return (
     <section
@@ -110,7 +137,6 @@ const Hero = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-">
-
             <Button
               size="lg"
               onClick={() => scrollToSection("contact")}
@@ -129,15 +155,23 @@ const Hero = () => {
                 Entre em Contato
               </span>
             </Button>
-
-
-
-
-
           </div>
 
-          {/* Ícones sociais com cor roxa */}
+          {/* Ícones sociais com botão de compartilhamento em primeiro lugar */}
           <div className="flex items-center justify-center gap-6 pt-8">
+            <button
+              onClick={handleShareClick}
+              className="relative group text-primary hover:text-primary/80 transition-colors animate-bounce"
+              aria-label="Compartilhar portfólio"
+            >
+              <Share className="h-6 w-6" />
+              {copied && (
+                <div className="absolute -top-14 left-1/2 -translate-x-1/2 px-4 py-2 text-sm rounded-xl bg-purple-700 text-white shadow-2xl backdrop-blur-md animate-fade-in transition-all duration-500">
+                  Link copiado! Compartilhe com quem quiser 🚀
+                </div>
+              )}
+            </button>
+
             <a
               href="https://github.com/fehscudiero"
               target="_blank"
