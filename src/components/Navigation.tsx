@@ -116,7 +116,7 @@ const Navigation = () => {
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-14 right-6 bg-primary text-white p-3 rounded-full shadow-lg hover:bg-primary/80 transition-all z-50"
+          className="fixed bottom-20 md:bottom-14 right-6 bg-primary text-white p-3 rounded-full shadow-lg hover:bg-primary/80 transition-all z-50"
           aria-label="Voltar ao topo"
         >
           ↑
