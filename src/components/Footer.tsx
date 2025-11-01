@@ -1,7 +1,14 @@
-import { Code2 } from "lucide-react";
+import { Code2, Github, Linkedin, Instagram, Mail } from "lucide-react";
 import Particles from "react-tsparticles";
 import { loadSlim } from "tsparticles-slim";
 import { useCallback } from "react";
+
+const socialLinks = [
+  { icon: Github, label: "GitHub", href: "https://github.com/fehscudiero" },
+  { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/devscud/" },
+  { icon: Instagram, label: "Instagram", href: "https://www.instagram.com/scudiero.js/" },
+  { icon: Mail, label: "Email", href: "mailto:scudiero.dev@yahoo.com" },
+];
 
 const Footer = () => {
   const particlesInit = useCallback(async (engine: any) => {
@@ -37,7 +44,7 @@ const Footer = () => {
               random: true,
               straight: false,
             },
-            links: { enable: false }, // ❌ Sem linhas entre partículas
+            links: { enable: false },
           },
           interactivity: {
             events: {
@@ -56,19 +63,35 @@ const Footer = () => {
         }}
       />
 
-
-
       {/* Conteúdo do footer */}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-2">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-1">
+        <div className="flex flex-wrap items-center justify-between gap-4 text-center">
+          {/* Esquerda: Nome e ícone */}
           <div className="flex items-center gap-2">
             <Code2 className="h-5 w-5 text-primary" />
             <span className="font-semibold">Felipe Scudiero</span>
           </div>
 
-          <p className="text-sm text-muted-foreground text-center sm:text-left">
-            {new Date().getFullYear()} Felipe Scudiero | Todos os direitos reservados. ©
+          {/* Centro: Texto legal */}
+          <p className="text-sm text-muted-foreground">
+            © 2025 Felipe Scudiero — Todos os direitos reservados.
           </p>
+
+          {/* Direita: Ícones sociais */}
+          <div className="flex gap-4">
+            {socialLinks.map(({ icon: Icon, label, href }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                className="transition transform hover:scale-110 hover:text-purple-500 text-purple-600"
+              >
+                <Icon className="h-5 w-5" />
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </footer>
