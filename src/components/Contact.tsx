@@ -82,12 +82,12 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="pb-6 pt-2">
+    <section id="contact" className="pb-6 pt-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-12 space-y-4">
             <h2 className="text-4xl sm:text-5xl font-bold" data-aos="fade-down">
-              Vamos <span className="text-gradient">Conversar</span>
+              Entre em  <span className="text-gradient">Contato</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-xl mx-auto" data-aos="fade-up">
               Me conte sobre seu projeto. Estou aqui para transformar ideias em soluções digitais.
@@ -151,14 +151,20 @@ const Contact = () => {
               </div>
 
               <div className="text-center">
-                <p className="text-sm text-muted-foreground mb-2">Responderei pessoalmente em até 24h!</p>
+                <p className="text-sm text-muted-foreground pb-3 mb-2">Responderei pessoalmente em até 24h!</p>
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-primary hover:bg-primary/90 glow-purple transition-all duration-300"
+                  className="relative w-36 bg-primary hover:bg-primary/90 glow-purple aura-button animated-gradient text-white font-semibold transition-all duration-300"
                 >
-                  {isSubmitting ? "Enviando..." : <><Send className="w-4 h-4 mr-2" />Enviar Mensagem</>}
+                  {isSubmitting ? "Enviando..." : (
+                    <>
+                      <Send className="w-4 h-4 mr-2" />
+                      Enviar Mensagem
+                    </>
+                  )}
                 </Button>
+
               </div>
             </form>
           </Card>
