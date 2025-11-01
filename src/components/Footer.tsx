@@ -16,7 +16,7 @@ const Footer = () => {
   }, []);
 
   return (
-    <footer className="relative border-t border-border bg-background/50 backdrop-blur-sm overflow-hidden">
+    <footer className="relative border-t border-border bg-background/50 backdrop-blur-sm">
       {/* Partículas no fundo */}
       <Particles
         id="footerParticles"
@@ -56,29 +56,29 @@ const Footer = () => {
         }}
         style={{
           position: "absolute",
-          width: "100%",
-          height: "100%",
+          inset: 0,
           zIndex: 0,
           pointerEvents: "none",
+          maxHeight: "100%",
         }}
       />
 
       {/* Conteúdo do footer */}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-1">
-        <div className="flex flex-wrap items-center justify-between gap-4 text-center">
-          {/* Esquerda: Nome e ícone */}
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-center">
+          {/* Nome e ícone */}
           <div className="flex items-center gap-2">
             <Code2 className="h-5 w-5 text-primary" />
             <span className="font-semibold">Felipe Scudiero</span>
           </div>
 
-          {/* Centro: Texto legal */}
+          {/* Texto legal */}
           <p className="text-sm text-muted-foreground">
             © 2025 Felipe Scudiero — Todos os direitos reservados.
           </p>
 
-          {/* Direita: Ícones sociais */}
-          <div className="flex gap-4">
+          {/* Ícones sociais */}
+          <div className="flex gap-2">
             {socialLinks.map(({ icon: Icon, label, href }) => (
               <a
                 key={label}
