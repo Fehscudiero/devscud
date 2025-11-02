@@ -7,7 +7,7 @@ import { Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import InputMask from "react-input-mask";
+import { IMaskInput } from "react-imask";
 
 const Contact = () => {
   const { toast } = useToast();
@@ -17,10 +17,17 @@ const Contact = () => {
     AOS.refresh();
   }, []);
 
-  const [formData, setFormData] = useState({ name: "", phone: "", email: "", message: "" });
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    message: "",
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
@@ -29,7 +36,9 @@ const Contact = () => {
     setIsSubmitting(true);
 
     const formDataToSend = new FormData();
-    Object.entries(formData).forEach(([key, value]) => formDataToSend.append(key, value));
+    Object.entries(formData).forEach(([key, value]) =>
+      formDataToSend.append(key, value)
+    );
     formDataToSend.append("_captcha", "false");
     formDataToSend.append("_subject", "Novo contato via portfólio");
 
@@ -67,7 +76,6 @@ const Contact = () => {
       if (response.ok) {
         setFormData({ name: "", phone: "", email: "", message: "" });
       }
-
     } catch (error) {
       loadingToast.dismiss();
 
@@ -89,8 +97,12 @@ const Contact = () => {
             <h2 className="text-4xl sm:text-5xl font-bold" data-aos="fade-down">
               Entre em <span className="text-gradient">Contato</span>
             </h2>
-            <p className="text-lg text-muted-foreground max-w-xl mx-auto" data-aos="fade-up">
-              Me conte sobre seu projeto. Estou aqui para transformar ideias em soluções digitais.
+            <p
+              className="text-lg text-muted-foreground max-w-xl mx-auto"
+              data-aos="fade-up"
+            >
+              Me conte sobre seu projeto. Estou aqui para transformar ideias em
+              soluções digitais.
             </p>
           </div>
 
@@ -98,11 +110,25 @@ const Contact = () => {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {[
-                  { id: "name", label: "Nome", type: "text", placeholder: "Seu nome completo", maxLength: 100 },
-                  { id: "email", label: "Email", type: "email", placeholder: "seu.email@example.com", maxLength: 255 },
+                  {
+                    id: "name",
+                    label: "Nome",
+                    type: "text",
+                    placeholder: "Seu nome completo",
+                    maxLength: 100,
+                  },
+                  {
+                    id: "email",
+                    label: "Email",
+                    type: "email",
+                    placeholder: "seu.email@example.com",
+                    maxLength: 255,
+                  },
                 ].map(({ id, label, ...props }) => (
                   <div key={id} className="space-y-2">
-                    <label htmlFor={id} className="text-sm font-medium">{label}</label>
+                    <label htmlFor={id} className="text-sm font-medium">
+                      {label}
+                    </label>
                     <Input
                       id={id}
                       name={id}
@@ -117,28 +143,28 @@ const Contact = () => {
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="phone" className="text-sm font-medium">Celular</label>
-                <InputMask
-                  mask="(99) 99999-9999"
+                <label htmlFor="phone" className="text-sm font-medium">
+                  Celular
+                </label>
+                <IMaskInput
+                  mask="(00) 00000-0000"
                   value={formData.phone}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, phone: e.target.value }))}
-                >
-                  {(inputProps) => (
-                    <Input
-                      {...inputProps}
-                      id="phone"
-                      name="phone"
-                      type="tel"
-                      placeholder="(11) 98462-3116"
-                      required
-                      className="bg-background border-border focus-visible:ring-2 focus-visible:ring-primary"
-                    />
-                  )}
-                </InputMask>
+                  onAccept={(value) =>
+                    setFormData((prev) => ({ ...prev, phone: value }))
+                  }
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  placeholder="(11) 98462-3116"
+                  required
+                  className="bg-background border-border focus-visible:ring-2 focus-visible:ring-primary px-4 py-2 rounded-md w-full"
+                />
               </div>
-              -
+
               <div className="space-y-2">
-                <label htmlFor="message" className="text-sm font-medium">Mensagem</label>
+                <label htmlFor="message" className="text-sm font-medium">
+                  Mensagem
+                </label>
                 <Textarea
                   id="message"
                   name="message"
@@ -153,13 +179,17 @@ const Contact = () => {
               </div>
 
               <div className="text-center">
-                <p className="text-sm text-muted-foreground mb-1 pb-3">Responderei pessoalmente em até 24h!</p>
+                <p className="text-sm text-muted-foreground mb-1 pb-3">
+                  Responderei pessoalmente em até 24h!
+                </p>
                 <Button
                   type="submit"
                   disabled={isSubmitting}
                   className="relative w-32 bg-primary hover:bg-primary/90 glow-purple aura-button animated-gradient text-white font-semibold transition-all duration-300"
                 >
-                  {isSubmitting ? "Enviando..." : (
+                  {isSubmitting ? (
+                    "Enviando..."
+                  ) : (
                     <>
                       <Send className="w-4 h-4 mr-2" />
                       Enviar
