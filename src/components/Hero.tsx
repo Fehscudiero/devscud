@@ -6,7 +6,6 @@ import {
   ArrowDown,
   Share,
 } from "lucide-react";
-import heroBg from "@/assets/hero-bg.jpg";
 import Particles from "react-tsparticles";
 import { loadSlim } from "tsparticles-slim";
 import { useCallback, useState } from "react";
@@ -111,7 +110,7 @@ const Hero = () => {
         <div
           className="absolute inset-0"
           style={{
-            backgroundImage: `url(${heroBg})`,
+
             backgroundSize: "cover",
             backgroundPosition: "center",
             opacity: 0.15,
