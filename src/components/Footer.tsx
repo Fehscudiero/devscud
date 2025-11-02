@@ -64,10 +64,10 @@ const Footer = () => {
       />
 
       {/* Conteúdo do footer */}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div className="relative z-10 container mx-auto sm:px-6 lg:px-8 py-1" >
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-center">
           {/* Nome e ícone */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             <Code2 className="h-5 w-5 text-primary" />
             <span className="font-semibold">Felipe Scudiero</span>
           </div>
