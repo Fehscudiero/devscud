@@ -82,37 +82,39 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="pb-6 pt-12">
+    <section id="contact" className="pb-28 pt-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-12 space-y-4">
+          <div className="text-center mb-10 space-y-3">
             <h2 className="text-4xl sm:text-5xl font-bold" data-aos="fade-down">
-              Entre em  <span className="text-gradient">Contato</span>
+              Entre em <span className="text-gradient">Contato</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-xl mx-auto" data-aos="fade-up">
               Me conte sobre seu projeto. Estou aqui para transformar ideias em soluções digitais.
             </p>
           </div>
 
-          <Card className="p-8 bg-card border-border" data-aos="fade-up">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {[
-                { id: "name", label: "Nome", type: "text", placeholder: "Seu nome completo", maxLength: 100 },
-                { id: "email", label: "Email", type: "email", placeholder: "seu.email@example.com", maxLength: 255 },
-              ].map(({ id, label, ...props }) => (
-                <div key={id} className="space-y-2">
-                  <label htmlFor={id} className="text-sm font-medium">{label}</label>
-                  <Input
-                    id={id}
-                    name={id}
-                    value={formData[id as keyof typeof formData]}
-                    onChange={handleChange}
-                    required
-                    className="bg-background border-border focus-visible:ring-2 focus-visible:ring-primary"
-                    {...props}
-                  />
-                </div>
-              ))}
+          <Card className="p-4 bg-card border-border" data-aos="fade-up">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {[
+                  { id: "name", label: "Nome", type: "text", placeholder: "Seu nome completo", maxLength: 100 },
+                  { id: "email", label: "Email", type: "email", placeholder: "seu.email@example.com", maxLength: 255 },
+                ].map(({ id, label, ...props }) => (
+                  <div key={id} className="space-y-2">
+                    <label htmlFor={id} className="text-sm font-medium">{label}</label>
+                    <Input
+                      id={id}
+                      name={id}
+                      value={formData[id as keyof typeof formData]}
+                      onChange={handleChange}
+                      required
+                      className="bg-background border-border focus-visible:ring-2 focus-visible:ring-primary"
+                      {...props}
+                    />
+                  </div>
+                ))}
+              </div>
 
               <div className="space-y-2">
                 <label htmlFor="phone" className="text-sm font-medium">Celular</label>
@@ -134,7 +136,7 @@ const Contact = () => {
                   )}
                 </InputMask>
               </div>
-
+              -
               <div className="space-y-2">
                 <label htmlFor="message" className="text-sm font-medium">Mensagem</label>
                 <Textarea
@@ -145,26 +147,25 @@ const Contact = () => {
                   placeholder="Conte-me sobre seu projeto..."
                   required
                   maxLength={1000}
-                  rows={5}
+                  rows={3}
                   className="bg-background border-border focus-visible:ring-2 focus-visible:ring-primary resize-none"
                 />
               </div>
 
               <div className="text-center">
-                <p className="text-sm text-muted-foreground pb-3 mb-2">Responderei pessoalmente em até 24h!</p>
+                <p className="text-sm text-muted-foreground mb-1 pb-3">Responderei pessoalmente em até 24h!</p>
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="relative w-36 bg-primary hover:bg-primary/90 glow-purple aura-button animated-gradient text-white font-semibold transition-all duration-300"
+                  className="relative w-32 bg-primary hover:bg-primary/90 glow-purple aura-button animated-gradient text-white font-semibold transition-all duration-300"
                 >
                   {isSubmitting ? "Enviando..." : (
                     <>
                       <Send className="w-4 h-4 mr-2" />
-                      Enviar Mensagem
+                      Enviar
                     </>
                   )}
                 </Button>
-
               </div>
             </form>
           </Card>
