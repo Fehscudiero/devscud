@@ -89,7 +89,7 @@ const Footer = () => {
               <span className="font-semibold">Felipe Scudiero</span>
             </div>
             <p className="text-sm text-muted-foreground">
-              © 2025 Felipe Scudiero — Todos os direitos reservados.
+              © 2025 Todos os direitos reservados.
             </p>
           </div>
         </div>
