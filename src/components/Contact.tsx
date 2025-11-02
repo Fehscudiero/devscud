@@ -90,7 +90,7 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="pb-28 pt-20">
+    <section id="contact" className="pb-28 pt-10">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-10 space-y-3">
