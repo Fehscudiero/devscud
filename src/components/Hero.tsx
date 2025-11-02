@@ -111,7 +111,6 @@ const Hero = () => {
         <div
           className="absolute inset-0"
           style={{
-
             backgroundSize: "cover",
             backgroundPosition: "center",
             opacity: 0.15,
@@ -161,7 +160,7 @@ const Hero = () => {
           <div className="flex items-center justify-center gap-6 pt-8">
             <button
               onClick={handleShareClick}
-              className="relative group text-primary hover:text-primary/80 transition-colors animate-bounce"
+              className="w-12 h-12 flex items-center justify-center rounded-full text-primary hover:text-primary/80 transition-colors animate-bounce focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
               aria-label="Compartilhar portfólio"
             >
               <Share className="h-6 w-6" />
@@ -172,50 +171,35 @@ const Hero = () => {
               )}
             </button>
 
-            <a
-              href="https://github.com/fehscudiero"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:text-primary/80 transition-colors"
-              aria-label="GitHub"
-            >
-              <Github className="h-6 w-6" />
-            </a>
-            <a
-              href="https://www.linkedin.com/in/devscud/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:text-primary/80 transition-colors"
-              aria-label="LinkedIn"
-            >
-              <Linkedin className="h-6 w-6" />
-            </a>
-            <a
-              href="https://www.instagram.com/scudiero.js/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:text-primary/80 transition-colors"
-              aria-label="Instagram"
-            >
-              <Instagram className="h-6 w-6" />
-            </a>
-            <a
-              href="mailto:scudiero.dev@yahoo.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:text-primary/80 transition-colors"
-              aria-label="Email"
-            >
-              <Mail className="h-6 w-6" />
-            </a>
-
-
-
+            {[Github, Linkedin, Instagram, Mail].map((Icon, index) => {
+              const links = [
+                "https://github.com/fehscudiero",
+                "https://www.linkedin.com/in/devscud/",
+                "https://www.instagram.com/scudiero.js/",
+                "mailto:scudiero.dev@yahoo.com",
+              ];
+              const labels = ["GitHub", "LinkedIn", "Instagram", "Email"];
+              return (
+                <a
+                  key={labels[index]}
+                  href={links[index]}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={labels[index]}
+                  className="w-12 h-12 flex items-center justify-center rounded-full text-primary hover:text-primary/80 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                >
+                  <Icon className="h-6 w-6" />
+                </a>
+              );
+            })}
           </div>
+        </div>
 
+        {/* Botão de scroll para baixo — fora do bloco principal */}
+        <div className="flex justify-center mt-16">
           <button
             onClick={() => scrollToSection("about")}
-            className="pb-8 absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce text-primary"
+            className="w-12 h-12 flex items-center justify-center rounded-full animate-bounce text-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
             aria-label="Scroll para baixo"
           >
             <ArrowDown className="h-6 w-6" />
