@@ -5,6 +5,7 @@ import {
   Instagram,
   ArrowDown,
   Share,
+  Mail,
 } from "lucide-react";
 import Particles from "react-tsparticles";
 import { loadSlim } from "tsparticles-slim";
@@ -198,6 +199,18 @@ const Hero = () => {
             >
               <Instagram className="h-6 w-6" />
             </a>
+            <a
+              href="mailto:scudiero.dev@yahoo.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:text-primary/80 transition-colors"
+              aria-label="Email"
+            >
+              <Mail className="h-6 w-6" />
+            </a>
+
+
+
           </div>
 
           <button
