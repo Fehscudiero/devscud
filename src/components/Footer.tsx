@@ -64,21 +64,10 @@ const Footer = () => {
       />
 
       {/* Conteúdo do footer */}
-      <div className="relative z-10 container mx-auto sm:px-6 lg:px-8 py-1" >
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-center">
-          {/* Nome e ícone */}
-          <div className="flex items-center gap-1">
-            <Code2 className="h-5 w-5 text-primary" />
-            <span className="font-semibold">Felipe Scudiero</span>
-          </div>
-
-          {/* Texto legal */}
-          <p className="text-sm text-muted-foreground">
-            © 2025 Felipe Scudiero — Todos os direitos reservados.
-          </p>
-
+      <div className="relative z-10 container mx-auto sm:px-6 lg:px-8 py-6">
+        <div className="flex flex-col items-center gap-4 text-center">
           {/* Ícones sociais */}
-          <div className="flex gap-2">
+          <div className="flex gap-4 flex-wrap justify-center">
             {socialLinks.map(({ icon: Icon, label, href }) => (
               <a
                 key={label}
@@ -86,11 +75,22 @@ const Footer = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
-                className="transition transform hover:scale-110 hover:text-purple-500 text-purple-600"
+                className="w-12 h-12 flex items-center justify-center rounded-full transition transform hover:scale-110 hover:text-purple-500 text-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
               >
-                <Icon className="h-5 w-5" />
+                <Icon className="w-6 h-6" />
               </a>
             ))}
+          </div>
+
+          {/* Nome e copyright */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
+            <div className="flex items-center gap-1">
+              <Code2 className="h-5 w-5 text-primary" />
+              <span className="font-semibold">Felipe Scudiero</span>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              © 2025 Felipe Scudiero — Todos os direitos reservados.
+            </p>
           </div>
         </div>
       </div>
