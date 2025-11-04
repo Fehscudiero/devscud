@@ -50,7 +50,8 @@ const About = () => {
               data-aos="fade-up"
               data-aos-once="false"
             >
-              Desenvolvedor apaixonado por tecnologia e inovação
+              Codificando ideias, escalando soluções, impulsionando inovação.
+
             </p>
           </div>
 
