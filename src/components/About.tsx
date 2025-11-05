@@ -10,7 +10,7 @@ const About = () => {
     AOS.init({
       duration: 1000,
       once: false,
-      mirror: true // garante que os efeitos se repitam ao rolar
+      mirror: true // 
     });
     AOS.refresh(); // força reprocessamento dos elementos
   }, []);
