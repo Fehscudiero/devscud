@@ -15,7 +15,6 @@ const socialLinks = [
 ];
 
 // --- Sub-Componente: Divisor Minimalista ---
-// Requer o @keyframes pulse-vertical no src/index.css
 const MinimalSeparator = ({ isDarkTheme }: { isDarkTheme: boolean }) => {
   // Usando a cor de destaque principal (Roxo no Dark, Verde no Light) para um visual minimalista e coeso.
   const accentColor = isDarkTheme ? "bg-purple-500" : "bg-emerald-600";
@@ -33,7 +32,7 @@ const Footer = () => {
   const [availabilityStatus, setAvailabilityStatus] = useState({
     status: "LENTA",
     color: "red",
-    hours: "20:00 - 08:00",
+    hours: "20:00 - 08:00 (GMT-3)",
   });
 
   // -- Lógica de Disponibilidade de Trabalho (SLA) --
@@ -42,15 +41,15 @@ const Footer = () => {
     const now = new Date();
     const currentHour = now.getHours();
 
-    let newStatus = { status: "LENTA", color: "red", hours: "20:00 - 08:00" }; // Padrão
+    let newStatus = { status: "LENTA", color: "red", hours: "20:00 - 08:00 (GMT-3)" }; // Padrão
 
     // RÁPIDA: 08:00 - 16:59
     if (currentHour >= 8 && currentHour < 17) {
-      newStatus = { status: "RÁPIDA", color: "green", hours: "08:00 - 17:00" };
+      newStatus = { status: "RÁPIDA", color: "green", hours: "08:00 - 17:00 (GMT-3)" };
     }
     // MEDIANA: 17:00 - 19:59
     else if (currentHour >= 17 && currentHour < 20) {
-      newStatus = { status: "MEDIANA", color: "yellow", hours: "17:00 - 20:00" };
+      newStatus = { status: "MEDIANA", color: "yellow", hours: "17:00 - 20:00 (GMT-3)" };
     }
     // LENTA: 20:00 - 07:59
 
@@ -163,12 +162,12 @@ const Footer = () => {
         options={{
           fullScreen: { enable: false },
           particles: {
-            number: { value: 15 }, // Reduzido para limpar o visual
+            number: { value: 30 }, // Aumentado para 30
             color: { value: particleColor },
             shape: { type: "circle" },
-            opacity: { value: 0.3 },
-            size: { value: { min: 1, max: 2 } },
-            move: { enable: true, speed: 0.3, direction: "none", random: true },
+            opacity: { value: 0.6 }, // Aumentado
+            size: { value: { min: 1.5, max: 3 } }, // Aumentado
+            move: { enable: true, speed: 0.5, direction: "none", random: true }, // Mais visível
             links: { enable: false },
           },
           interactivity: { events: { onHover: { enable: false } } },
