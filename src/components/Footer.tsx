@@ -1,4 +1,4 @@
-import { Code2, Github, Linkedin, Instagram, Mail, Heart } from "lucide-react";
+import { Code2, Github, Linkedin, Instagram, Mail, Terminal } from "lucide-react";
 import Particles from "react-tsparticles";
 import { loadSlim } from "tsparticles-slim";
 import { useCallback, useEffect, useState } from "react";
@@ -30,90 +30,73 @@ const Footer = () => {
     await loadSlim(engine);
   }, []);
 
-  // Cores dinâmicas para partículas
   const particleColor = isDarkTheme ? ["#3C096C", "#5A189A", "#7B2CBF"] : ["#7c3aed", "#9333ea", "#c026d3"];
 
-  // Estilos de fundo e texto
-  const footerBg = isDarkTheme ? "bg-[#020817]/80 border-white/10" : "bg-white/80 border-purple-100";
-  const textColor = isDarkTheme ? "text-slate-400" : "text-slate-600";
-  const iconBg = isDarkTheme ? "bg-white/5 hover:bg-white/10 border-white/5" : "bg-white hover:bg-purple-50 border-purple-100 shadow-sm";
+  // Estilos Ultra-Minimalistas
+  const footerBg = isDarkTheme ? "bg-[#020817]/95 border-white/10" : "bg-white/95 border-slate-200";
+  const textColor = isDarkTheme ? "text-slate-400" : "text-slate-500";
+  const borderColor = isDarkTheme ? "border-white/10" : "border-slate-200";
 
   return (
-    <footer className={`relative border-t backdrop-blur-md overflow-hidden transition-colors duration-500 ${footerBg}`}>
+    <footer className={`relative border-t backdrop-blur-xl overflow-hidden transition-colors duration-500 ${footerBg}`}>
 
-      {/* Linha de Gradiente Superior Animada */}
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-purple-500 to-transparent opacity-50"></div>
+      {/* Linha de Energia Superior */}
+      <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"></div>
 
-      {/* Partículas no fundo */}
+      {/* Partículas Sutis (Apenas para textura) */}
       <Particles
         id="footerParticles"
         init={particlesInit}
-        // Key muda para forçar reinício ao trocar tema
         key={isDarkTheme ? "dark" : "light"}
         options={{
           fullScreen: { enable: false },
           particles: {
-            number: { value: 30 },
+            number: { value: 15 }, // Reduzido para limpar o visual
             color: { value: particleColor },
             shape: { type: "circle" },
-            opacity: {
-              value: 0.5,
-              random: { enable: true, minimumValue: 0.1 },
-              animation: { enable: true, speed: 0.5, sync: false },
-            },
-            size: {
-              value: { min: 1, max: 3 },
-              animation: { enable: true, speed: 2, sync: false },
-            },
-            move: {
-              enable: true,
-              speed: 0.8,
-              direction: "top",
-              outModes: { default: "out" },
-              random: true,
-              straight: false,
-            },
+            opacity: { value: 0.3 },
+            size: { value: { min: 1, max: 2 } },
+            move: { enable: true, speed: 0.3, direction: "none", random: true },
             links: { enable: false },
           },
-          interactivity: {
-            events: {
-              onHover: { enable: true, mode: "bubble" },
-            },
-            modes: {
-              bubble: { distance: 200, size: 6, duration: 2, opacity: 0.8 },
-            },
-          },
+          interactivity: { events: { onHover: { enable: false } } },
           retina_detect: true,
         }}
-        style={{
-          position: "absolute",
-          inset: 0,
-          zIndex: 0,
-          pointerEvents: "none",
-        }}
+        style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none" }}
       />
 
-      {/* Conteúdo do footer */}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex flex-col items-center gap-8 text-center">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Layout Achatado: Flex Row em Desktop */}
+        <div className="flex flex-col md:flex-row items-center justify-between py-6 gap-4 md:gap-0">
 
-          {/* Logo / Marca */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-center gap-2 text-2xl font-bold tracking-tighter">
-              <div className="p-2 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 text-white shadow-lg shadow-purple-500/20">
-                <Code2 className="h-6 w-6" />
-              </div>
-              <span className={isDarkTheme ? "text-white" : "text-slate-900"}>
-                Felipe <span className="text-purple-600">Scudiero</span>
+          {/* Esquerda: Identidade Técnica */}
+          <div className="flex items-center gap-3">
+            <div className={`p-1.5 rounded bg-gradient-to-br from-purple-600 to-indigo-600 text-white shadow-md`}>
+              <Code2 className="h-4 w-4" />
+            </div>
+            <div className="flex flex-col">
+              <span className={`text-sm font-bold tracking-tight leading-none ${isDarkTheme ? "text-white" : "text-slate-900"}`}>
+                Felipe Scudiero
+              </span>
+              <span className="text-[10px] uppercase tracking-widest text-purple-500 font-semibold">
+                Full Stack Engineer
               </span>
             </div>
-            <p className={`text-sm max-w-xs mx-auto ${textColor}`}>
-              Transformando linhas de código em experiências digitais memoráveis.
-            </p>
           </div>
 
-          {/* Ícones sociais Glassmorphism */}
-          <div className="flex gap-4 flex-wrap justify-center">
+          {/* Centro: Status do Sistema (Tech Vibe) */}
+          <div className={`hidden md:flex items-center gap-2 px-3 py-1 rounded-full border ${borderColor} ${isDarkTheme ? "bg-white/5" : "bg-slate-100"}`}>
+            <div className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+            </div>
+            <span className={`text-[10px] font-mono ${textColor}`}>
+              SYSTEM STATUS: ONLINE
+            </span>
+          </div>
+
+          {/* Direita: Redes Sociais Compactas */}
+          <div className="flex items-center gap-1">
             {socialLinks.map(({ icon: Icon, label, href }) => (
               <a
                 key={label}
@@ -121,26 +104,25 @@ const Footer = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
-                className={`group relative p-3 rounded-xl border transition-all duration-300 hover:scale-110 hover:-translate-y-1 ${iconBg}`}
+                className={`p-2 rounded-lg transition-all duration-200 hover:scale-110 ${isDarkTheme ? "text-slate-400 hover:text-white hover:bg-white/10" : "text-slate-500 hover:text-purple-700 hover:bg-purple-50"}`}
               >
-                {/* Glow no hover */}
-                <div className="absolute inset-0 rounded-xl bg-purple-500/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                <Icon className="w-5 h-5 relative z-10 text-purple-500 group-hover:text-purple-400 transition-colors" />
+                <Icon className="w-4 h-4" />
               </a>
             ))}
           </div>
+        </div>
 
-          {/* Divisor */}
-          <div className={`w-full max-w-sm h-px bg-gradient-to-r from-transparent via-purple-500/20 to-transparent`} />
+        {/* Linha Divisória Fina */}
+        <div className={`w-full h-[1px] ${borderColor}`}></div>
 
-          {/* Copyright */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 text-sm">
-            <span className={textColor}>© 2025 Felipe Scudiero.</span>
-            <span className="hidden sm:inline text-purple-500/50">•</span>
-            <span className={`flex items-center gap-1.5 ${textColor}`}>
-              Desenvolvido com <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500 animate-pulse" /> e React
-            </span>
+        {/* Copyright Técnico (Rodapé do Rodapé) */}
+        <div className="flex flex-col md:flex-row items-center justify-between py-4 text-xs font-mono opacity-60">
+          <span className={textColor}>
+            © 2025 FELIPE SCUDIERO. ALL RIGHTS RESERVED.
+          </span>
+          <div className={`flex items-center gap-2 ${textColor}`}>
+            <Terminal className="w-3 h-3" />
+            <span>v2.0.0 // DESIGN & CODE</span>
           </div>
         </div>
       </div>
