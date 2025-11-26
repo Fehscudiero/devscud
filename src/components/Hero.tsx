@@ -22,15 +22,11 @@ const Hero = () => {
   useEffect(() => {
     const checkTheme = () => {
       const root = window.document.documentElement;
-      // Verifica se a classe 'dark' está presente no HTML
       const isDark = root.classList.contains("dark");
       setIsDarkTheme(isDark);
     };
 
-    // 1. Verifica agora
     checkTheme();
-
-    // 2. Cria um "espião" que avisa sempre que a classe do HTML mudar
     const observer = new MutationObserver(checkTheme);
     observer.observe(document.documentElement, {
       attributes: true,
@@ -40,20 +36,37 @@ const Hero = () => {
     return () => observer.disconnect();
   }, [theme]);
 
-  // -- DEFINIÇÃO MANUAL DAS CORES (FALLBACK DE SEGURANÇA) --
-  // Se for Dark: Fundo Escuro / Texto Branco
-  // Se for Light: Fundo Branco / Texto Escuro
-  const bgColorClass = isDarkTheme ? "bg-[#020817]" : "bg-white";
+  // -- DEFINIÇÃO DE TEMAS (Dual Personality) --
+
+  // Fundo: Dark (Azul Profundo) vs Light (Branco)
+  const bgColorClass = isDarkTheme ? "bg-[#030014]" : "bg-white";
+
+  // Texto
   const textColorClass = isDarkTheme ? "text-white" : "text-slate-900";
   const mutedTextClass = isDarkTheme ? "text-slate-400" : "text-slate-600";
 
-  // Gradiente sobre as partículas
-  const gradientOverlay = isDarkTheme
-    ? "from-[#020817]/90 via-[#020817]/50 to-[#020817]"
-    : "from-white/90 via-white/50 to-white";
+  // Gradiente do Título Principal: Roxo/Azul (Dark) vs Verde/Teal (Light)
+  const titleGradient = isDarkTheme
+    ? "from-purple-600 via-indigo-500 to-blue-600"
+    : "from-green-600 via-emerald-500 to-teal-600";
 
-  // Cor das linhas das partículas
-  const linksColor = isDarkTheme ? "#ffffff" : "#7c3aed"; // Branco no Dark, Roxo no Light
+  // Botão Principal
+  const btnPrimaryClass = isDarkTheme
+    ? "bg-purple-700 hover:bg-purple-600 border-blue-500 shadow-purple-500/20"
+    : "bg-green-600 hover:bg-green-700 border-emerald-400 shadow-green-500/20";
+
+  // Cores das Linhas das Partículas
+  const linksColor = isDarkTheme ? "#ffffff" : "#10b981"; // Branco no Dark, Esmeralda no Light
+
+  // Cores das Partículas (Array)
+  const particlesColors = isDarkTheme
+    ? ["#7c3aed", "#2563eb", "#ffffff"] // Roxo, Azul, Branco
+    : ["#059669", "#10b981", "#34d399"]; // Tons de Verde
+
+  // Gradiente de Fundo (Overlay)
+  const gradientOverlay = isDarkTheme
+    ? "from-[#030014]/90 via-[#030014]/50 to-[#030014]"
+    : "from-white/90 via-white/50 to-white";
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -74,7 +87,7 @@ const Hero = () => {
   }, []);
 
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-  const particleCount = isMobile ? 30 : 80;
+  const particleCount = isMobile ? 30 : 50;
 
   const handleShareClick = () => {
     const url = window.location.href;
@@ -82,13 +95,7 @@ const Hero = () => {
     const text = "Veja o trabalho do desenvolvedor Felipe Scudiero.";
 
     if (navigator.share) {
-      navigator
-        .share({ title, text, url })
-        .catch(() => {
-          navigator.clipboard.writeText(url);
-          setCopied(true);
-          setTimeout(() => setCopied(false), 4000);
-        });
+      navigator.share({ title, text, url }).catch(() => { });
     } else {
       navigator.clipboard.writeText(url);
       setCopied(true);
@@ -99,7 +106,6 @@ const Hero = () => {
   return (
     <section
       id="home"
-      // Aqui aplicamos a classe de cor dinâmica
       className={`relative min-h-screen flex items-center justify-center overflow-hidden transition-colors duration-500 ${bgColorClass}`}
     >
       {/* Fundo com partículas */}
@@ -107,13 +113,13 @@ const Hero = () => {
         <Particles
           id="tsparticles"
           init={particlesInit}
-          // A key muda para forçar o reinício das partículas quando o tema muda
+          // Força reset ao trocar o tema
           key={isDarkTheme ? "dark" : "light"}
           options={{
             fullScreen: { enable: false },
             particles: {
               number: { value: particleCount },
-              color: { value: "#3C096C" },
+              color: { value: particlesColors },
               shape: { type: "circle" },
               opacity: { value: 0.5 },
               size: { value: 3 },
@@ -126,7 +132,7 @@ const Hero = () => {
               links: {
                 enable: true,
                 distance: 150,
-                color: linksColor, // Usamos a variável definida acima
+                color: linksColor,
                 opacity: 0.4,
                 width: 1,
               },
@@ -161,7 +167,7 @@ const Hero = () => {
           <div className="space-y-4">
             <h1 className={`text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight transition-colors duration-300 ${textColorClass}`}>
               Impulsione sua presença{" "}
-              <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              <span className={`bg-gradient-to-r ${titleGradient} bg-clip-text text-transparent animate-gradient-x`}>
                 Online!
               </span>
             </h1>
@@ -175,7 +181,7 @@ const Hero = () => {
             <Button
               size="lg"
               onClick={() => scrollToSection("contact")}
-              className="relative px-8 py-6 text-lg font-semibold text-white rounded-xl bg-gradient-to-r from-purple-700 via-fuchsia-600 to-purple-700 shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 border border-white/10"
+              className={`relative px-8 py-6 text-lg font-semibold text-white rounded-xl border-l-4 shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 ${btnPrimaryClass}`}
             >
               <span className="relative z-10 flex items-center gap-2">
                 <Mail className="w-5 h-5" />
@@ -188,7 +194,11 @@ const Hero = () => {
           <div className="flex items-center justify-center gap-6 pt-8">
             <button
               onClick={handleShareClick}
-              className={`relative group p-3 rounded-full bg-transparent border hover:border-primary transition-all duration-300 shadow-sm hover:shadow-md ${isDarkTheme ? 'border-slate-800 text-slate-400 hover:text-primary' : 'border-slate-200 text-slate-600 hover:text-primary'}`}
+              className={`relative group p-3 rounded-full bg-transparent border transition-all duration-300 shadow-sm hover:shadow-md 
+                ${isDarkTheme
+                  ? 'border-slate-800 text-slate-400 hover:text-primary hover:border-primary'
+                  : 'border-slate-200 text-slate-600 hover:text-green-600 hover:border-green-500'
+                }`}
               aria-label="Compartilhar portfólio"
             >
               <Share className="h-5 w-5" />
@@ -210,7 +220,11 @@ const Hero = () => {
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`p-3 rounded-full bg-transparent border hover:border-primary transition-all duration-300 shadow-sm hover:shadow-md ${isDarkTheme ? 'border-slate-800 text-slate-400 hover:text-primary' : 'border-slate-200 text-slate-600 hover:text-primary'}`}
+                className={`p-3 rounded-full bg-transparent border transition-all duration-300 shadow-sm hover:shadow-md
+                  ${isDarkTheme
+                    ? 'border-slate-800 text-slate-400 hover:text-primary hover:border-primary'
+                    : 'border-slate-200 text-slate-600 hover:text-green-600 hover:border-green-500'
+                  }`}
                 aria-label={label}
               >
                 <Icon className="h-5 w-5" />
@@ -218,17 +232,21 @@ const Hero = () => {
             ))}
           </div>
         </div>
+      </div>
 
-        {/* Botão de scroll para baixo */}
-        <div className="absolute bottom-1 left-1/2 -translate-x-1/2 hidden md:flex">
-          <button
-            onClick={() => scrollToSection("about")}
-            className={`p-3 rounded-full backdrop-blur-sm border transition-all duration-300 animate-bounce ${isDarkTheme ? 'bg-white/5 border-white/10 text-slate-400 hover:bg-primary hover:text-white' : 'bg-black/5 border-black/10 text-slate-600 hover:bg-primary hover:text-white'}`}
-            aria-label="Scroll para baixo"
-          >
-            <ArrowDown className="h-6 w-6" />
-          </button>
-        </div>
+      {/* Botão de scroll para baixo - FORA DO CONTAINER PARA FICAR FIXO NO RODAPÉ DA TELA */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 hidden md:flex z-20">
+        <button
+          onClick={() => scrollToSection("about")}
+          className={`p-3 rounded-full backdrop-blur-sm border transition-all duration-300 animate-bounce 
+            ${isDarkTheme
+              ? 'bg-white/5 border-white/10 text-slate-400 hover:bg-primary hover:text-white'
+              : 'bg-white/50 border-green-200 text-green-700 hover:bg-green-600 hover:text-white'
+            }`}
+          aria-label="Scroll para baixo"
+        >
+          <ArrowDown className="h-6 w-6" />
+        </button>
       </div>
     </section>
   );
