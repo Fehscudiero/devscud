@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Logo from "../assets/logo3.png";
 import { Menu, X } from "lucide-react";
+import { ThemeToggle } from "./ThemeToggle";
 
 const Navigation = () => {
   const [activeSection, setActiveSection] = useState("home");
@@ -60,7 +61,7 @@ const Navigation = () => {
             </button>
 
             {/* Botão Fale comigo - apenas mobile */}
-            <div className="md:hidden">
+            <div className="md:hidden flex items-center gap-4">
               <button
                 onClick={() => scrollToSection("contact")}
                 className="bg-gradient-to-r from-purple-700 via-fuchsia-600 to-purple-700 text-white font-semibold px-4 py-2 rounded-lg shadow-md hover:scale-105 active:scale-95 transition-all duration-300"
@@ -70,7 +71,10 @@ const Navigation = () => {
             </div>
 
             {/* Menu Hamburguer */}
-            <div className="md:hidden">
+            <div className="md:hidden flex items-center gap-2">
+              {/* Adicionei o toggle aqui também para acesso rápido se preferir, mas deixei comentado para priorizar o menu interno. 
+                   Se quiser fora, é só descomentar: <ThemeToggle /> 
+               */}
               <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-muted-foreground hover:text-primary transition-colors">
                 {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
@@ -89,6 +93,11 @@ const Navigation = () => {
                   </button>
                 </li>
               ))}
+
+              {/* Theme Toggle Desktop */}
+              <li className="pl-4 border-l border-border/50">
+                <ThemeToggle />
+              </li>
             </ul>
           </div>
         </div>
@@ -97,6 +106,11 @@ const Navigation = () => {
         {mobileMenuOpen && (
           <div className="md:hidden absolute top-20 left-0 w-full bg-background border-t border-border shadow-md z-40">
             <ul className="flex flex-col items-center gap-6 py-6">
+              {/* Theme Toggle Mobile (Topo da lista) */}
+              <li>
+                <ThemeToggle />
+              </li>
+
               {navItems.map(({ id, label }) => (
                 <li key={id}>
                   <button
