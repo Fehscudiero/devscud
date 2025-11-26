@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Globe,
   Gauge,
@@ -9,7 +9,9 @@ import {
 } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import CardParticles from "@/components/CardParticles"; // ajuste o caminho conforme sua estrutura
+// Ajuste para o seu caminho real. Se der erro no preview aqui, ignore, vai funcionar no seu VS Code.
+import CardParticles from "@/components/CardParticles";
+import { useTheme } from "@/components/theme-provider";
 
 const services = [
   {
@@ -60,24 +62,58 @@ const effects = [
 ];
 
 const Servicos = () => {
+  const { theme } = useTheme();
+  const [isDarkTheme, setIsDarkTheme] = useState(true);
+
+  // -- Detecção de Tema --
+  useEffect(() => {
+    const checkTheme = () => {
+      const root = window.document.documentElement;
+      const isDark = root.classList.contains("dark");
+      setIsDarkTheme(isDark);
+    };
+    checkTheme();
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, [theme]);
+
+  // -- Estilos Dinâmicos --
+  // Fundo da seção: Escuro translúcido no Dark | Cinza claro no Light
+  const sectionBgClass = isDarkTheme ? "bg-secondary/30" : "bg-slate-50";
+
+  // Títulos e Textos
+  const titleColor = isDarkTheme ? "text-foreground" : "text-slate-900";
+  const descColor = isDarkTheme ? "text-muted-foreground" : "text-slate-600";
+
+  // Card: Escuro com borda no Dark | Branco com sombra no Light
+  const cardClass = isDarkTheme
+    ? "bg-card border-border hover:border-primary/50"
+    : "bg-white border-slate-200 shadow-md hover:shadow-xl hover:border-primary/50";
+
   useEffect(() => {
     AOS.init({ duration: 1000, once: false, mirror: true });
     AOS.refresh();
   }, []);
 
   return (
-    <section id="servicos" className="py-20 bg-secondary/30">
+    <section
+      id="servicos"
+      className={`py-20 transition-colors duration-500 ${sectionBgClass}`}
+    >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Título */}
         <div
           className="max-w-4xl mx-auto text-center mb-16 space-y-4"
           data-aos="fade-down"
         >
-          <h2 className="text-4xl sm:text-5xl font-bold leading-tight">
+          <h2 className={`text-4xl sm:text-5xl font-bold leading-tight transition-colors duration-300 ${titleColor}`}>
             SOLUÇÕES COMPLETAS PARA{" "}
-            <span className="text-gradient">IMPULSIONAR SEU SUCESSO DIGITAL</span>
+            <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              IMPULSIONAR SEU SUCESSO DIGITAL
+            </span>
           </h2>
-          <p className="text-lg text-muted-foreground" data-aos="fade-up">
+          <p className={`text-lg transition-colors duration-300 ${descColor}`} data-aos="fade-up">
             Serviços completos para impulsionar o seu negócio.
           </p>
         </div>
@@ -86,15 +122,15 @@ const Servicos = () => {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {services.map(({ icon: Icon, title, description }, index) => {
             const effect = effects[index % effects.length];
-            const particleId = `cardParticles-${index}`; // ID único por card
+            const particleId = `cardParticles-${index}`;
 
             return (
               <div
                 key={index}
                 data-aos={effect}
-                className="relative overflow-hidden p-6 rounded-xl bg-card border border-border hover:border-primary/50 transition-all duration-300 group"
+                className={`relative overflow-hidden p-6 rounded-xl transition-all duration-300 group ${cardClass}`}
               >
-                {/* Partículas no fundo com ID único */}
+                {/* Partículas no fundo - Nota: Se as partículas forem brancas, podem não aparecer no modo Light */}
                 <CardParticles id={particleId} />
 
                 {/* Conteúdo do card */}
@@ -104,8 +140,10 @@ const Servicos = () => {
                       <Icon className="w-8 h-8 text-primary" />
                     </div>
                   </div>
-                  <h3 className="text-lg font-semibold text-foreground">{title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+                  <h3 className={`text-lg font-semibold transition-colors duration-300 ${titleColor}`}>
+                    {title}
+                  </h3>
+                  <p className={`text-sm leading-relaxed transition-colors duration-300 ${descColor}`}>
                     {description}
                   </p>
                 </div>
