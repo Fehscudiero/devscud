@@ -1,11 +1,5 @@
-import { useEffect, useState } from "react";
-// MOCK Badge para o ambiente de preview (No seu código local, mantenha: import { Badge } from "@/components/ui/badge";)
-const Badge = ({ children, className, variant }: any) => (
-  <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${className}`}>
-    {children}
-  </span>
-);
-
+import { useEffect, useState, useCallback } from "react";
+import { Badge } from "@/components/ui/badge";
 import {
   Code2,
   Blocks,
@@ -18,23 +12,15 @@ import {
   MonitorSmartphone,
   Settings2,
 } from "lucide-react";
-
-// MOCK AOS (No seu código local, mantenha os imports originais)
-// import AOS from "aos";
-// import "aos/dist/aos.css";
-const AOS = {
-  init: (config: any) => console.log("AOS init", config),
-  refresh: () => console.log("AOS refresh"),
-};
-
-// REMOVIDO: import { useTheme } from "./theme-provider"; 
-// Motivo: Causava erro no preview. Usaremos detecção nativa abaixo.
+import Particles from "react-tsparticles";
+import { loadSlim } from "tsparticles-slim";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const Technologies = () => {
-  // const { theme } = useTheme(); // Removido
   const [isDarkTheme, setIsDarkTheme] = useState(true);
 
-  // -- Detecção de Tema (Sem dependência externa) --
+  // -- Detecção de Tema Blindada --
   useEffect(() => {
     const checkTheme = () => {
       const root = window.document.documentElement;
@@ -42,36 +28,52 @@ const Technologies = () => {
       setIsDarkTheme(isDark);
     };
 
-    // Verifica inicial
     checkTheme();
-
-    // Observa mudanças na classe do HTML (Troca de tema)
     const observer = new MutationObserver(checkTheme);
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
-
     return () => observer.disconnect();
-  }, []); // Array vazio, pois o observer cuida das atualizações
+  }, []);
+
+  // -- Inicialização de Partículas --
+  const particlesInit = useCallback(async (engine: any) => {
+    await loadSlim(engine);
+  }, []);
+
+  // -- Configuração Dinâmica das Partículas --
+  const particleColors = isDarkTheme
+    ? ["#7c3aed", "#2563eb", "#ffffff"] // Roxo, Azul, Branco (Dark)
+    : ["#059669", "#10b981", "#34d399"]; // Tons de Verde (Light)
+
+  const linksColor = isDarkTheme ? "#4c1d95" : "#a7f3d0"; // Linhas Roxo Escuro (Dark) vs Verde Claro (Light)
 
   // -- Estilos Dinâmicos --
-
   // Fundo
   const sectionBgClass = isDarkTheme
-    ? "bg-gradient-to-b from-background to-secondary/20"
-    : "bg-gradient-to-b from-white via-purple-50/30 to-white";
+    ? "bg-[#030014]" // Azul Profundo (Dark)
+    : "bg-white";    // Branco (Light)
 
   // Card
   const cardClass = isDarkTheme
-    ? "bg-card border-border hover:border-primary/50"
-    : "bg-white border-slate-200 shadow-md hover:shadow-xl hover:border-purple-300";
+    ? "bg-white/5 border-white/10 hover:border-purple-500/50 hover:bg-white/10"
+    : "bg-white border-slate-200 shadow-md hover:shadow-xl hover:border-green-500/50";
 
   // Texto
-  const titleColor = isDarkTheme ? "text-foreground" : "text-slate-900";
-  const textColor = isDarkTheme ? "text-muted-foreground" : "text-slate-600";
+  const titleColor = isDarkTheme ? "text-white" : "text-slate-900";
+  const textColor = isDarkTheme ? "text-slate-400" : "text-slate-600";
+
+  // Gradiente do Título
+  const gradientText = isDarkTheme
+    ? "from-purple-600 via-indigo-500 to-blue-600"
+    : "from-green-600 via-emerald-500 to-teal-600";
 
   // Badge
   const badgeClass = isDarkTheme
-    ? "bg-primary/5 text-foreground border-primary/20 hover:bg-primary/10"
-    : "bg-purple-100 text-purple-900 border-purple-200 hover:bg-purple-200";
+    ? "bg-purple-500/10 text-purple-200 border-purple-500/20 hover:bg-purple-500/20"
+    : "bg-green-100 text-green-800 border-green-200 hover:bg-green-200";
+
+  // Ícone
+  const iconBg = isDarkTheme ? "bg-purple-500/20" : "bg-green-100";
+  const iconColor = isDarkTheme ? "text-purple-400" : "text-green-600";
 
   useEffect(() => {
     AOS.init({
@@ -91,7 +93,8 @@ const Technologies = () => {
     {
       icon: Server,
       title: "Frameworks e Ferramentas",
-      techs: ["Node.js", "APIs RESTful", "HTML5", "CSS3", "Tailwind", "Git", "CI/CD"],
+      // Adicionado React aqui como pedido
+      techs: ["React", "Node.js", "APIs RESTful", "HTML5", "CSS3", "Tailwind", "Git", "CI/CD"],
     },
     {
       icon: BarChart2,
@@ -108,8 +111,42 @@ const Technologies = () => {
   const effects = ["zoom-in", "flip-up", "fade-up", "fade-down"];
 
   return (
-    <section id="technologies" className={`py-20 transition-colors duration-500 ${sectionBgClass}`}>
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="technologies" className={`py-20 relative overflow-hidden transition-colors duration-500 ${sectionBgClass}`}>
+
+      {/* --- PARTÍCULAS --- */}
+      <div className="absolute inset-0 z-0 opacity-30 pointer-events-none">
+        <Particles
+          id="techParticles"
+          init={particlesInit}
+          key={isDarkTheme ? "dark" : "light"}
+          options={{
+            fullScreen: { enable: false },
+            particles: {
+              number: { value: 30 },
+              color: { value: particleColors },
+              shape: { type: "circle" },
+              opacity: { value: 0.3 },
+              size: { value: { min: 1, max: 3 } },
+              move: { enable: true, speed: 0.3, direction: "none", random: true, outModes: "out" },
+              links: {
+                enable: true,
+                distance: 150,
+                color: linksColor,
+                opacity: 0.15,
+                width: 1
+              },
+            },
+            interactivity: {
+              events: { onHover: { enable: true, mode: "grab" } },
+              modes: { grab: { distance: 140, links: { opacity: 0.4 } } },
+            },
+            retina_detect: true,
+          }}
+          style={{ position: "absolute", width: "100%", height: "100%" }}
+        />
+      </div>
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-6xl mx-auto">
           {/* Cabeçalho */}
           <div className="text-center mb-16 space-y-4">
@@ -118,7 +155,7 @@ const Technologies = () => {
               data-aos="fade-right"
               data-aos-once="false"
             >
-              Minha <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Stack Técnica</span>
+              Minha <span className={`bg-gradient-to-r ${gradientText} bg-clip-text text-transparent animate-gradient-x`}>Stack Técnica</span>
             </h2>
             <p
               className={`text-lg max-w-2xl mx-auto transition-colors duration-300 ${textColor}`}
@@ -143,8 +180,8 @@ const Technologies = () => {
                   className={`flex flex-col items-center space-y-6 p-6 rounded-xl transition-all duration-300 group ${cardClass}`}
                 >
                   <div className="flex flex-col items-center gap-3">
-                    <div className="p-3 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                      <Icon className="w-7 h-7 text-primary" />
+                    <div className={`p-3 rounded-full transition-colors duration-300 ${iconBg}`}>
+                      <Icon className={`w-7 h-7 transition-colors duration-300 ${iconColor}`} />
                     </div>
                     <h3 className={`font-semibold text-xl transition-colors duration-300 ${titleColor}`}>
                       {category.title}
@@ -156,7 +193,7 @@ const Technologies = () => {
                       <Badge
                         key={i}
                         variant="secondary"
-                        className={`transition-colors px-3 py-1 ${badgeClass}`}
+                        className={`transition-colors px-3 py-1 border ${badgeClass}`}
                       >
                         {tech}
                       </Badge>
