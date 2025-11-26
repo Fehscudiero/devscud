@@ -86,8 +86,9 @@ const Hero = () => {
     await loadSlim(engine);
   }, []);
 
+  // Aumentamos a contagem para um visual mais cheio
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-  const particleCount = isMobile ? 30 : 50;
+  const particleCount = isMobile ? 50 : 80; // Aumentado de 30/50 para 50/80
 
   const handleShareClick = () => {
     const url = window.location.href;
@@ -121,11 +122,11 @@ const Hero = () => {
               number: { value: particleCount },
               color: { value: particlesColors },
               shape: { type: "circle" },
-              opacity: { value: 0.5 },
-              size: { value: 3 },
+              opacity: { value: 0.8 }, // Aumentado de 0.5 para 0.8
+              size: { value: 4 }, // Aumentado de 3 para 4
               move: {
                 enable: true,
-                speed: 1.3,
+                speed: 1.5, // Aumentado de 1.3 para 1.5
                 direction: "none",
                 outModes: { default: "out" },
               },
@@ -133,8 +134,8 @@ const Hero = () => {
                 enable: true,
                 distance: 150,
                 color: linksColor,
-                opacity: 0.4,
-                width: 1,
+                opacity: 0.6, // Aumentado de 0.4 para 0.6
+                width: 1.5, // Aumentado de 1 para 1.5
               },
             },
             interactivity: {
