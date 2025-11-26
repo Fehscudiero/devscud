@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Github, ExternalLink, ArrowUpRight, Trophy, Zap, Layout, Search } from "lucide-react";
 
-// MOCK AOS
+// MOCK AOS (Para evitar erro no preview). 
+// No seu projeto local, use os imports reais: import AOS from "aos"; import "aos/dist/aos.css";
 const AOS = {
   init: (config: any) => console.log("AOS init", config),
   refresh: () => console.log("AOS refresh"),
@@ -98,7 +99,8 @@ const Projects = () => {
       title: "E-commerce High-End",
       description: "Loja virtual premium com experiência 3D e checkout otimizado para conversão máxima.",
       technologies: ["Shopify Headless", "Three.js", "React"],
-      image: "https://images.unsplash.com/photo-1472851294608-4153126014c4?w=800&h=600&fit=crop",
+      // NOVA IMAGEM: Moda/Shopping de Luxo para combinar com "High-End"
+      image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&h=600&fit=crop",
       size: "small", // Ocupa 1 coluna
       links: { github: "#", live: "#" },
       scores: { performance: 100, accessibility: 96, bestPractices: 100, seo: 100 }
