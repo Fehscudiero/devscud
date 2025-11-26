@@ -3,6 +3,10 @@ import Particles from "react-tsparticles";
 import { loadSlim } from "tsparticles-slim";
 import { useCallback, useEffect, useState } from "react";
 
+// MOCK para evitar erro no preview. Se você estiver usando o projeto local, não precisa deste mock.
+const ParticlesMock = ({ children }: { children: React.ReactNode }) => <div className="absolute inset-0 z-0">{children}</div>;
+const ParticlesComponent = typeof Particles !== 'undefined' ? Particles : ParticlesMock;
+
 const socialLinks = [
   { icon: Github, label: "GitHub", href: "https://github.com/fehscudiero" },
   { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/in/devscud/" },
@@ -27,7 +31,10 @@ const Footer = () => {
   }, []);
 
   const particlesInit = useCallback(async (engine: any) => {
-    await loadSlim(engine);
+    // Apenas carrega o slim se a biblioteca estiver disponível (não for o mock)
+    if (typeof loadSlim !== 'undefined') {
+      await loadSlim(engine);
+    }
   }, []);
 
   // Cores dinâmicas (Roxo/Azul no Dark vs Verde no Light)
@@ -44,7 +51,7 @@ const Footer = () => {
   const titleColor = isDarkTheme ? "text-white" : "text-slate-900";
   const borderColor = isDarkTheme ? "border-white/10" : "border-slate-200";
 
-  // Cores de Destaque
+  // Cores de Destaque e Status
   const accentText = isDarkTheme ? "text-purple-500" : "text-emerald-600";
   const statusBg = isDarkTheme ? "bg-white/5 border-white/10" : "bg-emerald-50 border-emerald-100";
   const statusDot = isDarkTheme ? "bg-green-500" : "bg-emerald-500";
@@ -62,7 +69,7 @@ const Footer = () => {
       <div className={`absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent to-transparent opacity-50 ${isDarkTheme ? 'via-purple-500' : 'via-emerald-500'}`}></div>
 
       {/* Partículas Sutis (Apenas para textura) */}
-      <Particles
+      <ParticlesComponent
         id="footerParticles"
         init={particlesInit}
         key={isDarkTheme ? "dark" : "light"}
@@ -85,50 +92,57 @@ const Footer = () => {
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* Layout Achatado: Flex Row em Desktop (Espalhado) */}
-        <div className="flex flex-col md:flex-row items-center justify-between py-8 gap-6 md:gap-0">
+        {/* Layout Principal: Organizado em 3 colunas no desktop, e empilhado no mobile */}
+        <div className="flex flex-col items-center py-8 gap-6">
 
-          {/* ESQUERDA: Identidade Técnica */}
-          <div className="flex items-center gap-4">
-            <div className={`p-2 rounded-lg shadow-lg ${isDarkTheme ? 'bg-gradient-to-br from-purple-600 to-indigo-600 text-white' : 'bg-gradient-to-br from-green-500 to-emerald-600 text-white'}`}>
-              <Code2 className="h-5 w-5" />
+          {/* Topo (Mobile): Identidade + Status do Sistema */}
+          <div className="flex flex-col md:flex-row items-center justify-between w-full gap-4 md:gap-0">
+
+            {/* Esquerda: Identidade Técnica */}
+            <div className="flex items-center gap-3 order-1">
+              <div className={`p-2 rounded-lg shadow-lg ${isDarkTheme ? 'bg-gradient-to-br from-purple-600 to-indigo-600 text-white' : 'bg-gradient-to-br from-green-500 to-emerald-600 text-white'}`}>
+                <Code2 className="h-5 w-5" />
+              </div>
+              <div className="flex flex-col">
+                <span className={`text-sm font-bold tracking-tight leading-none ${titleColor}`}>
+                  Felipe Scudiero
+                </span>
+                <span className={`text-[10px] uppercase tracking-widest font-bold mt-1 ${accentText}`}>
+                  Full Stack Engineer
+                </span>
+              </div>
             </div>
-            <div className="flex flex-col">
-              <span className={`text-sm font-bold tracking-tight leading-none ${titleColor}`}>
-                Felipe Scudiero
+
+            {/* Centro: Status do Sistema (AGORA APARECE NO MOBILE) */}
+            <div className={`flex items-center gap-3 px-4 py-1.5 rounded-full border transition-colors duration-300 order-3 md:order-2 ${statusBg}`}>
+              <div className="relative flex h-2.5 w-2.5">
+                <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${statusPing}`}></span>
+                <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${statusDot}`}></span>
+              </div>
+              <span className={`text-[10px] font-mono font-medium tracking-wider ${textColor}`}>
+                SYSTEM STATUS: <span className={isDarkTheme ? "text-green-400" : "text-emerald-600"}>ONLINE</span>
               </span>
-              <span className={`text-[10px] uppercase tracking-widest font-bold mt-1 ${accentText}`}>
-                Full Stack Engineer
-              </span>
             </div>
+
+            {/* Direita: Redes Sociais Compactas (Mantido na direita/final) */}
+            <div className="flex items-center gap-2 order-2 md:order-3">
+              {socialLinks.map(({ icon: Icon, label, href }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className={`p-2.5 rounded-lg transition-all duration-200 hover:scale-110 border border-transparent ${iconBtn}`}
+                >
+                  <Icon className="w-4 h-4" />
+                </a>
+              ))}
+            </div>
+
           </div>
 
-          {/* CENTRO: Status do Sistema (Tech Vibe) */}
-          <div className={`hidden md:flex items-center gap-3 px-4 py-1.5 rounded-full border ${statusBg}`}>
-            <div className="relative flex h-2.5 w-2.5">
-              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${statusPing}`}></span>
-              <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${statusDot}`}></span>
-            </div>
-            <span className={`text-[10px] font-mono font-medium tracking-wider ${textColor}`}>
-              SYSTEM STATUS: <span className={isDarkTheme ? "text-green-400" : "text-emerald-600"}>ONLINE</span>
-            </span>
-          </div>
 
-          {/* DIREITA: Redes Sociais Compactas */}
-          <div className="flex items-center gap-2">
-            {socialLinks.map(({ icon: Icon, label, href }) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={label}
-                className={`p-2.5 rounded-lg transition-all duration-200 hover:scale-110 border border-transparent ${iconBtn}`}
-              >
-                <Icon className="w-4 h-4" />
-              </a>
-            ))}
-          </div>
         </div>
 
         {/* Linha Divisória Fina */}
