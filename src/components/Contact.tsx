@@ -2,11 +2,10 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Sparkles, Mail, Phone, ArrowRight } from "lucide-react";
+import { Send, Sparkles, Mail, ArrowRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { IMaskInput } from "react-imask";
 
-// MOCK AOS
+// MOCK AOS (Para evitar erro no preview)
 const AOS = {
   init: (config: any) => console.log("AOS init", config),
   refresh: () => console.log("AOS refresh"),
@@ -43,60 +42,117 @@ const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeField, setActiveField] = useState<string | null>(null);
 
+  // -- Máscara de Telefone Manual --
+  const formatPhone = (value: string) => {
+    const numbers = value.replace(/\D/g, "");
+    let formatted = numbers;
+    if (numbers.length > 2) {
+      formatted = `(${numbers.slice(0, 2)}) ${numbers.slice(2)}`;
+    }
+    if (numbers.length > 7) {
+      formatted = `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7, 11)}`;
+    }
+    return formatted.slice(0, 15);
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    if (name === "phone") {
+      setFormData((prev) => ({ ...prev, [name]: formatPhone(value) }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulação de envio para UX (Mantenha sua lógica real de fetch aqui)
     setTimeout(() => {
       setIsSubmitting(false);
       toast({
         title: "Mensagem enviada com sucesso! 🚀",
         description: "Em breve entrarei em contato para tirarmos seu projeto do papel.",
-        className: "bg-purple-600 text-white border-none",
+        className: isDarkTheme ? "bg-purple-600 text-white border-none" : "bg-green-600 text-white border-none",
       });
       setFormData({ name: "", phone: "", email: "", message: "" });
     }, 2000);
   };
 
-  // -- Estilos Dinâmicos --
-  const sectionBgClass = isDarkTheme ? "bg-[#020817]" : "bg-slate-50";
+  // -- Estilos Dinâmicos (Dual Personality) --
+
+  // Fundo
+  const sectionBgClass = isDarkTheme ? "bg-[#030014]" : "bg-white";
+
+  // Texto
   const titleColor = isDarkTheme ? "text-white" : "text-slate-900";
   const textColor = isDarkTheme ? "text-slate-400" : "text-slate-600";
+  const labelColor = isDarkTheme ? "text-slate-300" : "text-slate-700";
 
-  // Input Styles
-  const inputBg = isDarkTheme ? "bg-white/5" : "bg-white";
+  // Badge
+  const badgeClass = isDarkTheme
+    ? "bg-purple-500/10 text-purple-400 border-purple-500/20"
+    : "bg-green-100 text-green-700 border-green-200";
+
+  // Ícone de Email
+  const iconBg = isDarkTheme ? "bg-white/5" : "bg-green-50 shadow-sm";
+  const iconColor = isDarkTheme ? "text-purple-500" : "text-green-600";
+
+  // Card Glassmorphism
+  const cardClass = isDarkTheme
+    ? "bg-white/5 border-white/10 shadow-purple-900/20"
+    : "bg-white border-slate-200 shadow-xl shadow-green-900/5";
+
+  // Inputs
+  const inputBg = isDarkTheme ? "bg-white/5" : "bg-slate-50";
   const inputBorder = isDarkTheme ? "border-white/10" : "border-slate-200";
-  const inputFocus = "focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300";
+
+  // Foco do Input (Roxo no Dark, Verde no Light)
+  const focusRing = isDarkTheme
+    ? "focus:ring-purple-500"
+    : "focus:ring-green-500";
+
+  const activeRing = isDarkTheme
+    ? "ring-2 ring-purple-500 border-transparent"
+    : "ring-2 ring-green-500 border-transparent";
+
+  // Botão de Envio (Gradiente)
+  const btnGradient = isDarkTheme
+    ? "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 shadow-purple-500/25 hover:shadow-purple-500/40"
+    : "bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 shadow-green-500/25 hover:shadow-green-500/40";
+
+  // Título Gradiente
+  const titleGradient = isDarkTheme
+    ? "from-purple-600 via-pink-500 to-purple-600"
+    : "from-green-600 via-emerald-500 to-teal-600";
+
+  // Blobs de Fundo
+  const blob1 = isDarkTheme ? "bg-purple-600" : "bg-green-400";
+  const blob2 = isDarkTheme ? "bg-blue-600" : "bg-teal-400";
 
   return (
     <section id="contact" className={`py-32 relative overflow-hidden transition-colors duration-500 ${sectionBgClass}`}>
 
-      {/* Background Atmosphere (Luzes de fundo dinâmicas) */}
+      {/* Background Atmosphere */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className={`absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-[120px] opacity-20 animate-pulse ${isDarkTheme ? 'bg-purple-600' : 'bg-purple-400'}`} style={{ animationDuration: '4s' }}></div>
-        <div className={`absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full blur-[120px] opacity-20 animate-pulse ${isDarkTheme ? 'bg-blue-600' : 'bg-blue-400'}`} style={{ animationDuration: '7s' }}></div>
+        <div className={`absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-[120px] opacity-20 animate-pulse ${blob1}`} style={{ animationDuration: '4s' }}></div>
+        <div className={`absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full blur-[120px] opacity-20 animate-pulse ${blob2}`} style={{ animationDuration: '7s' }}></div>
       </div>
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-5xl mx-auto">
 
-          {/* Grid Layout: Texto à esquerda, Form à direita (em telas grandes) */}
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
 
-            {/* Coluna da Esquerda: Copywriting de Venda */}
+            {/* Coluna da Esquerda */}
             <div className="space-y-8 text-center lg:text-left" data-aos="fade-right">
               <div>
-                <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-6 ${isDarkTheme ? 'bg-purple-500/10 text-purple-400 border border-purple-500/20' : 'bg-purple-100 text-purple-700 border border-purple-200'}`}>
+                <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-6 border ${badgeClass}`}>
                   <Sparkles className="w-3 h-3" />
                   Disponível para novos projetos
                 </span>
                 <h2 className={`text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight ${titleColor}`}>
-                  Vamos construir o <span className="bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 bg-clip-text text-transparent animate-gradient-x">Extraordinário?</span>
+                  Vamos construir o <span className={`bg-gradient-to-r ${titleGradient} bg-clip-text text-transparent animate-gradient-x`}>Extraordinário?</span>
                 </h2>
               </div>
 
@@ -106,8 +162,8 @@ const Contact = () => {
 
               <div className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start pt-4">
                 <div className="flex items-center gap-4">
-                  <div className={`p-3 rounded-full ${isDarkTheme ? 'bg-white/5' : 'bg-white shadow-sm'}`}>
-                    <Mail className="w-6 h-6 text-purple-500" />
+                  <div className={`p-3 rounded-full ${iconBg}`}>
+                    <Mail className={`w-6 h-6 ${iconColor}`} />
                   </div>
                   <div className="text-left">
                     <p className={`text-sm font-medium ${textColor}`}>Email</p>
@@ -117,18 +173,18 @@ const Contact = () => {
               </div>
             </div>
 
-            {/* Coluna da Direita: O Formulário Glassmorphism */}
+            {/* Coluna da Direita: Formulário */}
             <div data-aos="fade-left">
-              <div className={`relative p-8 rounded-[2rem] border backdrop-blur-xl shadow-2xl transition-all duration-300 ${isDarkTheme ? 'bg-white/5 border-white/10 shadow-purple-900/20' : 'bg-white/60 border-white/40 shadow-xl'}`}>
+              <div className={`relative p-8 rounded-[2rem] border backdrop-blur-xl shadow-2xl transition-all duration-300 ${cardClass}`}>
 
-                {/* Brilho decorativo no topo do card */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent opacity-50 blur-[2px]"></div>
+                {/* Brilho decorativo no topo */}
+                <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-1 bg-gradient-to-r from-transparent via-${isDarkTheme ? 'purple' : 'green'}-500 to-transparent opacity-50 blur-[2px]`}></div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     {/* Nome */}
                     <div className="space-y-2">
-                      <label htmlFor="name" className={`text-sm font-medium ml-1 ${titleColor}`}>Nome</label>
+                      <label htmlFor="name" className={`text-sm font-medium ml-1 ${labelColor}`}>Nome</label>
                       <Input
                         id="name"
                         name="name"
@@ -137,14 +193,14 @@ const Contact = () => {
                         onChange={handleChange}
                         onFocus={() => setActiveField('name')}
                         onBlur={() => setActiveField(null)}
-                        className={`h-12 rounded-xl ${inputBg} ${inputBorder} ${inputFocus} ${activeField === 'name' ? 'ring-2 ring-purple-500 border-transparent' : ''}`}
+                        className={`h-12 rounded-xl ${inputBg} ${inputBorder} ${focusRing} focus:border-transparent transition-all duration-300 ${activeField === 'name' ? activeRing : ''} ${titleColor}`}
                         required
                       />
                     </div>
 
                     {/* Email */}
                     <div className="space-y-2">
-                      <label htmlFor="email" className={`text-sm font-medium ml-1 ${titleColor}`}>Email</label>
+                      <label htmlFor="email" className={`text-sm font-medium ml-1 ${labelColor}`}>Email</label>
                       <Input
                         id="email"
                         name="email"
@@ -154,33 +210,32 @@ const Contact = () => {
                         onChange={handleChange}
                         onFocus={() => setActiveField('email')}
                         onBlur={() => setActiveField(null)}
-                        className={`h-12 rounded-xl ${inputBg} ${inputBorder} ${inputFocus} ${activeField === 'email' ? 'ring-2 ring-purple-500 border-transparent' : ''}`}
+                        className={`h-12 rounded-xl ${inputBg} ${inputBorder} ${focusRing} focus:border-transparent transition-all duration-300 ${activeField === 'email' ? activeRing : ''} ${titleColor}`}
                         required
                       />
                     </div>
                   </div>
 
-                  {/* Telefone com Máscara */}
+                  {/* Telefone */}
                   <div className="space-y-2">
-                    <label htmlFor="phone" className={`text-sm font-medium ml-1 ${titleColor}`}>WhatsApp / Celular</label>
-                    <div className={`flex h-12 w-full rounded-xl border ${inputBg} ${inputBorder} focus-within:ring-2 focus-within:ring-purple-500 focus-within:border-transparent transition-all duration-300 overflow-hidden`}>
-                      <IMaskInput
-                        mask="(00) 00000-0000"
-                        value={formData.phone}
-                        onAccept={(value: any) => setFormData((prev) => ({ ...prev, phone: value }))}
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        placeholder="(11) 99999-9999"
-                        className={`flex h-full w-full bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 ${titleColor}`}
-                        required
-                      />
-                    </div>
+                    <label htmlFor="phone" className={`text-sm font-medium ml-1 ${labelColor}`}>WhatsApp / Celular</label>
+                    <Input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      placeholder="(11) 99999-9999"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      onFocus={() => setActiveField('phone')}
+                      onBlur={() => setActiveField(null)}
+                      className={`h-12 rounded-xl ${inputBg} ${inputBorder} ${focusRing} focus:border-transparent transition-all duration-300 ${activeField === 'phone' ? activeRing : ''} ${titleColor}`}
+                      required
+                    />
                   </div>
 
                   {/* Mensagem */}
                   <div className="space-y-2">
-                    <label htmlFor="message" className={`text-sm font-medium ml-1 ${titleColor}`}>Sobre o Projeto</label>
+                    <label htmlFor="message" className={`text-sm font-medium ml-1 ${labelColor}`}>Sobre o Projeto</label>
                     <Textarea
                       id="message"
                       name="message"
@@ -189,16 +244,16 @@ const Contact = () => {
                       onChange={handleChange}
                       onFocus={() => setActiveField('message')}
                       onBlur={() => setActiveField(null)}
-                      className={`min-h-[120px] rounded-xl resize-none ${inputBg} ${inputBorder} ${inputFocus} ${activeField === 'message' ? 'ring-2 ring-purple-500 border-transparent' : ''}`}
+                      className={`min-h-[120px] rounded-xl resize-none ${inputBg} ${inputBorder} ${focusRing} focus:border-transparent transition-all duration-300 ${activeField === 'message' ? activeRing : ''} ${titleColor}`}
                       required
                     />
                   </div>
 
-                  {/* Botão de Envio de Alto Impacto */}
+                  {/* Botão de Envio */}
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full h-14 text-base font-bold rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group"
+                    className={`w-full h-14 text-base font-bold rounded-xl text-white hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group ${btnGradient}`}
                   >
                     {isSubmitting ? (
                       <span className="flex items-center gap-2">
