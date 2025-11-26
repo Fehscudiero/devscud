@@ -128,10 +128,7 @@ const About = () => {
                   estética, funcionalidade e acessibilidade. Acredito que cada projeto
                   é uma oportunidade de aprender, inovar e criar algo excepcional.
                 </p>
-                <p className={`transition-colors duration-300 ${textColorClass}`}>
-                  Quando não estou codificando, estou explorando novas tecnologias,
-                  estudando design patterns ou contribuindo para a comunidade dev.
-                </p>
+
               </div>
             </div>
 
