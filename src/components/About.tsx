@@ -124,9 +124,7 @@ const About = () => {
                   criatividade com código limpo e performance.
                 </p>
                 <p className={`transition-colors duration-300 ${textColorClass}`}>
-                  Minha abordagem é centrada no usuário, sempre buscando equilibrar
-                  estética, funcionalidade e acessibilidade. Acredito que cada projeto
-                  é uma oportunidade de aprender, inovar e criar algo excepcional.
+                  Transformo requisitos em experiências memoráveis. Meu foco é eliminar a fricção entre o usuário e a tecnologia, equilibrando beleza e funcionalidade para criar interfaces que não apenas funcionam, mas engajam e convertem.
                 </p>
 
               </div>
