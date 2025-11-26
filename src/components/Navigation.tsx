@@ -276,7 +276,7 @@ const Navigation = () => {
       {/* Botão Scroll to Top (Fixo e Animado) */}
       <button
         onClick={scrollToTop}
-        className={`fixed bottom-6 right-6 p-3 rounded-full shadow-2xl transition-all duration-500 z-40 flex items-center justify-center group border border-transparent
+        className={`fixed bottom-6 right-2 p-3 rounded-full shadow-2xl transition-all duration-500 z-40 flex items-center justify-center group border border-transparent
             ${showScrollTop ? "translate-y-0 opacity-100" : "translate-y-20 opacity-0 pointer-events-none"}
             ${scrollTopClass}
         `}

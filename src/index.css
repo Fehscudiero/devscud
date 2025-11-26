@@ -194,28 +194,46 @@
   }
 }
 
+
 /* ============================
-   🖱️ Scrollbar Customization
+   🖱️ Scrollbar Customization (TEMA DUAL)
    ============================ */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
+/* Trilha (Fundo da barra) */
 ::-webkit-scrollbar-track {
-  background: transparent;
+  /* Fundo claro (Slate 100) vs Fundo Dark Profundo (Azul Noturno) */
+  @apply bg-slate-100 dark:bg-[#030014];
 }
 
+/* Polegar (A parte que mexe) */
 ::-webkit-scrollbar-thumb {
-  background-color: hsl(var(--primary));
+  background-color: #10b981;
+  /* Light: Verde Esmeralda (#10b981) */
   border-radius: 4px;
   border: 2px solid transparent;
   background-clip: content-box;
 }
 
+/* Polegar no Dark Mode (Roxo/Índigo) - Sobrescreve */
+.dark ::-webkit-scrollbar-thumb {
+  background-color: #7c3aed;
+  /* Dark: Roxo/Índigo (#7c3aed) */
+}
+
+/* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: hsl(var(--primary)) transparent;
+  /* Light: Verde (#10b981) na Trilha Clara */
+  scrollbar-color: #10b981 #f1f5f9;
+}
+
+.dark * {
+  /* Dark: Roxo (#7c3aed) na Trilha Escura (#030014) */
+  scrollbar-color: #7c3aed #030014;
 }
 
 /* ============================
