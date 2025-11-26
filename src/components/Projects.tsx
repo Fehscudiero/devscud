@@ -153,7 +153,9 @@ const Projects = () => {
   ];
 
   // -- Estilos Dinâmicos --
-  const sectionBgClass = isDarkTheme ? "bg-secondary/30" : "bg-white";
+  // Fundo: Dark (Azul Profundo) vs Light (Branco)
+  const sectionBgClass = isDarkTheme ? "bg-[#030014]" : "bg-white";
+
   const titleColor = isDarkTheme ? "text-foreground" : "text-slate-900";
   const textColor = isDarkTheme ? "text-muted-foreground" : "text-slate-600";
 
@@ -161,14 +163,24 @@ const Projects = () => {
   const cardBorder = isDarkTheme ? "border-border" : "border-slate-200";
   const cardShadow = isDarkTheme ? "" : "shadow-2xl hover:shadow-3xl";
 
+  // Gradiente do Título Principal
+  const titleGradient = isDarkTheme
+    ? "from-purple-600 via-indigo-500 to-blue-600"
+    : "from-green-600 via-emerald-500 to-teal-600";
+
   return (
-    <section id="projects" className={`py-20 transition-colors duration-500 ${sectionBgClass}`}>
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="projects" className={`py-20 relative overflow-hidden transition-colors duration-500 ${sectionBgClass}`}>
+
+      {/* Luzes Ambientais de Fundo (Igual ao Hero/About/Services) */}
+      <div className={`absolute top-1/4 right-0 w-[600px] h-[600px] rounded-full blur-[120px] opacity-20 pointer-events-none ${isDarkTheme ? 'bg-purple-600' : 'bg-green-400'}`} />
+      <div className={`absolute bottom-0 left-0 w-[600px] h-[600px] rounded-full blur-[120px] opacity-20 pointer-events-none ${isDarkTheme ? 'bg-blue-600' : 'bg-teal-400'}`} />
+
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-7xl mx-auto">
           {/* Cabeçalho */}
           <div className="text-center mb-16 space-y-4" data-aos="fade-down">
             <h2 className={`text-4xl sm:text-5xl font-bold transition-colors duration-300 ${titleColor}`}>
-              Excelência em <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Cada Pixel</span>
+              Excelência em <span className={`bg-gradient-to-r ${titleGradient} bg-clip-text text-transparent`}>Cada Pixel</span>
             </h2>
             <p className={`text-lg max-w-2xl mx-auto transition-colors duration-300 ${textColor}`}>
               Projetos desenvolvidos com foco obsessivo em performance, acessibilidade e SEO.
