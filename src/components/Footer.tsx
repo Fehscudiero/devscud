@@ -194,7 +194,7 @@ const Footer = () => {
                   Felipe Scudiero
                 </span>
                 <span className={`text-[10px] uppercase tracking-widest font-bold mt-1 ${accentText}`}>
-                  Full Stack Engineer
+                  Full Stack Developer
                 </span>
               </div>
             </div>
