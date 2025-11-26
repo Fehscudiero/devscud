@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
 import { Github, ExternalLink, ArrowUpRight, Trophy, Zap, Layout, Search } from "lucide-react";
 
-// MOCK AOS (Para evitar erro no preview). 
-// No seu projeto local, use os imports reais: import AOS from "aos"; import "aos/dist/aos.css";
+// MOCK AOS
 const AOS = {
   init: (config: any) => console.log("AOS init", config),
   refresh: () => console.log("AOS refresh"),
 };
 
-// Componente Circular Progress (Estilo Lighthouse)
-const CircularScore = ({ score, label, delay }: { score: number; label: string; delay: number }) => {
-  const [currentScore, setCurrentScore] = useState(0);
+// Componente Circular Progress (Estilo Lighthouse) - Adaptado para Mobile
+const CircularScore = ({ score, label, delay, isMobileView }: { score: number; label: string; delay: number; isMobileView: boolean }) => {
   const radius = 16;
   const circumference = 2 * Math.PI * radius;
 
@@ -55,15 +53,19 @@ const CircularScore = ({ score, label, delay }: { score: number; label: string; 
           {score}
         </span>
       </div>
-      <span className="text-[9px] font-medium text-slate-400 uppercase tracking-wider text-center group-hover/score:text-slate-200 transition-colors">
-        {label}
-      </span>
+      {/* Rótulo aparece APENAS no Desktop/Tablet */}
+      {!isMobileView && (
+        <span className="text-[9px] font-medium text-slate-400 uppercase tracking-wider text-center group-hover/score:text-slate-200 transition-colors">
+          {label}
+        </span>
+      )}
     </div>
   );
 };
 
 const Projects = () => {
   const [isDarkTheme, setIsDarkTheme] = useState(true);
+  const [isMobileView, setIsMobileView] = useState(false); // Novo estado para controlar a visualização mobile
 
   // -- Detecção de Tema Blindada --
   useEffect(() => {
@@ -72,11 +74,23 @@ const Projects = () => {
       const isDark = root.classList.contains("dark");
       setIsDarkTheme(isDark);
     };
+    const checkViewport = () => {
+      // Assume mobile se a largura for menor que a breakpoint md (768px)
+      setIsMobileView(window.innerWidth < 768);
+    };
 
     checkTheme();
-    const observer = new MutationObserver(checkTheme);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
-    return () => observer.disconnect();
+    checkViewport();
+
+    const themeObserver = new MutationObserver(checkTheme);
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+
+    window.addEventListener('resize', checkViewport);
+
+    return () => {
+      themeObserver.disconnect();
+      window.removeEventListener('resize', checkViewport);
+    };
   }, []);
 
   useEffect(() => {
@@ -84,73 +98,86 @@ const Projects = () => {
     AOS.refresh();
   }, []);
 
-  // -- Dados dos 7 Projetos (Focados em suas tecnologias) --
-  const projects = [
+  // -- Dados dos 7 Projetos --
+  const allProjects = [
     {
       title: "SaaS Enterprise Dashboard",
       description: "Plataforma de gestão completa com analytics em tempo real, controle de equipes multicamada e automações via IA.",
       technologies: ["React", "Next.js", "Tailwind", "Supabase"],
       image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop",
-      size: "large", // Ocupa 2 colunas
+      size: "large",
       links: { github: "#", live: "#" },
-      scores: { performance: 98, accessibility: 100, bestPractices: 100, seo: 100 }
+      scores: { performance: 98, accessibility: 100, bestPractices: 100, seo: 100 },
+      slug: "saas",
     },
     {
       title: "E-commerce High-End",
       description: "Loja virtual premium com experiência 3D e checkout otimizado para conversão máxima.",
       technologies: ["Shopify Headless", "Three.js", "React"],
-      // NOVA IMAGEM: Moda/Shopping de Luxo para combinar com "High-End"
       image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&h=600&fit=crop",
-      size: "small", // Ocupa 1 coluna
+      size: "small",
       links: { github: "#", live: "#" },
-      scores: { performance: 100, accessibility: 96, bestPractices: 100, seo: 100 }
+      scores: { performance: 100, accessibility: 96, bestPractices: 100, seo: 100 },
+      slug: "ecommerce",
     },
     {
       title: "Fintech Mobile App",
       description: "App financeiro com gráficos interativos e sincronização bancária via Open Finance.",
       technologies: ["React Native", "Expo", "Node.js"],
       image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&h=600&fit=crop",
-      size: "small", // Ocupa 1 coluna
+      size: "small",
       links: { github: "#", live: "#" },
-      scores: { performance: 95, accessibility: 98, bestPractices: 100, seo: 92 }
+      scores: { performance: 95, accessibility: 98, bestPractices: 100, seo: 92 },
+      slug: "fintech",
     },
     {
       title: "Portal de Notícias SEO-First",
       description: "CMS robusto para mídia de alto tráfego com renderização ISR e cache avançado para Core Web Vitals perfeitos.",
       technologies: ["Next.js", "GraphQL", "Redis"],
       image: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&h=600&fit=crop",
-      size: "large", // Ocupa 2 colunas
+      size: "large",
       links: { github: "#", live: "#" },
-      scores: { performance: 99, accessibility: 100, bestPractices: 98, seo: 100 }
+      scores: { performance: 99, accessibility: 100, bestPractices: 98, seo: 100 },
+      slug: "portal",
     },
     {
       title: "Landing Page AI Startup",
       description: "Site institucional com animações complexas (Framer Motion) e storytelling interativo.",
       technologies: ["Framer Motion", "React", "Vite"],
       image: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&h=600&fit=crop",
-      size: "small", // Ocupa 1 coluna
+      size: "small",
       links: { github: "#", live: "#" },
-      scores: { performance: 100, accessibility: 100, bestPractices: 100, seo: 100 }
+      scores: { performance: 100, accessibility: 100, bestPractices: 100, seo: 100 },
+      slug: "ai_landing",
     },
     {
       title: "Sistema de Delivery",
       description: "Plataforma multi-tenant para restaurantes com rastreamento em tempo real via WebSocket.",
       technologies: ["Vue.js", "Firebase", "Google Maps API"],
       image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=600&fit=crop",
-      size: "small", // Ocupa 1 coluna
+      size: "small",
       links: { github: "#", live: "#" },
-      scores: { performance: 92, accessibility: 95, bestPractices: 96, seo: 100 }
+      scores: { performance: 92, accessibility: 95, bestPractices: 96, seo: 100 },
+      slug: "delivery",
     },
     {
       title: "Plataforma LMS de Cursos",
       description: "Ambiente de aprendizado com área de membros, gamificação e emissão de certificados automáticos.",
       technologies: ["React", "Node.js", "PostgreSQL"],
       image: "https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=800&h=600&fit=crop",
-      size: "small", // Ocupa 1 coluna
+      size: "small",
       links: { github: "#", live: "#" },
-      scores: { performance: 96, accessibility: 98, bestPractices: 100, seo: 95 }
+      scores: { performance: 96, accessibility: 98, bestPractices: 100, seo: 95 },
+      slug: "lms",
     },
   ];
+
+  // Filtra projetos para o Mobile (apenas os 3 selecionados)
+  const mobileProjectSlugs = ["saas", "ecommerce", "ai_landing"];
+  const filteredProjects = isMobileView
+    ? allProjects.filter(p => mobileProjectSlugs.includes(p.slug))
+    : allProjects;
+
 
   // -- Estilos Dinâmicos --
   // Fundo: Dark (Azul Profundo) vs Light (Branco)
@@ -160,8 +187,8 @@ const Projects = () => {
   const textColor = isDarkTheme ? "text-muted-foreground" : "text-slate-600";
 
   // Card Styles
-  const cardBorder = isDarkTheme ? "border-border" : "border-slate-200";
-  const cardShadow = isDarkTheme ? "" : "shadow-2xl hover:shadow-3xl";
+  const cardBorder = isDarkTheme ? "border-white/10" : "border-slate-200";
+  const cardShadow = isDarkTheme ? "shadow-purple-900/10" : "shadow-2xl";
 
   // Gradiente do Título Principal
   const titleGradient = isDarkTheme
@@ -171,7 +198,7 @@ const Projects = () => {
   return (
     <section id="projects" className={`py-20 relative overflow-hidden transition-colors duration-500 ${sectionBgClass}`}>
 
-      {/* Luzes Ambientais de Fundo (Igual ao Hero/About/Services) */}
+      {/* Luzes Ambientais de Fundo */}
       <div className={`absolute top-1/4 right-0 w-[600px] h-[600px] rounded-full blur-[120px] opacity-20 pointer-events-none ${isDarkTheme ? 'bg-purple-600' : 'bg-green-400'}`} />
       <div className={`absolute bottom-0 left-0 w-[600px] h-[600px] rounded-full blur-[120px] opacity-20 pointer-events-none ${isDarkTheme ? 'bg-blue-600' : 'bg-teal-400'}`} />
 
@@ -189,8 +216,9 @@ const Projects = () => {
 
           {/* Bento Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[450px]">
-            {projects.map((project, index) => {
-              const colSpan = project.size === "large" ? "md:col-span-2" : "md:col-span-1";
+            {filteredProjects.map((project, index) => {
+              // No mobile, todos os cards ocupam 1 coluna para simplificar o layout.
+              const colSpan = isMobileView ? "md:col-span-1" : (project.size === "large" ? "md:col-span-2" : "md:col-span-1");
 
               return (
                 <div
@@ -267,10 +295,10 @@ const Projects = () => {
 
                     {/* SCORE BOARD (Estilo PageSpeed/Lighthouse) */}
                     <div className="grid grid-cols-4 gap-2 sm:gap-4 bg-black/40 backdrop-blur-xl rounded-xl p-4 border border-white/5 transform translate-y-4 opacity-0 transition-all duration-500 delay-100 group-hover:translate-y-0 group-hover:opacity-100">
-                      <CircularScore score={project.scores.performance} label="Performance" delay={0} />
-                      <CircularScore score={project.scores.accessibility} label="Acessibilidade" delay={100} />
-                      <CircularScore score={project.scores.bestPractices} label="Práticas" delay={200} />
-                      <CircularScore score={project.scores.seo} label="SEO" delay={300} />
+                      <CircularScore score={project.scores.performance} label="Performance" delay={0} isMobileView={isMobileView} />
+                      <CircularScore score={project.scores.accessibility} label="Acessibilidade" delay={100} isMobileView={isMobileView} />
+                      <CircularScore score={project.scores.bestPractices} label="Práticas" delay={200} isMobileView={isMobileView} />
+                      <CircularScore score={project.scores.seo} label="SEO" delay={300} isMobileView={isMobileView} />
                     </div>
 
                   </div>
