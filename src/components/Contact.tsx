@@ -17,7 +17,7 @@ const Contact = () => {
   // 🚨 MUDANÇA AQUI: ENDPOINT DO FORMSPREE
   // O Formspree exige um ID do formulário (que é gerado após a primeira submissão com seu e-mail).
   // Usamos o seu e-mail para a primeira ativação:
-  const FORMSPREE_EMAIL = "scudiero.dev@yahoo.com";
+  const FORMSPREE_EMAIL = "fehscudiero@gmail.com";
   const FORM_ACTION_ENDPOINT = `https://formspree.io/f/${FORMSPREE_EMAIL}`;
 
   // URL para onde o Formspree deve redirecionar após o sucesso
