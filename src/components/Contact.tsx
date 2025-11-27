@@ -2,18 +2,28 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Sparkles, Mail, Phone, ArrowRight } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { Sparkles, Mail, ArrowRight } from "lucide-react";
 
 // MOCK AOS (Para evitar erro no preview)
 const AOS = {
-  init: (config: any) => console.log("AOS init", config),
+  init: (config) => console.log("AOS init", config),
   refresh: () => console.log("AOS refresh"),
 };
 
 const Contact = () => {
-  const { toast } = useToast();
   const [isDarkTheme, setIsDarkTheme] = useState(true);
+
+  // ------------------------------------------------------------------
+  // 🚨 MUDANÇA AQUI: ENDPOINT DO FORMSPREE
+  // O Formspree exige um ID do formulário (que é gerado após a primeira submissão com seu e-mail).
+  // Usamos o seu e-mail para a primeira ativação:
+  const FORMSPREE_EMAIL = "scudiero.dev@yahoo.com";
+  const FORM_ACTION_ENDPOINT = `https://formspree.io/f/${FORMSPREE_EMAIL}`;
+
+  // URL para onde o Formspree deve redirecionar após o sucesso
+  const REDIRECT_URL = "https://www.scudiero.com.br/#contact?success=true";
+  // ------------------------------------------------------------------
+
 
   // -- Detecção de Tema Blindada --
   useEffect(() => {
@@ -39,11 +49,12 @@ const Contact = () => {
     email: "",
     message: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [activeField, setActiveField] = useState<string | null>(null);
 
-  // -- Máscara de Telefone Manual (Substituindo react-imask) --
-  const formatPhone = (value: string) => {
+  // isSubmitting e handleSubmit não são mais usados, mas mantemos o estado e o handler para controlar os inputs
+  const [activeField, setActiveField] = useState(null);
+
+  // -- Máscara de Telefone Manual --
+  const formatPhone = (value) => {
     // Remove tudo que não é dígito
     const numbers = value.replace(/\D/g, "");
 
@@ -59,7 +70,7 @@ const Contact = () => {
     return formatted.slice(0, 15); // Limita o tamanho
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "phone") {
       setFormData((prev) => ({ ...prev, [name]: formatPhone(value) }));
@@ -68,21 +79,7 @@ const Contact = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    // Simulação de envio
-    setTimeout(() => {
-      setIsSubmitting(false);
-      toast({
-        title: "Mensagem enviada com sucesso! 🚀",
-        description: "Em breve entrarei em contato para tirarmos seu projeto do papel.",
-        className: isDarkTheme ? "bg-purple-600 text-white border-none" : "bg-green-600 text-white border-none",
-      });
-      setFormData({ name: "", phone: "", email: "", message: "" });
-    }, 2000);
-  };
+  // Funções de envio foram removidas, o formulário agora usa o POST nativo
 
   // -- Estilos Dinâmicos (Dual Personality) --
 
@@ -131,11 +128,6 @@ const Contact = () => {
   const btnGradient = isDarkTheme
     ? "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 shadow-purple-500/25 hover:shadow-purple-500/40"
     : "bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 shadow-green-500/25 hover:shadow-green-500/40";
-
-  // Título Gradiente
-  const titleGradient = isDarkTheme
-    ? "from-purple-600 via-pink-500 to-purple-600"
-    : "from-green-600 via-emerald-500 to-teal-600";
 
   // Blobs de Fundo
   const blob1 = isDarkTheme ? "bg-purple-600" : "bg-green-400";
@@ -191,7 +183,35 @@ const Contact = () => {
                 {/* Brilho decorativo no topo */}
                 <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-1 bg-gradient-to-r from-transparent via-${isDarkTheme ? 'purple' : 'green'}-500 to-transparent opacity-50 blur-[2px]`}></div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                {/* O FORMULÁRIO AGORA USA O MÉTODO POST DIRETO COM FORMSPREE */}
+                <form
+                  action={FORM_ACTION_ENDPOINT}
+                  method="POST"
+                  className="space-y-6"
+                >
+                  {/* Campos Ocultos para Formspree: */}
+
+                  {/* 1. Assunto do Email (Formspree usa 'subject' em vez de '_subject') */}
+                  <input
+                    type="hidden"
+                    name="subject"
+                    value={`[PORTFÓLIO] Novo Contato de ${formData.name || "Cliente Novo"}`}
+                  />
+                  {/* 2. Redirecionamento após o sucesso (Formspree usa '_next') */}
+                  <input
+                    type="hidden"
+                    name="_next"
+                    value={REDIRECT_URL}
+                  />
+
+                  {/* 3. Para que você possa responder ao e-mail do cliente diretamente */}
+                  <input
+                    type="hidden"
+                    name="_replyto"
+                    value={formData.email}
+                  />
+
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     {/* Nome */}
                     <div className="space-y-2">
@@ -263,20 +283,13 @@ const Contact = () => {
                   {/* Botão de Envio */}
                   <Button
                     type="submit"
-                    disabled={isSubmitting}
+                    // isSubmitting não é mais necessário, o próprio browser lida com o estado de envio
                     className={`w-full h-14 text-base font-bold rounded-xl text-white hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 group ${btnGradient}`}
                   >
-                    {isSubmitting ? (
-                      <span className="flex items-center gap-2">
-                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        Enviando...
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-2">
-                        Enviar Proposta
-                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                      </span>
-                    )}
+                    <span className="flex items-center gap-2">
+                      Enviar Proposta
+                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    </span>
                   </Button>
 
                   <p className={`text-xs text-center ${textColor}`}>
