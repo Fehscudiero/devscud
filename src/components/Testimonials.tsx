@@ -112,7 +112,7 @@ const Testimonials = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-7xl mx-auto">
 
-          {/* Cabeçalho de Impacto */}
+          {/* Cabeçalho */}
           <div className="text-center mb-24 space-y-6" data-aos="fade-down">
             <h2 className={`text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight transition-colors duration-300 ${titleColor}`}>
               Impacto Real em <span className={`bg-gradient-to-r ${gradientText} bg-clip-text text-transparent animate-gradient-x`}>Negócios Reais</span>
