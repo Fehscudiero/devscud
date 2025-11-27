@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Sparkles, Mail, ArrowRight } from "lucide-react";
+import { Send, Sparkles, Mail, Phone, ArrowRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 // MOCK AOS (Para evitar erro no preview)
@@ -42,9 +42,12 @@ const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeField, setActiveField] = useState<string | null>(null);
 
-  // -- Máscara de Telefone Manual --
+  // -- Máscara de Telefone Manual (Substituindo react-imask) --
   const formatPhone = (value: string) => {
+    // Remove tudo que não é dígito
     const numbers = value.replace(/\D/g, "");
+
+    // Aplica a máscara (XX) XXXXX-XXXX visualmente
     let formatted = numbers;
     if (numbers.length > 2) {
       formatted = `(${numbers.slice(0, 2)}) ${numbers.slice(2)}`;
@@ -52,7 +55,8 @@ const Contact = () => {
     if (numbers.length > 7) {
       formatted = `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7, 11)}`;
     }
-    return formatted.slice(0, 15);
+
+    return formatted.slice(0, 15); // Limita o tamanho
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -68,6 +72,7 @@ const Contact = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
+    // Simulação de envio
     setTimeout(() => {
       setIsSubmitting(false);
       toast({
@@ -89,6 +94,12 @@ const Contact = () => {
   const textColor = isDarkTheme ? "text-slate-400" : "text-slate-600";
   const labelColor = isDarkTheme ? "text-slate-300" : "text-slate-700";
 
+
+  // Gradiente do Título
+  const gradientText = isDarkTheme
+    ? "from-purple-600 via-indigo-500 to-blue-600"
+    : "from-green-600 via-emerald-500 to-teal-600";
+
   // Badge
   const badgeClass = isDarkTheme
     ? "bg-purple-500/10 text-purple-400 border-purple-500/20"
@@ -107,7 +118,7 @@ const Contact = () => {
   const inputBg = isDarkTheme ? "bg-white/5" : "bg-slate-50";
   const inputBorder = isDarkTheme ? "border-white/10" : "border-slate-200";
 
-  // Foco do Input (Roxo no Dark, Verde no Light)
+  // Foco do Input
   const focusRing = isDarkTheme
     ? "focus:ring-purple-500"
     : "focus:ring-green-500";
@@ -144,25 +155,25 @@ const Contact = () => {
 
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
 
-            {/* Coluna da Esquerda */}
+            {/* Coluna da Esquerda: Copywriting de Venda */}
             <div className="space-y-8 text-center lg:text-left" data-aos="fade-right">
               <div>
                 <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-6 border ${badgeClass}`}>
                   <Sparkles className="w-3 h-3" />
                   Disponível para novos projetos
                 </span>
-                <h2 className={`text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight ${titleColor}`}>
-                  Vamos construir o <span className={`bg-gradient-to-r ${titleGradient} bg-clip-text text-transparent animate-gradient-x`}>Extraordinário?</span>
+                <h2 className={`text-4xl sm:text-5xl lg:text-5xl font-bold leading-tight ${titleColor}`}>
+                  Vamos transformar sua presença <span className={`bg-gradient-to-r ${gradientText} bg-clip-text text-transparent animate-gradient-x`}>Digital?</span>
                 </h2>
               </div>
 
               <p className={`text-lg leading-relaxed ${textColor}`}>
-                Seu projeto merece mais do que apenas código. Merece estratégia, design de elite e performance. Me conte sua ideia e vamos transformá-la no próximo destaque do mercado.
+                Mais do que linhas de código, entrego soluções digitais. Do conceito à implementação, meu foco é criar produtos consistentes que resolvam problemas reais e entreguem resultados.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start pt-4">
                 <div className="flex items-center gap-4">
-                  <div className={`p-3 rounded-full ${iconBg}`}>
+                  <div className={`p-3 rounded-full transition-colors duration-300 ${iconBg}`}>
                     <Mail className={`w-6 h-6 ${iconColor}`} />
                   </div>
                   <div className="text-left">
@@ -173,7 +184,7 @@ const Contact = () => {
               </div>
             </div>
 
-            {/* Coluna da Direita: Formulário */}
+            {/* Coluna da Direita: O Formulário Glassmorphism */}
             <div data-aos="fade-left">
               <div className={`relative p-8 rounded-[2rem] border backdrop-blur-xl shadow-2xl transition-all duration-300 ${cardClass}`}>
 
@@ -216,7 +227,7 @@ const Contact = () => {
                     </div>
                   </div>
 
-                  {/* Telefone */}
+                  {/* Telefone (Máscara Manual) */}
                   <div className="space-y-2">
                     <label htmlFor="phone" className={`text-sm font-medium ml-1 ${labelColor}`}>WhatsApp / Celular</label>
                     <Input
