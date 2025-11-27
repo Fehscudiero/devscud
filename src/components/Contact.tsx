@@ -142,7 +142,7 @@ const Contact = () => {
   const blob2 = isDarkTheme ? "bg-blue-600" : "bg-teal-400";
 
   return (
-    <section id="contact" className={`py-32 relative overflow-hidden transition-colors duration-500 ${sectionBgClass}`}>
+    <section id="contact" className={`py-24 relative overflow-hidden transition-colors duration-500 ${sectionBgClass}`}>
 
       {/* Background Atmosphere */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
