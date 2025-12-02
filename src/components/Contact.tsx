@@ -359,7 +359,7 @@ const Contact = () => {
                   </Button>
 
                   <p className={`text-xs text-center ${styles.textColor}`}>
-                    Respondo geralmente em menos de 2 horas em horário comercial.
+                    Respondo geralmente em menos de 1 horas em horário comercial.
                   </p>
                 </form>
               </div>
