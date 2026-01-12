@@ -60,14 +60,14 @@ const About = () => {
         <div className="relative mb-20 flex flex-col items-center lg:items-start text-center lg:text-left">
           <motion.h2
             style={{ x: textX }}
-            className={`text-[6vw] font-black leading-none uppercase opacity-[0.06] dark:opacity-[0.1] absolute top-0 left-[30%] whitespace-nowrap pointer-events-none select-none ${isDarkTheme ? 'text-white' : 'text-black'}`}          >
+            className={`text-[6vw] font-black leading-none uppercase opacity-[0.06] dark:opacity-[0.1] absolute top-0 left-[70%] whitespace-nowrap pointer-events-none select-none ${isDarkTheme ? 'text-white' : 'text-black'}`}          >
             SOBRE
           </motion.h2>
 
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
             <h3 className={`text-6xl sm:text-8xl font-black ${titleColorClass} tracking-tighter leading-none relative z-10`}>
-              THE <br />
-              <span className={`bg-gradient-to-r ${gradientText} bg-clip-text text-transparent italic underline decoration-cyan-500/20`}>DEVELOPER_</span>
+              <br />
+              <span className={`text-left bg-gradient-to-r ${gradientText} bg-clip-text text-transparent italic underline decoration-cyan-500/20`}>DESENVOLVEDOR</span>
             </h3>
           </motion.div>
         </div>
