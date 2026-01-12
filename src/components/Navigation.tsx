@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Menu, X, ArrowUp, Moon, Sun, Terminal, Cpu } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// --- CUSTOM HOOK PARA TEMA (Sincronizado com o sistema) ---
+// --- CUSTOM HOOK PARA TEMA ---
 const useTheme = () => {
   const [theme, setThemeState] = useState(() => {
     if (typeof window !== "undefined") {
@@ -22,12 +22,8 @@ const useTheme = () => {
   return { theme, setTheme };
 };
 
-// --- COMPONENTE LOGO (Identidade Visual Scudiero) ---
-const Logo = ({ isDarkTheme }: { isDarkTheme: boolean }) => {
-  const textColor = isDarkTheme ? "#ffffff" : "#0f172a";
-  const colorStart = isDarkTheme ? "#9333ea" : "#059669"; // Roxo (Dark) ou Esmeralda (Light)
-  const colorEnd = isDarkTheme ? "#2563eb" : "#0d9488"; // Azul (Dark) ou Teal (Light)
-
+// --- COMPONENTE LOGO (Identidade Visual Scudiero Adaptada) ---
+const Logo = () => {
   return (
     <div className="flex items-center gap-2 font-sans select-none">
       <div className="relative">
@@ -47,8 +43,12 @@ const Logo = ({ isDarkTheme }: { isDarkTheme: boolean }) => {
               y2="40"
               gradientUnits="userSpaceOnUse"
             >
-              <stop offset="0%" stopColor={colorStart} />
-              <stop offset="100%" stopColor={colorEnd} />
+              <stop offset="0%" stopColor="var(--primary)" />
+              <stop
+                offset="100%"
+                stopColor="var(--primary)"
+                stopOpacity="0.6"
+              />
             </linearGradient>
           </defs>
           <path
@@ -67,33 +67,21 @@ const Logo = ({ isDarkTheme }: { isDarkTheme: boolean }) => {
           />
           <path
             d="M22 4L18 36"
-            stroke={textColor}
+            stroke="currentColor"
+            className="text-foreground/50"
             strokeWidth="3"
             strokeLinecap="round"
-            strokeOpacity="0.5"
           />
         </svg>
       </div>
       <div className="flex flex-col justify-center">
-        <span
-          className="text-xl font-black tracking-tighter leading-none"
-          style={{ color: textColor }}
-        >
+        <span className="text-xl font-black tracking-tighter leading-none text-foreground uppercase">
           DEV
-          <span
-            style={{
-              backgroundImage: `linear-gradient(to right, ${colorStart}, ${colorEnd})`,
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
-          >
+          <span className="bg-gradient-primary bg-clip-text text-transparent">
             SCUD
           </span>
         </span>
-        <span
-          className="text-[8px] uppercase tracking-[0.3em] font-bold opacity-50"
-          style={{ color: textColor }}
-        >
+        <span className="text-[8px] uppercase tracking-[0.3em] font-bold opacity-50 text-foreground">
           SYSTEMS v4.0
         </span>
       </div>
@@ -106,13 +94,11 @@ const Navigation = () => {
   const [scrolled, setScrolled] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isDarkTheme, setIsDarkTheme] = useState(true);
   const { setTheme, theme } = useTheme();
 
-  // --- LOGICA DE SLA (Sincronizada com o horário comercial) ---
   const [availabilityStatus, setAvailabilityStatus] = useState({
     status: "LENTA",
-    color: "red",
+    color: "text-destructive",
   });
 
   const checkSLA = useCallback(() => {
@@ -124,26 +110,15 @@ const Navigation = () => {
       now.getHours() < 17;
     setAvailabilityStatus(
       isWorking
-        ? { status: "ONLINE", color: "green" }
-        : { status: "OFFLINE", color: "red" }
+        ? { status: "ONLINE", color: "text-emerald-500" }
+        : { status: "OFFLINE", color: "text-destructive" }
     );
   }, []);
 
   useEffect(() => {
     checkSLA();
     const interval = setInterval(checkSLA, 60000);
-    const checkTheme = () =>
-      setIsDarkTheme(document.documentElement.classList.contains("dark"));
-    checkTheme();
-    const observer = new MutationObserver(checkTheme);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-    return () => {
-      observer.disconnect();
-      clearInterval(interval);
-    };
+    return () => clearInterval(interval);
   }, [checkSLA]);
 
   const navItems = [
@@ -154,7 +129,6 @@ const Navigation = () => {
     { id: "contact", label: "Contato" },
   ];
 
-  // --- INTERSECTION OBSERVER PARA SCROLL ---
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -184,45 +158,36 @@ const Navigation = () => {
     }
   };
 
-  const isAvailable = availabilityStatus.color === "green";
-
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 backdrop-blur-md 
+        className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 backdrop-blur-md border-b 
         ${
           scrolled
-            ? isDarkTheme
-              ? "bg-[#030014]/80 border-b border-white/10 shadow-2xl"
-              : "bg-white/90 border-b border-slate-200 shadow-lg"
+            ? "bg-background/80 border-border shadow-2xl"
             : "bg-transparent border-transparent"
         }`}
       >
-        {/* LASER LINE ANIMATION (Top Bar) */}
+        {/* LASER LINE ANIMATION */}
         <div className="absolute top-0 left-0 w-full h-[1px] overflow-hidden">
           <motion.div
             animate={{ x: ["-100%", "100%"] }}
             transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-            className={`w-[150px] h-full shadow-[0_0_15px] ${
-              isDarkTheme
-                ? "bg-cyan-400 shadow-cyan-400"
-                : "bg-emerald-500 shadow-emerald-500"
-            }`}
+            className="w-[150px] h-full bg-primary shadow-[0_0_15px_var(--primary)]"
           />
         </div>
 
         <div className="container mx-auto px-6 lg:px-12">
           <div className="flex items-center justify-between h-20">
-            {/* LADO ESQUERDO: LOGO */}
             <button
               onClick={() => scrollToSection("home")}
               className="hover:opacity-80 transition-all active:scale-95"
             >
-              <Logo isDarkTheme={isDarkTheme} />
+              <Logo />
             </button>
 
-            {/* CENTRO: DESKTOP NAV */}
-            <div className="hidden md:flex items-center bg-white/5 border border-white/5 rounded-full px-2 py-1 backdrop-blur-sm">
+            {/* DESKTOP NAV */}
+            <div className="hidden md:flex items-center bg-foreground/5 border border-border/50 rounded-full px-2 py-1 backdrop-blur-sm">
               <ul className="flex items-center gap-1">
                 {navItems.map(({ id, label }) => (
                   <li key={id}>
@@ -231,23 +196,15 @@ const Navigation = () => {
                       className={`text-[11px] font-black uppercase tracking-wider px-4 py-2 rounded-full transition-all relative group
                         ${
                           activeSection === id
-                            ? isDarkTheme
-                              ? "text-cyan-400"
-                              : "text-emerald-600"
-                            : isDarkTheme
-                            ? "text-slate-400 hover:text-white"
-                            : "text-slate-600 hover:text-black"
+                            ? "text-primary"
+                            : "text-muted-foreground hover:text-foreground"
                         }`}
                     >
                       {label}
                       {activeSection === id && (
                         <motion.div
                           layoutId="nav-active-pill"
-                          className={`absolute inset-0 rounded-full border ${
-                            isDarkTheme
-                              ? "border-cyan-500/50 bg-cyan-500/5"
-                              : "border-emerald-500/50 bg-emerald-500/5"
-                          }`}
+                          className="absolute inset-0 rounded-full border border-primary/50 bg-primary/5"
                         />
                       )}
                     </button>
@@ -256,47 +213,33 @@ const Navigation = () => {
               </ul>
             </div>
 
-            {/* LADO DIREITO: STATUS & TOGGLE */}
             <div className="flex items-center gap-4">
               <div
-                className={`hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full border transition-colors duration-500 text-[9px] font-bold font-mono tracking-tighter
-                ${
-                  isAvailable
-                    ? "border-emerald-500/30 bg-emerald-500/5 text-emerald-500"
-                    : "border-red-500/30 bg-red-500/5 text-red-500"
-                }`}
+                className={`hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-card/40 text-[9px] font-bold font-mono tracking-tighter ${availabilityStatus.color}`}
               >
                 <div className="relative flex h-1.5 w-1.5">
                   <span
-                    className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
-                      isAvailable ? "bg-emerald-400" : "bg-red-400"
-                    }`}
+                    className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-current`}
                   ></span>
                   <span
-                    className={`relative inline-flex rounded-full h-1.5 w-1.5 ${
-                      isAvailable ? "bg-emerald-500" : "bg-red-500"
-                    }`}
+                    className={`relative inline-flex rounded-full h-1.5 w-1.5 bg-current`}
                   ></span>
                 </div>
                 SLA: {availabilityStatus.status}
               </div>
 
-              <div className="h-4 w-[1px] bg-white/10 hidden md:block" />
+              <div className="h-4 w-[1px] bg-border hidden md:block" />
 
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-                  className={`p-2 rounded-xl border transition-all hover:scale-110 active:scale-90 ${
-                    isDarkTheme
-                      ? "border-white/5 bg-white/5 text-yellow-400"
-                      : "border-black/5 bg-black/5 text-indigo-600"
-                  }`}
+                  className="p-2 rounded-xl border border-border bg-card/50 text-primary transition-all hover:scale-110 active:scale-90"
                 >
                   {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
                 </button>
                 <button
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                  className="md:hidden p-2 text-slate-400 hover:text-white transition-colors"
+                  className="md:hidden p-2 text-muted-foreground hover:text-primary transition-colors"
                 >
                   {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
@@ -305,60 +248,40 @@ const Navigation = () => {
           </div>
         </div>
 
-        {/* MOBILE MENU OVERLAY */}
+        {/* MOBILE MENU */}
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className={`md:hidden overflow-hidden border-b ${
-                isDarkTheme
-                  ? "bg-[#030014]/95 border-white/10"
-                  : "bg-white/95 border-slate-200"
-              }`}
+              className="md:hidden overflow-hidden border-b border-border bg-background/95 backdrop-blur-lg"
             >
               <div className="flex flex-col p-6 gap-2">
                 {navItems.map(({ id, label }) => (
                   <button
                     key={id}
                     onClick={() => scrollToSection(id)}
-                    className={`text-left text-sm font-black uppercase tracking-[0.2em] py-4 border-b border-white/5 transition-colors
+                    className={`text-left text-sm font-black uppercase tracking-[0.2em] py-4 border-b border-border transition-colors
                       ${
                         activeSection === id
-                          ? isDarkTheme
-                            ? "text-cyan-400"
-                            : "text-emerald-600"
-                          : "text-slate-500"
+                          ? "text-primary"
+                          : "text-muted-foreground"
                       }`}
                   >
                     {label}
                   </button>
                 ))}
-
                 <div
-                  className={`flex items-center justify-between p-4 rounded-xl border mt-4 ${
-                    isAvailable
-                      ? "border-emerald-500/20 bg-emerald-500/5"
-                      : "border-red-500/20 bg-red-500/5"
-                  }`}
+                  className={`flex items-center justify-between p-4 rounded-xl border border-border mt-4 bg-card/50 ${availabilityStatus.color}`}
                 >
                   <div className="flex items-center gap-2">
-                    <Terminal
-                      size={14}
-                      className={
-                        isAvailable ? "text-emerald-500" : "text-red-500"
-                      }
-                    />
-                    <span className="text-[10px] font-mono text-slate-400">
+                    <Terminal size={14} className="bg-current" />
+                    <span className="text-[10px] font-mono text-muted-foreground">
                       SYSTEM_STATUS
                     </span>
                   </div>
-                  <span
-                    className={`text-[10px] font-mono font-bold ${
-                      isAvailable ? "text-emerald-500" : "text-red-500"
-                    }`}
-                  >
+                  <span className="text-[10px] font-mono font-bold uppercase">
                     {availabilityStatus.status}
                   </span>
                 </div>
@@ -378,24 +301,17 @@ const Navigation = () => {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        className={`fixed bottom-14 right-6 md:bottom-24 md:right-10 z-[90] p-4 rounded-2xl border shadow-2xl group transition-all
-          ${
-            isDarkTheme
-              ? "bg-[#030014]/80 border-cyan-500/50 text-cyan-400 shadow-cyan-400/20"
-              : "bg-white/80 border-emerald-500/50 text-emerald-600 shadow-emerald-500/20"
-          }`}
+        className="fixed bottom-14 right-6 md:bottom-24 md:right-10 z-[90] p-4 rounded-2xl border border-primary/50 bg-background/80 text-primary shadow-2xl shadow-primary/20 group"
       >
         <ArrowUp
           size={20}
           className="group-hover:-translate-y-1 transition-transform"
         />
-
-        {/* Efeito visual de scanner no botão (opcional, para combinar com o tema) */}
         <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
           <motion.div
             animate={{ top: ["-100%", "200%"] }}
             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-            className="absolute w-full h-[2px] bg-cyan-400/30 blur-sm"
+            className="absolute w-full h-[2px] bg-primary/30 blur-sm"
           />
         </div>
       </motion.button>

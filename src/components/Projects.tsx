@@ -1,341 +1,259 @@
-import { useEffect, useState, useRef } from "react";
+import { useState } from "react";
 import {
-  Github,
   ExternalLink,
-  ArrowUpRight,
   Trophy,
   Zap,
-  ShieldCheck,
+  Rocket,
+  Monitor,
+  CheckCircle2,
+  ShoppingCart,
+  Search,
+  Settings,
 } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import {
-  EffectCoverflow,
-  Pagination,
-  Autoplay,
-  Navigation,
-} from "swiper/modules";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { Pagination, Autoplay, EffectFade, Mousewheel } from "swiper/modules";
 
 import "swiper/css";
-import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
+import "swiper/css/effect-fade";
 
-const CircularScore = ({ score, label }: { score: number; label: string }) => {
-  const radius = 16;
-  const circumference = 2 * Math.PI * radius;
-  return (
-    <div className="flex flex-col items-center gap-1 group/score">
-      <div className="relative w-10 h-10 flex items-center justify-center">
-        <svg className="w-full h-full transform -rotate-90">
-          <circle
-            cx="20"
-            cy="20"
-            r={radius}
-            stroke="currentColor"
-            strokeWidth="2"
-            fill="transparent"
-            className="text-white/10"
-          />
-          <motion.circle
-            initial={{ strokeDashoffset: circumference }}
-            whileInView={{
-              strokeDashoffset: circumference - (score / 100) * circumference,
-            }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
-            cx="20"
-            cy="20"
-            r={radius}
-            stroke="#22d3ee"
-            strokeWidth="2"
-            fill="transparent"
-            strokeDasharray={circumference}
-            strokeLinecap="round"
-          />
-        </svg>
-        <span className="absolute text-[9px] font-bold text-cyan-400">
-          {score}
-        </span>
-      </div>
-      <span className="text-[7px] font-bold text-slate-500 uppercase tracking-tighter">
-        {label}
-      </span>
+const MetricsBox = ({
+  value,
+  label,
+  icon: Icon,
+}: {
+  value: number;
+  label: string;
+  icon: any;
+}) => (
+  <div className="flex-1 border-r border-white/5 p-4 last:border-0">
+    <Icon className="w-4 h-4 text-purple-500 mb-1" />
+    <div className="text-xl font-black text-white">{value}%</div>
+    <div className="text-[8px] uppercase tracking-wider text-slate-500 font-bold">
+      {label}
     </div>
-  );
-};
+  </div>
+);
 
 const Projects = () => {
-  const [isDarkTheme, setIsDarkTheme] = useState(true);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const swiperRef = useRef<any>(null);
-  const sectionRef = useRef<HTMLElement>(null);
+  const [activeProject, setActiveProject] = useState(0);
+  const [swiperInstance, setSwiperInstance] = useState<any>(null);
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-  const textX = useTransform(
-    useSpring(scrollYProgress, { stiffness: 100, damping: 30 }),
-    [0, 1],
-    [-150, 150]
-  );
-
-  useEffect(() => {
-    const checkTheme = () =>
-      setIsDarkTheme(document.documentElement.classList.contains("dark"));
-    checkTheme();
-    const observer = new MutationObserver(checkTheme);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-    return () => observer.disconnect();
-  }, []);
-
-  const allProjects = [
+  const services = [
     {
-      title: "SaaS Enterprise Dashboard",
+      id: "UI_01",
+      shortName: "Websites",
+      title: "Websites de Alta Conversão",
+      service: "Criação de Websites",
       description:
-        "Plataforma de gestão completa com analytics em tempo real e automações via IA.",
-      technologies: ["React", "Next.js", "Supabase"],
+        "Interfaces que vendem. Focamos em UX Design para guiar o usuário até a conversão final, com carregamento instantâneo.",
       image:
-        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
-      links: { github: "#", live: "#" },
-      scores: { perf: 98, acc: 100, pract: 100, seo: 100 },
+        "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?q=80&w=1200",
+      metrics: { p: 100, a: 98, s: 100 },
+      highlights: ["Design Exclusivo", "Mobile First", "Copywriting"],
+      icon: Monitor,
     },
     {
-      title: "E-commerce High-End",
+      id: "PERF_02",
+      shortName: "Performance",
+      title: "Performance Extrema",
+      service: "Otimização de Sites",
       description:
-        "Loja virtual premium com experiência 3D e checkout otimizado.",
-      technologies: ["Three.js", "React", "Node"],
+        "Sites que carregam em milissegundos. Transformamos lentidão em velocidade, melhorando o ranking no Google.",
       image:
-        "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80",
-      links: { github: "#", live: "#" },
-      scores: { perf: 100, acc: 96, pract: 100, seo: 100 },
+        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200",
+      metrics: { p: 100, a: 95, s: 99 },
+      highlights: ["Lighthouse 100", "Compressão", "Cache Pro"],
+      icon: Zap,
     },
     {
-      title: "Fintech Mobile App",
+      id: "SYS_03",
+      shortName: "Sistemas",
+      title: "Sistemas Web Sob Medida",
+      service: "Sistemas Web",
       description:
-        "App financeiro com gráficos interativos e sincronização via Open Finance.",
-      technologies: ["React Native", "Expo"],
+        "Automatize processos complexos com Dashboards e ERPs customizados integrados ao seu ecossistema de negócio.",
+      // Link de imagem atualizado e testado para Sistemas Web
       image:
-        "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&q=80",
-      links: { github: "#", live: "#" },
-      scores: { perf: 95, acc: 98, pract: 100, seo: 92 },
+        "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200",
+      metrics: { p: 98, a: 100, s: 95 },
+      highlights: ["Escalável", "API First", "Segurança"],
+      icon: Settings,
     },
     {
-      title: "Portal de Notícias SEO",
+      id: "SUP_04",
+      shortName: "Suporte",
+      title: "Evolução Contínua",
+      service: "Suporte & Evolução",
       description:
-        "CMS robusto para mídia de alto tráfego com renderização ISR avançada.",
-      technologies: ["Next.js", "GraphQL", "Redis"],
+        "Monitoramento 24/7 e evolução constante para garantir que sua tecnologia nunca fique obsoleta.",
       image:
-        "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80",
-      links: { github: "#", live: "#" },
-      scores: { perf: 99, acc: 100, pract: 98, seo: 100 },
+        "https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=1200",
+      metrics: { p: 99, a: 99, s: 100 },
+      highlights: ["SLA Garantido", "Real-time", "Updates"],
+      icon: CheckCircle2,
     },
     {
-      title: "AI Landing Page",
+      id: "SEO_05",
+      shortName: "SEO",
+      title: "Domínio Orgânico",
+      service: "SEO Técnico",
       description:
-        "Site institucional com animações complexas e storytelling interativo.",
-      technologies: ["Framer", "Vite", "Tailwind"],
+        "Apareça na primeira página. Técnicas estruturais para alcançar o topo do Google sem depender de anúncios.",
       image:
-        "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80",
-      links: { github: "#", live: "#" },
-      scores: { perf: 100, acc: 100, pract: 100, seo: 100 },
+        "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?q=80&w=1200",
+      metrics: { p: 96, a: 98, s: 100 },
+      highlights: ["Indexação", "Link Building", "Rank+"],
+      icon: Search,
     },
     {
-      title: "Sistema de Delivery",
+      id: "SHOP_06",
+      shortName: "E-commerce",
+      title: "E-commerce Boutique",
+      service: "E-commerce High-End",
       description:
-        "Plataforma multi-tenant com rastreamento em tempo real via WebSocket.",
-      technologies: ["Vue.js", "Firebase", "Maps"],
+        "Venda com experiência de luxo. Checkout fluido e gestão de estoque inteligente para ticket médio alto.",
       image:
-        "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80",
-      links: { github: "#", live: "#" },
-      scores: { perf: 92, acc: 95, pract: 96, seo: 100 },
-    },
-    {
-      title: "Plataforma LMS",
-      description:
-        "Ambiente de aprendizado com gamificação e certificados automáticos.",
-      technologies: ["React", "Node.js", "Postgres"],
-      image:
-        "https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=800&q=80",
-      links: { github: "#", live: "#" },
-      scores: { perf: 96, acc: 98, pract: 100, seo: 95 },
+        "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1200",
+      metrics: { p: 100, a: 97, s: 98 },
+      highlights: ["One-Click Pay", "Inventário", "Upsell"],
+      icon: ShoppingCart,
     },
   ];
 
   return (
     <section
-      ref={sectionRef}
       id="projects"
-      className={`py-24 relative overflow-hidden transition-colors duration-1000 ${
-        isDarkTheme ? "bg-[#030014]" : "bg-slate-50"
-      }`}
+      className="py-24 bg-[#050505] min-h-screen relative flex flex-col justify-center overflow-hidden"
     >
-      {/* MARCA D'ÁGUA CINÉTICA */}
-      <div className="absolute top-0 left-0 w-full overflow-hidden pointer-events-none select-none z-0">
-        <motion.h2
-          style={{ x: textX }}
-          className="text-[15vw] font-black opacity-[0.03] dark:opacity-[0.05] whitespace-nowrap dark:text-white text-black uppercase"
-        >
-          Projetos_Portfolio
-        </motion.h2>
-      </div>
-
       <div className="container mx-auto px-6 relative z-10">
-        <div className="mb-16 text-center lg:text-left">
-          <p className="font-mono text-xs tracking-[0.5em] text-cyan-400 uppercase mb-2">
-            System_Initialize // 2026
-          </p>
-          <h2 className="text-5xl lg:text-7xl font-black tracking-tighter dark:text-white text-slate-900">
-            LASER{" "}
-            <span className="italic bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent">
-              SCANNER_
-            </span>
-          </h2>
-        </div>
+        <header className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-purple-500 font-mono text-xs uppercase tracking-[0.3em]">
+              <Rocket className="w-4 h-4 fill-current" />
+              <span>Expertise Técnica v2.0</span>
+            </div>
+            <h2 className="text-5xl md:text-8xl font-black text-white tracking-tighter leading-none">
+              SOLUÇÕES<span className="text-zinc-800 italic">.WEB</span>
+            </h2>
+          </div>
+        </header>
 
         <Swiper
-          onSwiper={(swiper) => (swiperRef.current = swiper)}
-          onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
-          effect={"coverflow"}
-          grabCursor={true}
-          centeredSlides={true}
-          slidesPerView={"auto"}
+          modules={[Pagination, Autoplay, EffectFade, Mousewheel]}
+          effect="fade"
+          fadeEffect={{ crossFade: true }}
           loop={true}
-          autoplay={{ delay: 4000, disableOnInteraction: false }}
-          coverflowEffect={{
-            rotate: 5,
-            stretch: 0,
-            depth: 100,
-            modifier: 2.5,
-            slideShadows: false,
-          }}
-          pagination={{ clickable: true }}
-          modules={[EffectCoverflow, Pagination, Autoplay, Navigation]}
-          className="pb-24 !overflow-visible"
+          speed={800}
+          onSwiper={setSwiperInstance}
+          autoplay={{ delay: 5000 }}
+          onSlideChange={(swiper) => setActiveProject(swiper.realIndex)}
+          className="w-full max-w-7xl rounded-[2rem] overflow-hidden border border-white/5 bg-zinc-950 shadow-2xl"
         >
-          {allProjects.map((project, index) => (
-            <SwiperSlide
-              key={index}
-              className="max-w-[320px] sm:max-w-[700px] group"
-              onClick={() => swiperRef.current?.slideToLoop(index)}
-            >
-              <div
-                className={`relative aspect-[16/10] sm:aspect-[16/9] overflow-hidden rounded-[2.5rem] border-2 transition-all duration-500
-                ${
-                  activeIndex === index
-                    ? "border-cyan-500/50 shadow-[0_0_50px_rgba(6,182,212,0.2)]"
-                    : "border-white/5 opacity-40 scale-90 grayscale"
-                }`}
-              >
-                {/* EFEITO LASER (VARREDURA) */}
-                {activeIndex === index && (
-                  <div className="absolute inset-0 z-30 pointer-events-none">
-                    <motion.div
-                      animate={{ top: ["-10%", "110%"] }}
-                      transition={{
-                        duration: 2.5,
-                        repeat: Infinity,
-                        ease: "linear",
-                      }}
-                      className="absolute left-0 w-full h-[3px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_20px_#22d3ee] z-40"
-                    />
-                    <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,255,255,0.02)_50%)] bg-[length:100%_4px] z-20 opacity-30" />
-                  </div>
-                )}
-
-                {/* IMAGEM E OVERLAY */}
-                <div className="absolute inset-0">
+          {services.map((project, index) => (
+            <SwiperSlide key={index}>
+              <div className="grid lg:grid-cols-2 min-h-[500px]">
+                {/* IMAGEM COM LOADING PLACEHOLDER */}
+                <div className="relative h-[250px] lg:h-auto bg-zinc-900 overflow-hidden">
                   <img
                     src={project.image}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                     alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#030014] via-[#030014]/60 to-transparent z-10" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-transparent to-transparent hidden lg:block" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 to-transparent lg:hidden" />
                 </div>
 
-                {/* HUD INFO */}
-                <div className="absolute top-6 left-8 right-8 flex justify-between items-start z-40">
-                  <div className="flex items-center gap-3 bg-black/40 backdrop-blur-md p-2 rounded-lg border border-white/10">
-                    <ShieldCheck className="text-cyan-400 w-4 h-4 sm:w-5 sm:h-5" />
-                    <span className="text-[8px] sm:text-[10px] font-mono text-white/70 uppercase tracking-widest">
-                      Secure_Access: Granted
-                    </span>
-                  </div>
-                  <div className="flex gap-2">
-                    <a
-                      href={project.links.github}
-                      className="p-2 sm:p-3 rounded-full bg-white/5 hover:bg-cyan-500 transition-colors border border-white/10"
-                    >
-                      <Github size={18} className="text-white" />
-                    </a>
-                  </div>
-                </div>
-
-                {/* CARD CONTENT */}
-                <motion.div
-                  animate={{
-                    y: activeIndex === index ? 0 : 150,
-                    opacity: activeIndex === index ? 1 : 0,
-                  }}
-                  className="absolute inset-x-0 bottom-0 p-6 sm:p-12 z-40 bg-gradient-to-t from-black via-black/90 to-transparent"
-                >
-                  <div className="flex flex-col sm:flex-row justify-between items-end gap-6">
-                    <div className="flex-1 space-y-3">
-                      <h3 className="text-2xl sm:text-5xl font-black text-white tracking-tighter flex items-center gap-4">
+                {/* CONTEÚDO */}
+                <div className="p-8 lg:p-12 flex flex-col justify-between">
+                  <div className="space-y-6">
+                    <div>
+                      <span className="text-purple-500 font-bold text-xs uppercase tracking-widest">
+                        {project.service}
+                      </span>
+                      <h3 className="text-3xl lg:text-5xl font-black text-white tracking-tighter mt-2 mb-4 leading-tight">
                         {project.title}
-                        <Zap
-                          className="text-cyan-400 fill-cyan-400 animate-pulse hidden sm:block"
-                          size={24}
-                        />
                       </h3>
-                      <p className="text-slate-300 text-[12px] sm:text-base max-w-md font-medium leading-relaxed line-clamp-2 sm:line-clamp-none">
+                      <p className="text-base lg:text-lg text-slate-400 font-medium leading-relaxed">
                         {project.description}
                       </p>
-                      <div className="flex flex-wrap gap-2 pt-2">
-                        {project.technologies.map((t, i) => (
-                          <span
-                            key={i}
-                            className="text-[8px] sm:text-[9px] font-bold px-2 sm:px-3 py-1 bg-cyan-500/10 text-cyan-400 rounded-full border border-cyan-500/20 uppercase"
-                          >
-                            {t}
-                          </span>
-                        ))}
-                      </div>
                     </div>
 
-                    <div className="grid grid-cols-4 gap-2 sm:gap-4 p-3 sm:p-4 bg-white/5 rounded-2xl sm:rounded-3xl border border-white/10 backdrop-blur-xl shrink-0">
-                      <CircularScore score={project.scores.perf} label="PERF" />
-                      <CircularScore score={project.scores.acc} label="ACC" />
-                      <CircularScore
-                        score={project.scores.pract}
-                        label="BEST"
-                      />
-                      <CircularScore score={project.scores.seo} label="SEO" />
+                    <div className="flex flex-wrap gap-2">
+                      {project.highlights.map((h) => (
+                        <div
+                          key={h}
+                          className="bg-white/5 border border-white/10 px-3 py-1 rounded-lg flex items-center gap-2"
+                        >
+                          <CheckCircle2 className="w-3 h-3 text-purple-500" />
+                          <span className="text-[10px] font-bold text-zinc-300 uppercase">
+                            {h}
+                          </span>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                </motion.div>
+
+                  <div className="mt-8 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center gap-6">
+                    <div className="flex w-full sm:w-auto">
+                      <MetricsBox
+                        value={project.metrics.p}
+                        label="Perf."
+                        icon={Zap}
+                      />
+                      <MetricsBox
+                        value={project.metrics.a}
+                        label="Acess."
+                        icon={Monitor}
+                      />
+                      <MetricsBox
+                        value={project.metrics.s}
+                        label="SEO"
+                        icon={Trophy}
+                      />
+                    </div>
+
+                    <button className="w-full sm:flex-1 bg-white text-black font-black py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-purple-600 hover:text-white transition-all group">
+                      SOLICITAR ORÇAMENTO <ExternalLink className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
               </div>
             </SwiperSlide>
           ))}
         </Swiper>
-      </div>
 
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-        .swiper-pagination-bullet { 
-          width: 8px !important; height: 8px !important; background: #22d3ee !important; 
-          opacity: 0.2 !important; transition: all 0.3s;
-        }
-        .swiper-pagination-bullet-active { 
-          width: 30px !important; border-radius: 4px !important; opacity: 1 !important;
-          box-shadow: 0 0 15px rgba(34,211,238,0.8);
-        }
-      `,
-        }}
-      />
+        {/* INDICADOR DE NAVEGAÇÃO PREMIUM */}
+        <div className="mt-8 grid grid-cols-3 md:grid-cols-6 gap-2">
+          {services.map((s, i) => (
+            <button
+              key={i}
+              onClick={() => swiperInstance?.slideToLoop(i)}
+              className={`p-3 rounded-xl border transition-all text-center flex flex-col items-center gap-1 group ${
+                activeProject === i
+                  ? "bg-purple-600 border-purple-500 shadow-lg shadow-purple-900/20"
+                  : "bg-zinc-900/50 border-white/5 hover:border-white/20"
+              }`}
+            >
+              <s.icon
+                className={`w-4 h-4 ${
+                  activeProject === i
+                    ? "text-white"
+                    : "text-zinc-500 group-hover:text-purple-400"
+                }`}
+              />
+              <span
+                className={`text-[8px] font-black uppercase tracking-tighter ${
+                  activeProject === i ? "text-white" : "text-zinc-600"
+                }`}
+              >
+                {s.shortName}
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
     </section>
   );
 };

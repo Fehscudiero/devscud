@@ -48,65 +48,35 @@ const techCategories = [
 ];
 
 const Technologies = () => {
-  const [isDarkTheme, setIsDarkTheme] = useState(true);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Lógica da Marca d'água cinética (TECNOLOGIA)
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
   });
+
   const smoothScroll = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
   });
-  const textX = useTransform(smoothScroll, [0, 1], [100, -100]); // Movimento oposto para variação visual
-
-  useEffect(() => {
-    const checkTheme = () =>
-      setIsDarkTheme(document.documentElement.classList.contains("dark"));
-    checkTheme();
-    const observer = new MutationObserver(checkTheme);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-    return () => observer.disconnect();
-  }, []);
-
-  const accentColor = isDarkTheme ? "text-cyan-400" : "text-emerald-600";
-  const accentBg = isDarkTheme ? "bg-cyan-500" : "bg-emerald-500";
-  const accentGradient = isDarkTheme
-    ? "from-purple-500 via-cyan-400 to-blue-500"
-    : "from-emerald-600 to-teal-600";
+  const textX = useTransform(smoothScroll, [0, 1], [100, -100]);
 
   return (
     <section
       ref={sectionRef}
       id="technologies"
-      className={`py-24 relative overflow-hidden transition-colors duration-1000 ${
-        isDarkTheme ? "bg-[#030014]" : "bg-slate-50"
-      }`}
+      className="py-24 relative overflow-hidden transition-colors duration-1000 bg-background"
     >
-      {/* MARCA D'ÁGUA - PADRÃO TOPO DIREITO */}
+      {/* MARCA D'ÁGUA PADRONIZADA */}
       <div className="absolute top-0 right-0 w-full overflow-hidden pointer-events-none select-none z-0">
         <motion.h2
           style={{ x: textX }}
-          className={`text-[15vw] font-black leading-none tracking-tighter uppercase opacity-[0.03] dark:opacity-[0.05] whitespace-nowrap text-right pr-10 ${
-            isDarkTheme ? "text-white" : "text-black"
-          }`}
+          className="text-[15vw] font-black leading-none tracking-tighter uppercase opacity-[0.03] dark:opacity-[0.05] whitespace-nowrap text-right pr-10 text-foreground"
         >
           TECNOLOGIA
         </motion.h2>
       </div>
-
-      {/* Background Cinético (Blur) */}
-      <div
-        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] blur-[150px] opacity-10 pointer-events-none transition-colors duration-1000 ${
-          isDarkTheme ? "bg-indigo-600" : "bg-emerald-200"
-        }`}
-      />
 
       <div className="container mx-auto px-6 relative z-10">
         {/* HEADER PADRONIZADO */}
@@ -114,19 +84,13 @@ const Technologies = () => {
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
-            className={`font-mono text-xs tracking-[0.5em] uppercase mb-4 ${accentColor}`}
+            className="font-mono text-xs tracking-[0.5em] uppercase mb-4 text-primary font-bold"
           >
             Capabilities_Module // 0{selectedIndex + 1}
           </motion.p>
-          <h2
-            className={`text-4xl lg:text-6xl font-black tracking-tighter ${
-              isDarkTheme ? "text-white" : "text-slate-900"
-            }`}
-          >
+          <h2 className="text-4xl lg:text-6xl font-black tracking-tighter text-foreground">
             STACK{" "}
-            <span
-              className={`bg-gradient-to-r ${accentGradient} bg-clip-text text-transparent italic`}
-            >
+            <span className="bg-gradient-primary bg-clip-text text-transparent italic">
               TÉCNICA_
             </span>
           </h2>
@@ -143,28 +107,26 @@ const Technologies = () => {
                 className={`w-full group relative flex items-center justify-between p-6 rounded-2xl border transition-all duration-500 
                   ${
                     selectedIndex === idx
-                      ? `border-white/10 ${
-                          isDarkTheme
-                            ? "bg-white/5 shadow-2xl"
-                            : "bg-white shadow-lg"
-                        }`
-                      : "border-transparent opacity-40 hover:opacity-100"
+                      ? "border-primary/20 bg-card shadow-xl"
+                      : "border-transparent opacity-40 hover:opacity-100 hover:bg-primary/5"
                   }`}
               >
                 <div className="flex items-center gap-4">
-                  <span className={`font-mono text-xs ${accentColor}`}>
-                    {item.code}
-                  </span>
-                  <h3
-                    className={`text-xl font-bold ${
-                      isDarkTheme ? "text-white" : "text-slate-900"
+                  <span
+                    className={`font-mono text-xs font-bold ${
+                      selectedIndex === idx
+                        ? "text-primary"
+                        : "text-muted-foreground"
                     }`}
                   >
+                    {item.code}
+                  </span>
+                  <h3 className="text-xl font-bold text-foreground">
                     {item.title}
                   </h3>
                 </div>
                 <ChevronRight
-                  className={`transition-transform duration-500 ${
+                  className={`transition-transform duration-500 text-primary ${
                     selectedIndex === idx
                       ? "rotate-90 opacity-100"
                       : "opacity-0 group-hover:opacity-100"
@@ -173,7 +135,7 @@ const Technologies = () => {
                 {selectedIndex === idx && (
                   <motion.div
                     layoutId="activeTabTech"
-                    className={`absolute left-0 w-1 h-8 ${accentBg} rounded-full`}
+                    className="absolute left-0 w-1.5 h-8 bg-primary rounded-full shadow-[0_0_15px_var(--primary)]"
                   />
                 )}
               </button>
@@ -189,46 +151,25 @@ const Technologies = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.4 }}
-                className={`relative p-8 lg:p-14 rounded-[3rem] border-2 overflow-hidden
-                  ${
-                    isDarkTheme
-                      ? "bg-zinc-900/40 border-white/5 backdrop-blur-xl"
-                      : "bg-white border-slate-100 shadow-2xl"
-                  }`}
+                className="relative p-8 lg:p-14 rounded-[3rem] border border-border overflow-hidden bg-card/40 backdrop-blur-xl shadow-2xl"
               >
                 <div className="relative z-10 space-y-8">
                   <div className="flex items-center gap-6">
-                    <div
-                      className={`p-5 rounded-3xl ${
-                        isDarkTheme
-                          ? "bg-white/5 text-cyan-400"
-                          : "bg-slate-100 text-emerald-600"
-                      }`}
-                    >
+                    <div className="p-5 rounded-3xl bg-primary/10 text-primary border border-primary/20">
                       {(() => {
                         const Icon = techCategories[selectedIndex].icon;
                         return <Icon size={42} strokeWidth={1.5} />;
                       })()}
                     </div>
                     <div>
-                      <h4
-                        className={`text-3xl lg:text-4xl font-black ${
-                          isDarkTheme ? "text-white" : "text-slate-900"
-                        }`}
-                      >
+                      <h4 className="text-3xl lg:text-4xl font-black text-foreground">
                         {techCategories[selectedIndex].title.toUpperCase()}
                       </h4>
-                      <div
-                        className={`h-1 w-20 rounded-full bg-gradient-to-r ${accentGradient} mt-2`}
-                      />
+                      <div className="h-1 w-20 rounded-full bg-gradient-primary mt-2" />
                     </div>
                   </div>
 
-                  <p
-                    className={`text-lg lg:text-xl font-medium leading-relaxed max-w-2xl ${
-                      isDarkTheme ? "text-slate-300" : "text-slate-600"
-                    }`}
-                  >
+                  <p className="text-lg lg:text-xl font-medium leading-relaxed max-w-2xl text-muted-foreground">
                     {techCategories[selectedIndex].desc}
                   </p>
 
@@ -237,12 +178,7 @@ const Technologies = () => {
                       <Badge
                         key={i}
                         variant="secondary"
-                        className={`px-4 py-2 text-sm font-bold border-none rounded-xl
-                          ${
-                            isDarkTheme
-                              ? "bg-white/5 text-slate-300"
-                              : "bg-slate-100 text-slate-700"
-                          }`}
+                        className="px-4 py-2 text-sm font-bold border border-border rounded-xl bg-background text-foreground hover:border-primary/50 transition-colors"
                       >
                         {t}
                       </Badge>
@@ -250,8 +186,8 @@ const Technologies = () => {
                   </div>
                 </div>
 
-                {/* Elemento Decorativo */}
-                <div className="absolute bottom-[-30px] right-[-30px] opacity-[0.03] pointer-events-none">
+                {/* Elemento Decorativo de Fundo */}
+                <div className="absolute bottom-[-30px] right-[-30px] opacity-[0.05] pointer-events-none text-primary">
                   <Cpu size={250} />
                 </div>
               </motion.div>
