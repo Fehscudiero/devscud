@@ -61,7 +61,7 @@ const About = () => {
           <motion.h2
             style={{ x: textX }}
             className={`text-[6vw] font-black leading-none uppercase opacity-[0.06] dark:opacity-[0.1] absolute top-0 left-[30%] whitespace-nowrap pointer-events-none select-none ${isDarkTheme ? 'text-white' : 'text-black'}`}          >
-            FELIPE SCUDIERO
+            SOBRE
           </motion.h2>
 
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
@@ -94,15 +94,15 @@ const About = () => {
                 <p className="text-white font-black text-xl uppercase tracking-tighter">Felipe Scudiero</p>
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
-                  <p className="text-cyan-400 text-[10px] font-mono uppercase tracking-[0.2em]">Full Stack Architect</p>
+                  <p className="text-cyan-400 text-[10px] font-mono uppercase tracking-[0.2em]">DESENVOLVEDOR</p>
                 </div>
               </div>
             </motion.div>
 
             <motion.div style={{ rotateZ: badgeRotate }} className="absolute -bottom-6 -right-6 z-40">
               <div className={`p-6 ${isDarkTheme ? 'bg-zinc-900' : 'bg-white'} border-2 border-cyan-500 shadow-[8px_8px_0px_#06b6d4] rounded-2xl`}>
-                <span className={`block text-4xl font-black ${isDarkTheme ? 'text-white' : 'text-slate-900'}`}>+3Y</span>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-cyan-500">EXPERIENCE</span>
+                <span className={`block text-4xl font-black ${isDarkTheme ? 'text-white' : 'text-slate-900'}`}>+3 ANOS</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-cyan-500">EXPERIÊNCIA</span>
               </div>
             </motion.div>
           </div>

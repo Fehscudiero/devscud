@@ -65,7 +65,7 @@ const Testimonials = () => {
           style={{ x: textX }}
           className={`text-[15vw] font-black leading-none tracking-tighter uppercase opacity-[0.03] dark:opacity-[0.05] whitespace-nowrap select-none ${isDarkTheme ? 'text-white' : 'text-black'}`}
         >
-          TESTIMONIALS CLIENTS
+          CLIENTES
         </motion.h2>
       </div>
 
