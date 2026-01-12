@@ -1,7 +1,8 @@
-import { Code2, Github, Linkedin, Instagram, Mail, Terminal, Activity } from "lucide-react";
+import { Github, Linkedin, Instagram, Mail, Terminal, Activity, Cpu } from "lucide-react";
 import Particles from "react-tsparticles";
 import { loadSlim } from "tsparticles-slim";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useMemo } from "react";
+import { motion } from "framer-motion";
 
 const socialLinks = [
   { icon: Github, label: "GitHub", href: "https://github.com/fehscudiero" },
@@ -10,15 +11,6 @@ const socialLinks = [
   { icon: Mail, label: "Email", href: "mailto:scudiero.dev@yahoo.com" },
 ];
 
-const MinimalSeparator = ({ isDarkTheme }: { isDarkTheme: boolean }) => {
-  const accentColor = isDarkTheme ? "bg-purple-500" : "bg-emerald-600";
-  return (
-    <div className="relative w-4 h-full hidden md:flex items-center justify-center min-h-[50px]">
-      <div className={`absolute w-[1px] h-3/4 ${accentColor} opacity-50 rounded-full`} />
-    </div>
-  );
-};
-
 const Footer = () => {
   const [isDarkTheme, setIsDarkTheme] = useState(true);
   const [availabilityStatus, setAvailabilityStatus] = useState({
@@ -26,30 +18,30 @@ const Footer = () => {
     color: "red",
   });
 
-  // -- Lógica de Horários Alterada --
+  const versionData = useMemo(() => {
+    const startDate = new Date("2025-11-01");
+    const today = new Date();
+    const diffInMs = today.getTime() - startDate.getTime();
+    const weeksPassed = Math.floor(diffInMs / (1000 * 60 * 60 * 24 * 7));
+    const lastDeploy = new Date(today);
+    lastDeploy.setDate(today.getDate() - (today.getDay() === 0 ? 6 : today.getDay() - 1));
+
+    return {
+      version: `4.${weeksPassed}.${today.getDay()}`,
+      lastUpdate: lastDeploy.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' })
+    };
+  }, []);
+
   const checkSLA = useCallback(() => {
     const now = new Date();
-    const currentDay = now.getDay(); // 0: Dom, 1: Seg, ..., 5: Sex, 6: Sáb
-    const currentHour = now.getHours();
-
-    const isWeekday = currentDay >= 1 && currentDay <= 5;
-    const isWorkingHour = currentHour >= 8 && currentHour < 17;
-
-    // Só fica ABERTO se for dia de semana E horário comercial
-    if (isWeekday && isWorkingHour) {
-      setAvailabilityStatus({ status: "ABERTO", color: "green" });
-    } else {
-      setAvailabilityStatus({ status: "FECHADO", color: "red" });
-    }
+    const isWorking = now.getDay() >= 1 && now.getDay() <= 5 && now.getHours() >= 8 && now.getHours() < 17;
+    setAvailabilityStatus(isWorking ? { status: "DISPONÍVEL", color: "green" } : { status: "INDISPONÍVEL", color: "red" });
   }, []);
 
   useEffect(() => {
     checkSLA();
     const intervalId = setInterval(checkSLA, 60000);
-    const checkTheme = () => {
-      const root = window.document.documentElement;
-      setIsDarkTheme(root.classList.contains("dark"));
-    };
+    const checkTheme = () => setIsDarkTheme(document.documentElement.classList.contains("dark"));
     checkTheme();
     const observer = new MutationObserver(checkTheme);
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
@@ -58,130 +50,144 @@ const Footer = () => {
 
   const particlesInit = useCallback(async (engine: any) => { await loadSlim(engine); }, []);
 
-  const particleColor = isDarkTheme ? ["#3C096C", "#5A189A", "#7B2CBF"] : ["#059669", "#10b981", "#34d399"];
-  const footerBg = isDarkTheme ? "bg-[#030014] border-white/10" : "bg-white border-slate-200";
-  const textColor = isDarkTheme ? "text-slate-400" : "text-slate-600";
-  const titleColor = isDarkTheme ? "text-white" : "text-slate-900";
-  const borderColor = isDarkTheme ? "border-white/10" : "border-slate-200";
-  const accentText = isDarkTheme ? "text-purple-500" : "text-emerald-600";
-
-  const getColorClasses = (statusColor: string) => {
-    let colorClass: { dot: string; ping: string; text: string; bg: string };
-    if (isDarkTheme) {
-      switch (statusColor) {
-        case 'green': colorClass = { dot: 'bg-emerald-500', ping: 'bg-emerald-400', text: 'text-emerald-400', bg: 'bg-emerald-900/20' }; break;
-        case 'red': colorClass = { dot: 'bg-red-500', ping: 'bg-red-400', text: 'text-red-400', bg: 'bg-red-900/20' }; break;
-        default: colorClass = { dot: 'bg-slate-500', ping: 'bg-slate-400', text: 'text-slate-400', bg: 'bg-slate-900/20' };
-      }
-    } else {
-      switch (statusColor) {
-        case 'green': colorClass = { dot: 'bg-emerald-600', ping: 'bg-emerald-400', text: 'text-emerald-700', bg: 'bg-emerald-50' }; break;
-        case 'red': colorClass = { dot: 'bg-red-600', ping: 'bg-red-400', text: 'text-red-700', bg: 'bg-red-50' }; break;
-        default: colorClass = { dot: 'bg-slate-600', ping: 'bg-slate-400', text: 'text-slate-700', bg: 'bg-slate-50' };
-      }
-    }
-    return colorClass;
-  };
-
-  const availabilityClasses = getColorClasses(availabilityStatus.color);
-  const systemClasses = getColorClasses("green");
-  const statusBorderClass = isDarkTheme ? 'border-emerald-500/30' : 'border-emerald-200';
-  const iconBtn = isDarkTheme ? "text-slate-400 hover:text-white hover:bg-white/10" : "text-slate-500 hover:text-emerald-700 hover:bg-emerald-50";
+  const footerBg = isDarkTheme ? "bg-[#030014]" : "bg-slate-50";
+  const textColor = isDarkTheme ? "text-slate-500" : "text-slate-600";
+  const borderColor = isDarkTheme ? "border-white/5" : "border-black/5";
+  const accentGradient = isDarkTheme ? "from-purple-500 via-cyan-400 to-blue-500" : "from-emerald-500 to-teal-600";
 
   return (
-    <footer className={`relative border-t backdrop-blur-xl overflow-hidden transition-colors duration-500 ${footerBg}`}>
-      <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent to-transparent opacity-50" />
+    <footer className={`relative pt-16 pb-8 border-t ${borderColor} ${footerBg} transition-colors duration-1000 overflow-hidden`}>
+
+      {/* Laser Line Animation */}
+      <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent">
+        <motion.div
+          animate={{ x: ["-100%", "100%"] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+          className="w-[150px] h-full bg-cyan-400 shadow-[0_0_15px_#22d3ee]"
+        />
+      </div>
 
       <Particles
         id="footerParticles"
         init={particlesInit}
-        key={isDarkTheme ? "dark" : "light"}
         options={{
           fullScreen: { enable: false },
           particles: {
-            number: { value: 30 },
-            color: { value: particleColor },
-            shape: { type: "circle" },
-            opacity: { value: 0.6 },
-            size: { value: { min: 1.5, max: 3 } },
-            move: { enable: true, speed: 0.5, direction: "none", random: true },
-            links: { enable: false },
+            number: { value: 20 },
+            color: { value: isDarkTheme ? "#6366f1" : "#10b981" },
+            opacity: { value: 0.2 },
+            size: { value: 1 },
+            move: { enable: true, speed: 0.3 },
           },
-          interactivity: { events: { onHover: { enable: false } } },
-          retina_detect: true,
         }}
-        style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none" }}
+        className="absolute inset-0 pointer-events-none"
       />
 
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-center py-4">
-          <div className="flex flex-col md:flex-row items-center justify-between w-full gap-4 md:gap-0">
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-center pb-12">
 
-            <div className="flex md:flex-1 justify-start items-center gap-3">
-              <div className={`p-1.5 rounded-lg shadow-lg ${isDarkTheme ? 'bg-gradient-to-br from-purple-600 to-indigo-600 text-white' : 'bg-gradient-to-br from-green-500 to-emerald-600 text-white'}`}>
-                <Code2 className="h-4 w-4" />
+          {/* LADO ESQUERDO: BRANDING */}
+          <div className="flex flex-col items-center md:items-start gap-4">
+            <div className="flex items-center gap-3 group">
+              <div className={`p-2 rounded-xl bg-gradient-to-br ${accentGradient} shadow-lg shadow-cyan-500/20 group-hover:scale-110 transition-transform`}>
+                <Cpu className="h-5 w-5 text-white animate-pulse" />
               </div>
               <div className="flex flex-col">
-                <span className={`text-sm font-bold tracking-tight leading-none ${titleColor}`}>Felipe Scudiero</span>
-                <span className={`text-[10px] uppercase tracking-widest font-bold mt-1 ${accentText}`}>Developer</span>
-              </div>
-            </div>
-
-            <div className="flex flex-col md:flex-row items-center gap-3 md:gap-0">
-              <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-colors duration-300 ${availabilityClasses.bg} ${statusBorderClass}`}>
-                <div className="relative flex h-2.5 w-2.5">
-                  <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${availabilityClasses.ping}`}></span>
-                  <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${availabilityClasses.dot}`}></span>
-                </div>
-                <span className={`text-[10px] font-mono font-medium tracking-wider ${textColor}`}>
-                  ATENDIMENTO: <span className={availabilityClasses.text}>{availabilityStatus.status}</span>
+                <span className={`text-xl font-black tracking-tighter ${isDarkTheme ? 'text-white' : 'text-slate-900'}`}>
+                  FELIPE<span className="text-cyan-500">.</span>SCUDIERO
                 </span>
-              </div>
-
-              <MinimalSeparator isDarkTheme={isDarkTheme} />
-
-              <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-colors duration-300 ${systemClasses.bg} ${statusBorderClass}`}>
-                <div className="relative flex h-2.5 w-2.5">
-                  <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${systemClasses.ping}`}></span>
-                  <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${systemClasses.dot}`}></span>
-                </div>
-                <span className={`text-[10px] font-mono font-medium tracking-wider ${textColor}`}>
-                  SYSTEM STATUS: <span className={systemClasses.text}>ONLINE</span>
-                </span>
+                <span className="text-[10px] font-mono tracking-[0.3em] uppercase opacity-50">DESENVOLVEDOR</span>
               </div>
             </div>
+            <p className={`text-xs max-w-[250px] leading-relaxed font-medium text-center md:text-left ${textColor}`}>
+              Projetando interfaces disruptivas e sistemas escaláveis com foco em performance.
+            </p>
+          </div>
 
-            <div className="flex md:flex-1 justify-end items-center gap-2">
-              {socialLinks.map(({ icon: Icon, label, href }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`p-2.5 rounded-lg transition-all duration-200 hover:scale-110 border border-transparent ${iconBtn}`}
-                >
-                  <Icon className="w-4 h-4" />
-                </a>
-              ))}
+          {/* CENTRO: SYSTEM STATUS */}
+          <div className="flex flex-col items-center gap-3">
+            {/* SLA - Borda Verde Animada */}
+            <div className={`relative overflow-hidden flex items-center gap-4 px-5 py-2 rounded-2xl border border-emerald-500/50 bg-white/5 backdrop-blur-md`}>
+              <motion.div
+                animate={{ x: ["-100%", "200%"] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-transparent via-emerald-400 to-transparent opacity-30 pointer-events-none"
+              />
+              <div className="relative flex h-2 w-2">
+                <span className={`animate-ping absolute h-full w-full rounded-full opacity-75 ${availabilityStatus.color === 'green' ? 'bg-emerald-400' : 'bg-red-400'}`}></span>
+                <span className={`relative rounded-full h-2 w-2 ${availabilityStatus.color === 'green' ? 'bg-emerald-500' : 'bg-red-500'}`}></span>
+              </div>
+              <span className={`text-[10px] font-black font-mono tracking-widest ${isDarkTheme ? 'text-white' : 'text-slate-900'}`}>
+                SLA: <span className={availabilityStatus.color === 'green' ? 'text-emerald-400' : 'text-red-400'}>{availabilityStatus.status}</span>
+              </span>
             </div>
 
+            {/* CORE - Borda Azul Animada */}
+            <div className={`relative overflow-hidden flex items-center gap-4 px-5 py-2 rounded-2xl border border-cyan-500/50 bg-white/5 backdrop-blur-md`}>
+              <motion.div
+                animate={{ x: ["-100%", "200%"] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-30 pointer-events-none"
+              />
+              <div className="relative flex h-2 w-2">
+                <span className="animate-ping absolute h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                <span className="relative rounded-full h-2 w-2 bg-cyan-500"></span>
+              </div>
+              <span className={`text-[10px] font-black font-mono tracking-widest ${isDarkTheme ? 'text-white' : 'text-slate-900'}`}>
+                CORE: <span className="text-cyan-400">ENCRYPTED & STABLE</span>
+              </span>
+            </div>
+          </div>
+
+          {/* LADO DIREITO: REDES SOCIAIS */}
+          <div className="flex justify-center md:justify-end gap-3">
+            {socialLinks.map(({ icon: Icon, label, href }) => (
+              <motion.a
+                whileHover={{ y: -5, scale: 1.1 }}
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`p-3 rounded-xl border ${borderColor} ${isDarkTheme ? 'bg-white/5 hover:bg-white/10 text-white' : 'bg-black/5 hover:bg-black/10 text-slate-900'} transition-all`}
+              >
+                <Icon className="w-5 h-5" />
+              </motion.a>
+            ))}
           </div>
         </div>
 
-        <div className={`w-full h-[1px] ${borderColor}`}></div>
+        {/* BOTTOM BAR: INFO TÉCNICA DINÂMICA */}
+        <div className={`pt-8 border-t ${borderColor} flex flex-col md:flex-row justify-between items-center gap-6`}>
+          <div className="flex flex-col items-center md:items-start">
+            <span className={`text-[10px] font-black tracking-widest ${textColor}`}>
+              © 2026 COPYRIGHT // DESIGNED BY DEV SCUD_
+            </span>
+          </div>
 
-        <div className="flex flex-col md:flex-row items-center justify-between py-4 text-[10px] sm:text-xs font-mono opacity-70 gap-2">
-          <span className={textColor}>© 2025 FELIPE SCUDIERO. ALL RIGHTS RESERVED.</span>
-          <div className={`flex items-center gap-4 ${textColor}`}>
-            <span className="hidden md:inline text-slate-500">|</span>
-            <div className="flex items-center gap-2">
-              <Terminal className="w-3 h-3" />
-              <span>v3.5.0 // STABLE BUILD</span>
+          <div className="flex items-center gap-6">
+            {/* BUILD - Borda Azul Animada */}
+            <div className="relative overflow-hidden flex items-center gap-3 group cursor-help bg-cyan-500/5 px-4 py-2 rounded-xl border border-cyan-500/50">
+              <motion.div
+                animate={{ x: ["-100%", "200%"] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent pointer-events-none"
+              />
+              <Terminal className="w-4 h-4 text-cyan-500 animate-bounce" />
+              <div className="flex flex-col">
+                <span className={`text-[10px] font-mono font-black ${isDarkTheme ? 'text-white' : 'text-slate-900'}`}>
+                  BUILD: v{versionData.version} <span className="text-cyan-500">// PROD</span>
+                </span>
+                <span className="text-[8px] font-mono text-cyan-600/80 font-bold uppercase tracking-tight">
+                  LAST DEPLOY: {versionData.lastUpdate}
+                </span>
+              </div>
             </div>
-            <span className="hidden md:inline text-slate-500">|</span>
-            <div className="flex items-center gap-2">
-              <Activity className="w-3 h-3" />
-              <span>100% UPTIME</span>
+
+            <div className="flex items-center gap-2 group cursor-help">
+              <Activity className="w-3 h-3 text-purple-500" />
+              <span className={`text-[10px] font-mono font-bold ${textColor} group-hover:text-purple-400 transition-colors`}>
+                LATENCY: 14MS
+              </span>
             </div>
           </div>
         </div>
