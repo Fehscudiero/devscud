@@ -1,208 +1,133 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import {
-  Code2,
-  Blocks,
-  Database,
-  Rocket,
-  Terminal,
-  Braces,
-  Server,
-  BarChart2,
-  MonitorSmartphone,
-  Settings2,
-} from "lucide-react";
-import Particles from "react-tsparticles";
-import { loadSlim } from "tsparticles-slim";
-import AOS from "aos";
-import "aos/dist/aos.css";
+import { Braces, Server, BarChart2, MonitorSmartphone, ChevronRight, Cpu } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+
+const techCategories = [
+  { icon: Braces, title: "Linguagens", techs: ["TypeScript", "JavaScript", "Python", "Java", "PHP"], code: "01", desc: "Desenvolvimento de lógica de alto nível com foco em tipagem estática e escalabilidade absoluta." },
+  { icon: Server, title: "Frameworks", techs: ["React", "Next.js", "Node.js", "Tailwind", "Docker"], code: "02", desc: "Construção de ecossistemas modernos, otimizados para SEO e alta performance de renderização." },
+  { icon: BarChart2, title: "Arquitetura de Dados", techs: ["PostgreSQL", "MySQL", "Prisma", "Redis", "MongoDB"], code: "03", desc: "Modelagem de bancos de dados relacionais e não-relacionais com foco total em integridade." },
+  { icon: MonitorSmartphone, title: "Interface & UX", techs: ["Framer Motion", "UX/UI Design", "Storybook", "Testes Vitest"], code: "04", desc: "Criação de experiências de utilizador fluidas, com foco em usabilidade e UX cinematográfica." },
+];
 
 const Technologies = () => {
   const [isDarkTheme, setIsDarkTheme] = useState(true);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
-  // -- Detecção de Tema Blindada --
   useEffect(() => {
-    const checkTheme = () => {
-      const root = window.document.documentElement;
-      const isDark = root.classList.contains("dark");
-      setIsDarkTheme(isDark);
-    };
-
+    const checkTheme = () => setIsDarkTheme(document.documentElement.classList.contains("dark"));
     checkTheme();
     const observer = new MutationObserver(checkTheme);
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
     return () => observer.disconnect();
   }, []);
 
-  // -- Inicialização de Partículas --
-  const particlesInit = useCallback(async (engine: any) => {
-    await loadSlim(engine);
-  }, []);
-
-  // -- Configuração Dinâmica das Partículas --
-  const particleColors = isDarkTheme
-    ? ["#7c3aed", "#2563eb", "#ffffff"] // Roxo, Azul, Branco (Dark)
-    : ["#059669", "#10b981", "#34d399"]; // Tons de Verde (Light)
-
-  const linksColor = isDarkTheme ? "#4c1d95" : "#a7f3d0"; // Linhas Roxo Escuro (Dark) vs Verde Claro (Light)
-
-  // -- Estilos Dinâmicos --
-  // Fundo
-  const sectionBgClass = isDarkTheme
-    ? "bg-[#030014]" // Azul Profundo (Dark)
-    : "bg-white";    // Branco (Light)
-
-  // Card
-  const cardClass = isDarkTheme
-    ? "bg-white/5 border-white/10 hover:border-purple-500/50 hover:bg-white/10"
-    : "bg-white border-slate-200 shadow-md hover:shadow-xl hover:border-green-500/50";
-
-  // Texto
-  const titleColor = isDarkTheme ? "text-white" : "text-slate-900";
-  const textColor = isDarkTheme ? "text-slate-400" : "text-slate-600";
-
-  // Gradiente do Título
-  const gradientText = isDarkTheme
-    ? "from-purple-600 via-indigo-500 to-blue-600"
-    : "from-green-600 via-emerald-500 to-teal-600";
-
-  // Badge
-  const badgeClass = isDarkTheme
-    ? "bg-purple-500/10 text-purple-200 border-purple-500/20 hover:bg-purple-500/20"
-    : "bg-green-100 text-green-800 border-green-200 hover:bg-green-200";
-
-  // Ícone
-  const iconBg = isDarkTheme ? "bg-purple-500/20" : "bg-green-100";
-  const iconColor = isDarkTheme ? "text-purple-400" : "text-green-600";
-
-  useEffect(() => {
-    AOS.init({
-      duration: 1000,
-      once: false,
-      mirror: true,
-    });
-    AOS.refresh();
-  }, []);
-
-  const techCategories = [
-    {
-      icon: Braces,
-      title: "Linguagens de Programação",
-      techs: ["JavaScript", "TypeScript", "Python", "Java", "PHP", "C"],
-    },
-    {
-      icon: Server,
-      title: "Frameworks e Ferramentas",
-      // Adicionado React aqui como pedido
-      techs: ["React", "Node.js", "APIs RESTful", "HTML5", "CSS3", "Tailwind", "Git", "CI/CD"],
-    },
-    {
-      icon: BarChart2,
-      title: "Banco de Dados e Visualização",
-      techs: ["SQL", "PostgreSQL", "MySQL", "SQLite", "Power BI", "Dashboards e KPIs"],
-    },
-    {
-      icon: MonitorSmartphone,
-      title: "Práticas de Interface e Performance",
-      techs: ["Testes Automatizados", "UX/UI", "Design Responsivo", "Otimização de Performance"],
-    },
-  ];
-
-  const effects = ["zoom-in", "flip-up", "fade-up", "fade-down"];
+  const accentColor = isDarkTheme ? "text-cyan-400" : "text-emerald-600";
+  const accentBg = isDarkTheme ? "bg-cyan-500" : "bg-emerald-500";
+  const accentGradient = isDarkTheme ? "from-purple-500 via-cyan-400 to-blue-500" : "from-emerald-600 to-teal-600";
 
   return (
-    <section id="technologies" className={`py-20 relative overflow-hidden transition-colors duration-500 ${sectionBgClass}`}>
+    <section id="technologies" className={`py-24 relative overflow-hidden transition-colors duration-1000 ${isDarkTheme ? 'bg-[#030014]' : 'bg-slate-50'}`}>
 
-      {/* --- PARTÍCULAS --- */}
-      <div className="absolute inset-0 z-0 opacity-30 pointer-events-none">
-        <Particles
-          id="techParticles"
-          init={particlesInit}
-          key={isDarkTheme ? "dark" : "light"}
-          options={{
-            fullScreen: { enable: false },
-            particles: {
-              number: { value: 30 },
-              color: { value: particleColors },
-              shape: { type: "circle" },
-              opacity: { value: 0.3 },
-              size: { value: { min: 1, max: 3 } },
-              move: { enable: true, speed: 0.3, direction: "none", random: true, outModes: "out" },
-              links: {
-                enable: true,
-                distance: 150,
-                color: linksColor,
-                opacity: 0.15,
-                width: 1
-              },
-            },
-            interactivity: {
-              events: { onHover: { enable: true, mode: "grab" } },
-              modes: { grab: { distance: 140, links: { opacity: 0.4 } } },
-            },
-            retina_detect: true,
-          }}
-          style={{ position: "absolute", width: "100%", height: "100%" }}
-        />
-      </div>
+      {/* Background Cinético */}
+      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] blur-[150px] opacity-10 pointer-events-none transition-colors duration-1000 ${isDarkTheme ? 'bg-indigo-600' : 'bg-emerald-200'}`} />
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="max-w-6xl mx-auto">
-          {/* Cabeçalho */}
-          <div className="text-center mb-16 space-y-4">
-            <h2
-              className={`text-4xl sm:text-5xl font-bold transition-colors duration-300 ${titleColor}`}
-              data-aos="fade-right"
-              data-aos-once="false"
-            >
-              Minha <span className={`bg-gradient-to-r ${gradientText} bg-clip-text text-transparent animate-gradient-x`}>Stack Técnica</span>
-            </h2>
-            <p
-              className={`text-lg max-w-2xl mx-auto transition-colors duration-300 ${textColor}`}
-              data-aos="fade-left"
-              data-aos-once="false"
-            >
-              Domínio de tecnologias modernas para desenvolver soluções digitais eficientes e escaláveis
-            </p>
+      <div className="container mx-auto px-6 relative z-10">
+
+        {/* HEADER PADRONIZADO (CONFORME SOLICITADO) */}
+        <div className="mb-16 text-center lg:text-left">
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className={`font-mono text-xs tracking-[0.5em] uppercase mb-4 ${accentColor}`}
+          >
+            Capabilities_Module // 0{selectedIndex + 1}
+          </motion.p>
+          <h2 className={`text-4xl lg:text-6xl font-black tracking-tighter ${isDarkTheme ? 'text-white' : 'text-slate-900'}`}>
+            STACK <span className={`bg-gradient-to-r ${accentGradient} bg-clip-text text-transparent italic`}>TÉCNICA_</span>
+          </h2>
+        </div>
+
+        {/* Grid de Conteúdo */}
+        <div className="grid lg:grid-cols-12 gap-12 items-start">
+
+          {/* Menu Lateral */}
+          <div className="lg:col-span-4 space-y-3 order-2 lg:order-1">
+            {techCategories.map((item, idx) => (
+              <button
+                key={idx}
+                onClick={() => setSelectedIndex(idx)}
+                className={`w-full group relative flex items-center justify-between p-6 rounded-2xl border transition-all duration-500 
+                  ${selectedIndex === idx
+                    ? `border-white/10 ${isDarkTheme ? 'bg-white/5 shadow-2xl' : 'bg-white shadow-lg'}`
+                    : 'border-transparent opacity-40 hover:opacity-100'}`}
+              >
+                <div className="flex items-center gap-4">
+                  <span className={`font-mono text-xs ${accentColor}`}>{item.code}</span>
+                  <h3 className={`text-xl font-bold ${isDarkTheme ? 'text-white' : 'text-slate-900'}`}>{item.title}</h3>
+                </div>
+                <ChevronRight className={`transition-transform duration-500 ${selectedIndex === idx ? 'rotate-90 opacity-100' : 'opacity-0 group-hover:opacity-100'}`} />
+                {selectedIndex === idx && (
+                  <motion.div layoutId="activeTabTech" className={`absolute left-0 w-1 h-8 ${accentBg} rounded-full`} />
+                )}
+              </button>
+            ))}
           </div>
 
-          {/* Grid de Cards */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 justify-center text-center">
-            {techCategories.map((category, index) => {
-              const Icon = category.icon;
-              const effect = effects[index % effects.length];
-
-              return (
-                <div
-                  key={index}
-                  data-aos={effect}
-                  data-aos-once="false"
-                  className={`flex flex-col items-center space-y-6 p-6 rounded-xl transition-all duration-300 group ${cardClass}`}
-                >
-                  <div className="flex flex-col items-center gap-3">
-                    <div className={`p-3 rounded-full transition-colors duration-300 ${iconBg}`}>
-                      <Icon className={`w-7 h-7 transition-colors duration-300 ${iconColor}`} />
+          {/* Painel Central de Detalhes */}
+          <div className="lg:col-span-8 order-1 lg:order-2">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={selectedIndex}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.4 }}
+                className={`relative p-8 lg:p-14 rounded-[3rem] border-2 overflow-hidden
+                  ${isDarkTheme ? 'bg-zinc-900/40 border-white/5 backdrop-blur-xl' : 'bg-white border-slate-100 shadow-2xl'}`}
+              >
+                <div className="relative z-10 space-y-8">
+                  <div className="flex items-center gap-6">
+                    <div className={`p-5 rounded-3xl ${isDarkTheme ? 'bg-white/5 text-cyan-400' : 'bg-slate-100 text-emerald-600'}`}>
+                      {(() => {
+                        const Icon = techCategories[selectedIndex].icon;
+                        return <Icon size={42} strokeWidth={1.5} />;
+                      })()}
                     </div>
-                    <h3 className={`font-semibold text-xl transition-colors duration-300 ${titleColor}`}>
-                      {category.title}
-                    </h3>
+                    <div>
+                      <h4 className={`text-3xl lg:text-4xl font-black ${isDarkTheme ? 'text-white' : 'text-slate-900'}`}>
+                        {techCategories[selectedIndex].title.toUpperCase()}
+                      </h4>
+                      <div className={`h-1 w-20 rounded-full bg-gradient-to-r ${accentGradient} mt-2`} />
+                    </div>
                   </div>
 
-                  <div className="flex flex-wrap justify-center gap-2">
-                    {category.techs.map((tech, i) => (
+                  <p className={`text-lg lg:text-xl font-medium leading-relaxed max-w-2xl ${isDarkTheme ? 'text-slate-300' : 'text-slate-600'}`}>
+                    {techCategories[selectedIndex].desc}
+                  </p>
+
+                  <div className="flex flex-wrap gap-2">
+                    {techCategories[selectedIndex].techs.map((t, i) => (
                       <Badge
                         key={i}
                         variant="secondary"
-                        className={`transition-colors px-3 py-1 border ${badgeClass}`}
+                        className={`px-4 py-2 text-sm font-bold border-none rounded-xl
+                          ${isDarkTheme ? 'bg-white/5 text-slate-300' : 'bg-slate-100 text-slate-700'}`}
                       >
-                        {tech}
+                        {t}
                       </Badge>
                     ))}
                   </div>
                 </div>
-              );
-            })}
+
+                {/* Elemento Decorativo */}
+                <div className="absolute bottom-[-30px] right-[-30px] opacity-[0.03] pointer-events-none">
+                  <Cpu size={250} />
+                </div>
+              </motion.div>
+            </AnimatePresence>
           </div>
+
         </div>
       </div>
     </section>
