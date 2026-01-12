@@ -71,11 +71,14 @@ const Hero = () => {
           key={isDarkTheme ? "dark-hero-balanced" : "light-hero-balanced"}
           options={{
             fullScreen: { enable: false },
-            fpsLimit: 120,
+            fpsLimit: 60, // 1. Limitado para consistência de performance
+            pauseOnBlur: true, // 2. Para de processar ao mudar de aba (foco do Opera GX)
+            pauseOnOutsideViewport: true, // 3. Para de processar ao scrollar para baixo
             particles: {
               number: {
                 value: isMobile ? 20 : 65,
-                density: { enable: true, area: 800 }
+                density: { enable: true, area: 800 },
+                limit: 100, // 4. Impede acúmulo por cliques (push)
               },
               color: { value: particlesColors },
               shape: { type: "circle" },
@@ -90,7 +93,7 @@ const Hero = () => {
                 direction: "none",
                 random: true,
                 straight: false,
-                outModes: { default: "out" },
+                outModes: { default: "destroy" }, // 5. Limpa a memória ao sair da tela
               },
               links: {
                 enable: !isMobile,
