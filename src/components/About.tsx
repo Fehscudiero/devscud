@@ -1,177 +1,143 @@
-import { useEffect, useState } from "react";
-import { Code2, Sparkles, Zap } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import Eu from "../assets/eu.jpg"; // Sua foto real
-import AOS from "aos";
-import "aos/dist/aos.css";
-// Usando caminho relativo para garantir compatibilidade no preview e local
+import { useEffect, useState, useRef } from "react";
+import Eu from "../assets/eu.jpg";
+import { motion, Variants, useScroll, useTransform, useSpring } from "framer-motion";
+import Tilt from "react-parallax-tilt";
 import { useTheme } from "./theme-provider";
 
 const About = () => {
   const { theme } = useTheme();
   const [isDarkTheme, setIsDarkTheme] = useState(true);
+  const sectionRef = useRef(null);
 
-  // -- Lógica de Detecção de Tema Blindada --
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  const smoothScroll = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
+
+  // Efeitos Disruptivos de Scroll
+  const clipPath = useTransform(smoothScroll, [0, 0.3], ["circle(0% at 50% 50%)", "circle(100% at 50% 50%)"]);
+  const imageScale = useTransform(smoothScroll, [0, 0.5], [1.5, 1]);
+  const textX = useTransform(smoothScroll, [0, 1], [0, 200]);
+  const badgeRotate = useTransform(smoothScroll, [0, 0.5], [-20, 0]);
+
   useEffect(() => {
     const checkTheme = () => {
-      const root = window.document.documentElement;
-      const isDark = root.classList.contains("dark");
+      const isDark = document.documentElement.classList.contains("dark");
       setIsDarkTheme(isDark);
     };
-
     checkTheme();
     const observer = new MutationObserver(checkTheme);
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
     return () => observer.disconnect();
   }, [theme]);
 
-  useEffect(() => {
-    AOS.init({ duration: 1000, once: false, mirror: true });
-    AOS.refresh();
-  }, []);
-
-  // -- Estilos Dinâmicos (Dual Personality) --
-
-  // Fundo: Dark (Azul Profundo Cyberpunk) vs Light (Branco Clean)
-  const sectionBgClass = isDarkTheme ? "bg-[#030014]" : "bg-white";
-
-  // Texto
+  const sectionBgClass = isDarkTheme ? "bg-[#030014]" : "bg-slate-50";
   const titleColorClass = isDarkTheme ? "text-white" : "text-slate-900";
   const textColorClass = isDarkTheme ? "text-slate-400" : "text-slate-600";
-
-  // Gradiente do Título
-  const gradientText = isDarkTheme
-    ? "from-purple-600 via-indigo-500 to-blue-600"
-    : "from-green-600 via-emerald-500 to-teal-600";
-
-  // Estilo dos Cards
-  const cardClass = isDarkTheme
-    ? "bg-white/5 border-white/10 hover:border-purple-500/50 hover:bg-white/10"
-    : "bg-white border-slate-200 shadow-lg hover:border-green-500/50 hover:shadow-xl";
-
-  // Ícones dos Cards
-  const iconBgClass = isDarkTheme
-    ? "bg-purple-500/10 group-hover:bg-purple-500/20"
-    : "bg-green-100 group-hover:bg-green-200";
-
-  const iconColorClass = isDarkTheme
-    ? "text-purple-400"
-    : "text-green-600";
-
-  // Moldura da Foto
-  const photoBorderClass = isDarkTheme
-    ? "border-purple-500/30 shadow-purple-500/20"
-    : "border-green-500/30 shadow-green-500/20";
-
-  const highlights = [
-    {
-      icon: Code2,
-      title: "Tecnologias",
-      description: "React, JavaScript, TypeScript, UI/UX Design",
-    },
-    {
-      icon: Sparkles,
-      title: "Criatividade",
-      description: "Transformo ideias em experiências digitais únicas",
-    },
-    {
-      icon: Zap,
-      title: "Performance",
-      description: "Código otimizado e interfaces responsivas",
-    },
-  ];
+  const gradientText = isDarkTheme ? "from-purple-500 via-cyan-400 to-blue-500" : "from-emerald-500 to-teal-600";
 
   return (
     <section
+      ref={sectionRef}
       id="about"
-      className={`py-20 relative transition-colors duration-500 overflow-hidden ${sectionBgClass}`}
+      className={`pt-20 pb-32 relative transition-colors duration-1000 overflow-hidden ${sectionBgClass}`}
     >
-      {/* Luzes de Fundo Ambientais (Blobs) */}
-      <div className={`absolute top-0 right-0 w-96 h-96 rounded-full blur-[120px] opacity-20 pointer-events-none ${isDarkTheme ? 'bg-purple-600' : 'bg-green-400'}`} />
-      <div className={`absolute bottom-0 left-0 w-96 h-96 rounded-full blur-[120px] opacity-20 pointer-events-none ${isDarkTheme ? 'bg-blue-600' : 'bg-teal-400'}`} />
+      {/* Grid de fundo tecnológica */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        style={{ backgroundImage: `radial-gradient(${isDarkTheme ? '#fff' : '#000'} 1px, transparent 1px)`, backgroundSize: '30px 30px' }}
+      />
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="max-w-6xl mx-auto">
+      <div className="container mx-auto px-6 relative z-10">
 
-          {/* Cabeçalho da Seção */}
-          <div className="text-center mb-20 space-y-4">
-            <h2
-              className={`text-4xl sm:text-5xl font-bold tracking-tight transition-colors duration-300 ${titleColorClass}`}
-              data-aos="fade-down"
-            >
-              Sobre <span className={`bg-gradient-to-r ${gradientText} bg-clip-text text-transparent animate-gradient-x`}>Mim</span>
-            </h2>
-            <p
-              className={`text-lg max-w-2xl mx-auto leading-relaxed transition-colors duration-300 ${textColorClass}`}
-              data-aos="fade-up"
-            >
-              Codificando ideias, escalando soluções, impulsionando inovação.
-            </p>
-          </div>
-
-          {/* Conteúdo Principal (Grid Assimétrico) */}
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-20">
-
-            {/* Texto */}
-            <div className="space-y-8" data-aos="fade-right">
-              <div className="space-y-6 text-lg leading-relaxed">
-                <p className={`transition-colors duration-300 ${textColorClass}`}>
-                  Sou um desenvolvedor com foco em criar interfaces intuitivas
-                  e experiências digitais que fazem a diferença. Especializado em{" "}
-                  <span className={`font-semibold ${isDarkTheme ? 'text-purple-400' : 'text-green-600'}`}>React</span>,{" "}
-                  <span className={`font-semibold ${isDarkTheme ? 'text-blue-400' : 'text-teal-600'}`}>JavaScript</span> e{" "}
-                  <span className={`font-semibold ${isDarkTheme ? 'text-indigo-400' : 'text-emerald-600'}`}>UI/UX</span>, combino
-                  criatividade com código limpo e performance.
-                </p>
-                <p className={`transition-colors duration-300 ${textColorClass}`}>
-                  Transformo requisitos em experiências memoráveis. Meu foco é eliminar a fricção entre o usuário e a tecnologia, equilibrando beleza e funcionalidade para criar interfaces que não apenas funcionam, mas engajam e convertem.
-                </p>
-
-              </div>
-            </div>
-
-            {/* Imagem com Efeito Glass/Glow */}
-            <div className="relative group" data-aos="fade-left">
-              {/* Glow Colorido no Fundo da Imagem */}
-              <div className={`absolute -inset-1 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200 ${isDarkTheme ? 'bg-gradient-to-r from-purple-600 to-blue-600' : 'bg-gradient-to-r from-green-600 to-teal-600'}`}></div>
-
-              <div className={`relative aspect-square rounded-2xl overflow-hidden border shadow-2xl transition-all duration-300 ${photoBorderClass}`}>
-                <img
-                  src={Eu}
-                  alt="Felipe Scudiero"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                {/* Overlay sutil para integrar a imagem ao tema */}
-                <div className={`absolute inset-0 bg-gradient-to-t opacity-20 ${isDarkTheme ? 'from-black via-transparent to-transparent' : 'from-green-900 via-transparent to-transparent'}`} />
-              </div>
-            </div>
-          </div>
-
-          {/* Cards de Destaque */}
-          <div
-            className="grid sm:grid-cols-3 gap-6"
-            data-aos="zoom-in-up"
+        {/* TÍTULO KINETIC - MARCA D'ÁGUA DINÂMICA */}
+        <div className="relative mb-24 overflow-hidden">
+          <motion.h2
+            style={{ x: textX }}
+            className={`text-[15vw] font-black leading-none tracking-tighter uppercase opacity-[0.03] dark:opacity-[0.05] absolute -top-5 left-0 whitespace-nowrap pointer-events-none select-none ${isDarkTheme ? 'text-white' : 'text-black'}`}
           >
-            {highlights.map((item, index) => (
-              <Card
-                key={index}
-                className={`p-8 border transition-all duration-300 group ${cardClass}`}
-              >
-                <div className="space-y-4 text-center">
-                  <div className={`w-14 h-14 mx-auto rounded-xl flex items-center justify-center transition-colors duration-300 ${iconBgClass}`}>
-                    <item.icon className={`w-7 h-7 transition-colors duration-300 ${iconColorClass}`} />
-                  </div>
-                  <h3 className={`text-xl font-bold transition-colors duration-300 ${titleColorClass}`}>
-                    {item.title}
-                  </h3>
-                  <p className={`text-sm leading-relaxed transition-colors duration-300 ${textColorClass}`}>
-                    {item.description}
-                  </p>
+            CODE & AESTHETICS • PIXEL PERFECT • CODE & AESTHETICS •
+          </motion.h2>
+
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            className="relative z-10"
+          >
+            <h3 className={`text-6xl sm:text-9xl font-black ${titleColorClass} tracking-tight`}>
+              SOBRE <br />
+              <span className={`bg-gradient-to-r ${gradientText} bg-clip-text text-transparent italic`}>MIM_</span>
+            </h3>
+          </motion.div>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
+
+          {/* FOTO: O PORTAL INTERATIVO */}
+          <div className="relative group">
+            <motion.div
+              style={{ clipPath, scale: imageScale }}
+              className="relative aspect-[4/5] sm:aspect-square w-full max-w-[550px] mx-auto rounded-[2rem] overflow-hidden bg-black shadow-[0_0_50px_rgba(139,92,246,0.3)]"
+            >
+              {/* Efeito de Scanner de Luz */}
+              <motion.div
+                animate={{ top: ["-100%", "100%"] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                className="absolute left-0 w-full h-20 bg-gradient-to-b from-transparent via-cyan-500/30 to-transparent z-10 pointer-events-none"
+              />
+
+              <img
+                src={Eu}
+                alt="Felipe Scudiero"
+                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+              />
+
+              {/* Overlay Futurista */}
+              <div className="absolute top-6 left-6 flex gap-2">
+                <div className="px-3 py-1 bg-black/50 backdrop-blur-md border border-white/20 rounded-full text-[10px] text-cyan-400 font-mono tracking-widest uppercase">
+                  System: Active
                 </div>
-              </Card>
-            ))}
+              </div>
+
+              {/* Glassmorphism Label */}
+              <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/80 to-transparent">
+                <p className="text-white font-black text-2xl tracking-tight uppercase">Felipe Scudiero</p>
+                <p className="text-cyan-400 text-xs font-mono tracking-[0.2em]">Creative Developer</p>
+              </div>
+            </motion.div>
+
+            {/* Badges Flutuantes (Neo-Brutalismo) */}
+            <motion.div
+              style={{ rotateZ: badgeRotate }}
+              className="absolute -bottom-10 -right-4 sm:-right-10 z-20 flex flex-col gap-4"
+            >
+              <div className="p-6 bg-white dark:bg-zinc-900 border-4 border-purple-500 shadow-[8px_8px_0px_rgba(139,92,246,1)] rounded-xl transform -rotate-3 hover:rotate-0 transition-transform">
+                <p className="font-black text-3xl italic ${isDarkTheme ? 'text-white' : 'text-black'}">+3 ANOS</p>
+                <p className="text-[10px] font-bold uppercase tracking-tighter opacity-60 ${isDarkTheme ? 'text-white' : 'text-black'}">Professional Exp</p>
+              </div>
+            </motion.div>
           </div>
 
+          {/* CONTEÚDO TEXTUAL */}
+          <div className="space-y-12">
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              className="relative p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm"
+            >
+              <div className="absolute -top-4 -left-4 w-12 h-12 border-t-4 border-l-4 border-cyan-500" />
+              <p className={`text-2xl sm:text-3xl font-medium leading-relaxed ${textColorClass}`}>
+                Eu transformo <span className="text-white font-bold underline decoration-cyan-500 underline-offset-8">visões complexas</span> em realidade digital.
+                Meu foco é o ponto onde o design impecável e a engenharia de alta performance se encontram.
+              </p>
+            </motion.div>
+
+            <div className="flex flex-wrap gap-4">
+
+            </div>
+          </div>
         </div>
       </div>
     </section>
