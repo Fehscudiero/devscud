@@ -26,16 +26,17 @@ const Footer = () => {
     color: "red",
   });
 
+  // -- Lógica de Horários Alterada --
   const checkSLA = useCallback(() => {
     const now = new Date();
-    const currentDay = now.getDay();
+    const currentDay = now.getDay(); // 0: Dom, 1: Seg, ..., 5: Sex, 6: Sáb
     const currentHour = now.getHours();
 
-    if (currentDay === 0 || currentDay === 6) {
-      setAvailabilityStatus({ status: "FECHADO", color: "red" });
-      return;
-    }
-    if (currentHour >= 8 && currentHour < 17) {
+    const isWeekday = currentDay >= 1 && currentDay <= 5;
+    const isWorkingHour = currentHour >= 8 && currentHour < 17;
+
+    // Só fica ABERTO se for dia de semana E horário comercial
+    if (isWeekday && isWorkingHour) {
       setAvailabilityStatus({ status: "ABERTO", color: "green" });
     } else {
       setAvailabilityStatus({ status: "FECHADO", color: "red" });
@@ -116,7 +117,6 @@ const Footer = () => {
         <div className="flex flex-col items-center py-4">
           <div className="flex flex-col md:flex-row items-center justify-between w-full gap-4 md:gap-0">
 
-            {/* Esquerda - Ocupa espaço flexível para empurrar o centro */}
             <div className="flex md:flex-1 justify-start items-center gap-3">
               <div className={`p-1.5 rounded-lg shadow-lg ${isDarkTheme ? 'bg-gradient-to-br from-purple-600 to-indigo-600 text-white' : 'bg-gradient-to-br from-green-500 to-emerald-600 text-white'}`}>
                 <Code2 className="h-4 w-4" />
@@ -127,7 +127,6 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* Centro - ATENDIMENTO E SYSTEM STATUS EXATAMENTE NO MEIO */}
             <div className="flex flex-col md:flex-row items-center gap-3 md:gap-0">
               <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-colors duration-300 ${availabilityClasses.bg} ${statusBorderClass}`}>
                 <div className="relative flex h-2.5 w-2.5">
@@ -152,7 +151,6 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* Direita - Ocupa espaço flexível igual à esquerda */}
             <div className="flex md:flex-1 justify-end items-center gap-2">
               {socialLinks.map(({ icon: Icon, label, href }) => (
                 <a
