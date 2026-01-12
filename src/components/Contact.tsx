@@ -95,7 +95,7 @@ const Contact = () => {
             </div>
 
             <h2 className={`text-6xl md:text-8xl font-black tracking-tighter ${isDarkTheme ? 'text-white' : 'text-slate-900'}`}>
-              START A <span className={`bg-gradient-to-r ${accentGradient} bg-clip-text text-transparent italic`}>PROJECT_</span>
+              COMECE UM <span className={`bg-gradient-to-r ${accentGradient} bg-clip-text text-transparent italic`}>PROJETO_</span>
             </h2>
           </motion.div>
 
