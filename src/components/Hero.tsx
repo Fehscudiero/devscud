@@ -213,7 +213,7 @@ const Hero = () => {
             {[
               { icon: Github, href: "https://github.com/fehscudiero", label: "GitHub" },
               { icon: Linkedin, href: "https://www.linkedin.com/in/devscud/", label: "LinkedIn" },
-              { icon: Instagram, href: "https://www.instagram.com/scudiero.js/", label: "Instagram" },
+              { icon: Instagram, href: "https://www.instagram.com/scudiero.dev/", label: "Instagram" },
               { icon: Mail, href: "mailto:scudiero.dev@yahoo.com", label: "Email" },
             ].map(({ icon: Icon, href, label }) => (
               <a
