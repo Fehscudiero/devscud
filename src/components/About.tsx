@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import Eu from "../assets/eu.jpg";
-import { motion, Variants, useScroll, useTransform, useSpring } from "framer-motion";
-import Tilt from "react-parallax-tilt";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { useTheme } from "./theme-provider";
 
 const About = () => {
@@ -37,6 +36,9 @@ const About = () => {
   const titleColorClass = isDarkTheme ? "text-white" : "text-slate-900";
   const textColorClass = isDarkTheme ? "text-slate-400" : "text-slate-600";
   const gradientText = isDarkTheme ? "from-purple-500 via-cyan-400 to-blue-500" : "from-emerald-500 to-teal-600";
+
+  // Cor dinâmica para o destaque no parágrafo
+  const highlightTextClass = isDarkTheme ? "text-white" : "text-slate-900";
 
   return (
     <section
@@ -79,7 +81,7 @@ const About = () => {
           <div className="relative group">
             <motion.div
               style={{ clipPath, scale: imageScale }}
-              className="relative aspect-[4/5] sm:aspect-square w-full max-w-[550px] mx-auto rounded-[2rem] overflow-hidden bg-black shadow-[0_0_50px_rgba(139,92,246,0.3)]"
+              className={`relative aspect-[4/5] sm:aspect-square w-full max-w-[550px] mx-auto rounded-[2rem] overflow-hidden bg-black shadow-2xl ${isDarkTheme ? 'shadow-purple-500/20' : 'shadow-slate-300'}`}
             >
               {/* Efeito de Scanner de Luz */}
               <motion.div
@@ -108,14 +110,18 @@ const About = () => {
               </div>
             </motion.div>
 
-            {/* Badges Flutuantes (Neo-Brutalismo) */}
+            {/* Badges Flutuantes (Neo-Brutalismo) - BUG CORRIGIDO AQUI */}
             <motion.div
               style={{ rotateZ: badgeRotate }}
               className="absolute -bottom-10 -right-4 sm:-right-10 z-20 flex flex-col gap-4"
             >
               <div className="p-6 bg-white dark:bg-zinc-900 border-4 border-purple-500 shadow-[8px_8px_0px_rgba(139,92,246,1)] rounded-xl transform -rotate-3 hover:rotate-0 transition-transform">
-                <p className="font-black text-3xl italic ${isDarkTheme ? 'text-white' : 'text-black'}">+3 ANOS</p>
-                <p className="text-[10px] font-bold uppercase tracking-tighter opacity-60 ${isDarkTheme ? 'text-white' : 'text-black'}">Professional Exp</p>
+                <p className={`font-black text-3xl italic ${isDarkTheme ? 'text-white' : 'text-slate-900'}`}>
+                  +3 ANOS
+                </p>
+                <p className={`text-[10px] font-bold uppercase tracking-tighter opacity-60 ${isDarkTheme ? 'text-white' : 'text-slate-900'}`}>
+                  Professional Exp
+                </p>
               </div>
             </motion.div>
           </div>
@@ -125,18 +131,14 @@ const About = () => {
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
-              className="relative p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm"
+              className={`relative p-8 rounded-3xl border backdrop-blur-sm ${isDarkTheme ? 'bg-white/5 border-white/10' : 'bg-slate-100/50 border-slate-200'}`}
             >
               <div className="absolute -top-4 -left-4 w-12 h-12 border-t-4 border-l-4 border-cyan-500" />
               <p className={`text-2xl sm:text-3xl font-medium leading-relaxed ${textColorClass}`}>
-                Eu transformo <span className="text-white font-bold underline decoration-cyan-500 underline-offset-8">visões complexas</span> em realidade digital.
+                Eu transformo <span className={`${highlightTextClass} font-bold underline decoration-cyan-500 underline-offset-8`}>visões complexas</span> em realidade digital.
                 Meu foco é o ponto onde o design impecável e a engenharia de alta performance se encontram.
               </p>
             </motion.div>
-
-            <div className="flex flex-wrap gap-4">
-
-            </div>
           </div>
         </div>
       </div>
