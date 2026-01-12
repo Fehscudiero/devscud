@@ -6,13 +6,50 @@
    🎨 Design System Variables
    ============================ */
 @layer base {
-
   html,
   body {
     overflow-x: hidden;
   }
 
+  /* TEMA LIGHT (Azul Tech & Branco Gelo) */
   :root {
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 199 89% 48%; /* Azul Sky */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 199 89% 48%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 199 89% 48%;
+
+    --radius: 0.75rem;
+
+    --gradient-primary: linear-gradient(135deg, #0ea5e9, #2563eb);
+    --gradient-subtle: linear-gradient(180deg, #f8fafc, #f1f5f9);
+    --glow-color: rgba(14, 165, 233, 0.3);
+  }
+
+  /* TEMA DARK (Original Roxo & Dark) */
+  .dark {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
 
@@ -28,34 +65,31 @@
     --secondary: 240 8% 15%;
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 240 8% 15%;
-    --muted-foreground: 240 5% 64.9%;
-
     --accent: 263 70% 65%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 240 8% 20%;
-    --input: 240 8% 20%;
+    --border: 240 8% 15%;
     --ring: 263 70% 65%;
 
-    --radius: 0.75rem;
-
-    --gradient-primary: linear-gradient(135deg, hsl(263 70% 65%), hsl(250 70% 60%));
-    --gradient-subtle: linear-gradient(180deg, hsl(240 10% 3.9%), hsl(240 10% 7%));
-    --glow-purple: 0 0 40px hsl(263 70% 65% / 0.3);
+    --gradient-primary: linear-gradient(
+      135deg,
+      hsl(263 70% 65%),
+      hsl(250 70% 60%)
+    );
+    --gradient-subtle: linear-gradient(
+      180deg,
+      hsl(240 10% 3.9%),
+      hsl(240 10% 7%)
+    );
+    --glow-color: hsl(263 70% 65% / 0.3);
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
 
   body {
-    @apply bg-background text-foreground font-inter antialiased;
+    @apply bg-background text-foreground font-inter antialiased transition-colors duration-500;
   }
 
   html {
@@ -68,196 +102,113 @@
    ============================ */
 @layer utilities {
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400 dark:to-purple-400;
   }
 
-  .glow-purple {
-    box-shadow: var(--glow-purple);
+  .glow-theme {
+    box-shadow: 0 0 40px var(--glow-color);
   }
 
   .animated-gradient {
-    background: linear-gradient(-45deg,
-        hsl(263 70% 65% / 0.2),
-        hsl(250 70% 60% / 0.3),
-        hsl(240 70% 55% / 0.2),
-        hsl(263 70% 65% / 0.3));
+    background: linear-gradient(
+      -45deg,
+      var(--primary) / 0.2,
+      #3b82f6 / 0.3,
+      var(--accent) / 0.2
+    );
     background-size: 400% 400%;
     animation: gradient-shift 15s ease infinite;
   }
 
-  .animated-particles {
-    position: relative;
-    overflow: hidden;
-  }
-
   .animated-particles::before,
   .animated-particles::after {
-    content: '';
+    content: "";
     position: absolute;
     width: 300px;
     height: 300px;
     border-radius: 50%;
     filter: blur(80px);
-    opacity: 0.5;
+    opacity: 0.3;
     animation: float 20s ease-in-out infinite;
-  }
-
-  .animated-particles::before {
-    background: hsl(263 70% 65% / 0.3);
-    top: -150px;
-    left: -150px;
-    animation-delay: -10s;
-  }
-
-  .animated-particles::after {
-    background: hsl(250 70% 60% / 0.3);
-    bottom: -150px;
-    right: -150px;
-    animation-delay: -5s;
+    background: var(--glow-color);
   }
 
   @keyframes gradient-shift {
     0% {
       background-position: 0% 50%;
     }
-
     50% {
       background-position: 100% 50%;
     }
-
     100% {
       background-position: 0% 50%;
     }
   }
 
   @keyframes float {
-
     0%,
     100% {
       transform: translate(0, 0) scale(1);
     }
-
     33% {
       transform: translate(30px, -30px) scale(1.1);
     }
-
     66% {
       transform: translate(-20px, 20px) scale(0.9);
     }
   }
 
-  @keyframes flicker {
-    0% {
-      opacity: 1;
-    }
-
-    5% {
-      opacity: 0.4;
-    }
-
-    10% {
-      opacity: 0.9;
-    }
-
-    15% {
-      opacity: 0.2;
-    }
-
-    20% {
-      opacity: 1;
-    }
-
-    25% {
-      opacity: 0.3;
-    }
-
-    30% {
-      opacity: 0.8;
-    }
-
-    35% {
-      opacity: 0.5;
-    }
-
-    40% {
-      opacity: 1;
-    }
-
-    100% {
-      opacity: 1;
-    }
-  }
-
   .flicker {
     animation: flicker 2.5s infinite;
-    color: #A020F0;
+    @apply text-primary;
   }
 }
 
-
 /* ============================
-   🖱️ Scrollbar Customization (TEMA DUAL)
+   🖱️ Scrollbar Customization
    ============================ */
 ::-webkit-scrollbar {
   width: 8px;
-  height: 8px;
 }
 
-/* Trilha (Fundo da barra) */
 ::-webkit-scrollbar-track {
-  /* Fundo claro (Slate 100) vs Fundo Dark Profundo (Azul Noturno) */
-  @apply bg-slate-100 dark:bg-[#030014];
+  @apply bg-background;
 }
 
-/* Polegar (A parte que mexe) */
 ::-webkit-scrollbar-thumb {
-  background-color: #10b981;
-  /* Light: Verde Esmeralda (#10b981) */
-  border-radius: 4px;
-  border: 2px solid transparent;
-  background-clip: content-box;
-}
-
-/* Polegar no Dark Mode (Roxo/Índigo) - Sobrescreve */
-.dark ::-webkit-scrollbar-thumb {
-  background-color: #7c3aed;
-  /* Dark: Roxo/Índigo (#7c3aed) */
+  @apply bg-primary/50 rounded-full border-2 border-transparent bg-clip-content hover:bg-primary;
 }
 
 /* Firefox */
 * {
   scrollbar-width: thin;
-  /* Light: Verde (#10b981) na Trilha Clara */
-  scrollbar-color: #10b981 #f1f5f9;
+  scrollbar-color: hsl(199 89% 48%) transparent;
 }
 
 .dark * {
-  /* Dark: Roxo (#7c3aed) na Trilha Escura (#030014) */
-  scrollbar-color: #7c3aed #030014;
+  scrollbar-color: hsl(263 70% 65%) transparent;
 }
 
 /* ============================
    ⚡ Botão “Entre em Contato” Chamativo
    ============================ */
 .aura-button::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: -8px;
   border-radius: 9999px;
-  background: radial-gradient(circle, hsl(263, 70%, 65%) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--glow-color) 0%, transparent 70%);
   opacity: 0.4;
   animation: auraPulse 2s infinite;
   z-index: 0;
 }
 
 @keyframes auraPulse {
-
   0%,
   100% {
     transform: scale(1);
     opacity: 0.4;
   }
-
   50% {
     transform: scale(1.2);
     opacity: 0.6;
