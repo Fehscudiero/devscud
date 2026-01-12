@@ -11,8 +11,14 @@ const Contact = () => {
   const [status, setStatus] = useState<{ type: 'success' | 'error' | null; msg: string }>({ type: null, msg: "" });
   const sectionRef = useRef<HTMLElement>(null);
 
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
-  const textX = useTransform(scrollYProgress, [0, 1], [200, -200]);
+  // Efeito de Parallax para a marca d'água (Padrão Testimonials)
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  // Ajuste do range para o movimento lateral clássico
+  const textX = useTransform(scrollYProgress, [0, 1], [-100, 100]);
 
   useEffect(() => {
     const checkTheme = () => setIsDarkTheme(document.documentElement.classList.contains("dark"));
@@ -64,12 +70,13 @@ const Contact = () => {
       id="contact"
       className={`py-32 relative overflow-hidden transition-colors duration-1000 z-30 ${isDarkTheme ? 'bg-[#030014]' : 'bg-slate-50'}`}
     >
-      <div className="absolute top-1/2 left-0 -translate-y-1/2 w-full overflow-hidden pointer-events-none select-none z-0">
+      {/* MARCA D'ÁGUA PADRONIZADA (Implementação do Estilo Testimonials) */}
+      <div className="absolute bottom-0 left-0 w-full overflow-hidden pointer-events-none select-none z-0">
         <motion.h2
           style={{ x: textX }}
-          className={`text-[25vw] font-black leading-none uppercase opacity-[0.03] dark:opacity-[0.07] whitespace-nowrap ${isDarkTheme ? 'text-white' : 'text-black'}`}
+          className={`text-[15vw] font-black leading-none tracking-tighter uppercase opacity-[0.03] dark:opacity-[0.05] whitespace-nowrap text-right pr-4 ${isDarkTheme ? 'text-white' : 'text-black'}`}
         >
-          LET'S WORK TOGETHER • CONTACT •
+          CONTATO
         </motion.h2>
       </div>
 
@@ -105,8 +112,8 @@ const Contact = () => {
               <div className={`absolute inset-[-1000%] animate-[spin_5s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#00EAFF_0%,#FF00D4_50%,#00EAFF_100%)] opacity-40`} />
             </div>
 
-            <div className={`relative p-8 md:p-16 rounded-[3rem] backdrop-blur-3xl shadow-2xl ${isDarkTheme ? 'bg-slate-950/90' : 'bg-white/90'}`}>
-
+            {/* Fundo do Formulário Transparente e Acima de Tudo */}
+            <div className={`relative p-8 md:p-16 rounded-[3rem] backdrop-blur-3xl shadow-2xl z-20 bg-transparent`}>
               <form onSubmit={handleSubmit} className="space-y-10">
                 <div className="grid md:grid-cols-2 gap-10">
                   <div className="relative group/input">
