@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Sparkles, Mail, User, Phone, MessageSquare, CheckCircle2, AlertCircle, Send } from "lucide-react";
+import { Mail, User, Phone, MessageSquare, CheckCircle2, AlertCircle, Send } from "lucide-react";
 
 const Contact = () => {
   const [isDarkTheme, setIsDarkTheme] = useState(true);
@@ -11,7 +11,6 @@ const Contact = () => {
   const [status, setStatus] = useState<{ type: 'success' | 'error' | null; msg: string }>({ type: null, msg: "" });
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Parallax do título gigante (fundo)
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
   const textX = useTransform(scrollYProgress, [0, 1], [200, -200]);
 
@@ -65,7 +64,6 @@ const Contact = () => {
       id="contact"
       className={`py-32 relative overflow-hidden transition-colors duration-1000 z-30 ${isDarkTheme ? 'bg-[#030014]' : 'bg-slate-50'}`}
     >
-      {/* 1. TEXTO KINETIC DE FUNDO (Brutalista) */}
       <div className="absolute top-1/2 left-0 -translate-y-1/2 w-full overflow-hidden pointer-events-none select-none z-0">
         <motion.h2
           style={{ x: textX }}
@@ -78,7 +76,6 @@ const Contact = () => {
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-4xl mx-auto flex flex-col items-center text-center">
 
-          {/* 2. HEADER CENTRALIZADO */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -99,13 +96,11 @@ const Contact = () => {
             </h2>
           </motion.div>
 
-          {/* 3. O CARD "SUPER FODA" (COM BORDA ANIMADA) */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             className="relative w-full group"
           >
-            {/* Efeito de Borda Giratória (Neon) */}
             <div className={`absolute -inset-[2px] rounded-[3rem] opacity-70 group-hover:opacity-100 transition duration-1000 overflow-hidden`}>
               <div className={`absolute inset-[-1000%] animate-[spin_5s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#00EAFF_0%,#FF00D4_50%,#00EAFF_100%)] opacity-40`} />
             </div>
@@ -114,7 +109,6 @@ const Contact = () => {
 
               <form onSubmit={handleSubmit} className="space-y-10">
                 <div className="grid md:grid-cols-2 gap-10">
-                  {/* Nome */}
                   <div className="relative group/input">
                     <User className="absolute left-0 -top-6 w-4 h-4 opacity-40 group-focus-within/input:opacity-100 transition-opacity" />
                     <Input
@@ -127,7 +121,6 @@ const Contact = () => {
                     />
                   </div>
 
-                  {/* Telefone */}
                   <div className="relative group/input">
                     <Phone className="absolute left-0 -top-6 w-4 h-4 opacity-40 group-focus-within/input:opacity-100 transition-opacity" />
                     <Input
@@ -141,7 +134,6 @@ const Contact = () => {
                   </div>
                 </div>
 
-                {/* Email */}
                 <div className="relative group/input">
                   <Mail className="absolute left-0 -top-6 w-4 h-4 opacity-40 group-focus-within/input:opacity-100 transition-opacity" />
                   <Input
@@ -155,7 +147,6 @@ const Contact = () => {
                   />
                 </div>
 
-                {/* Mensagem */}
                 <div className="relative group/input">
                   <MessageSquare className="absolute left-0 -top-6 w-4 h-4 opacity-40 group-focus-within/input:opacity-100 transition-opacity" />
                   <Textarea
@@ -168,23 +159,21 @@ const Contact = () => {
                   />
                 </div>
 
-                {/* Botão Magnético */}
                 <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                   <Button
                     disabled={isSubmitting}
-                    className={`w-full h-24 rounded-full text-2xl font-black uppercase tracking-[0.3em] transition-all duration-500 relative overflow-hidden
+                    className={`w-full h-24 rounded-full text-lg md:text-2xl font-black uppercase tracking-widest md:tracking-[0.3em] px-4 transition-all duration-500 relative overflow-hidden
                       ${isDarkTheme ? 'bg-white text-black hover:text-white' : 'bg-black text-white hover:text-white'}`}
                   >
                     <div className={`absolute inset-0 w-0 group-hover:w-full transition-all duration-700 bg-gradient-to-r ${accentGradient}`} />
-                    <span className="relative z-10 flex items-center gap-4">
+                    <span className="relative z-10 flex items-center justify-center gap-3 md:gap-4 w-full">
                       {isSubmitting ? "ENVIANDO..." : "ENVIAR AGORA"}
-                      <Send className="w-6 h-6" />
+                      <Send className="w-5 h-5 md:w-6 md:h-6" />
                     </span>
                   </Button>
                 </motion.div>
               </form>
 
-              {/* Feedback de Status */}
               <AnimatePresence>
                 {status.type && (
                   <motion.div
@@ -201,7 +190,6 @@ const Contact = () => {
             </div>
           </motion.div>
 
-          {/* 4. FOOTER DO CONTATO */}
           <div className="mt-20 flex flex-col items-center gap-6">
             <p className={`font-mono text-sm tracking-widest opacity-50 ${isDarkTheme ? 'text-white' : 'text-black'}`}>
               SCUDIERO.DEV@YAHOO.COM
