@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Github, ExternalLink, ArrowUpRight, Trophy } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Pagination, Navigation, Autoplay } from "swiper/modules";
+import { motion } from "framer-motion";
 
 // Import Swiper styles
 import "swiper/css";
@@ -141,22 +142,25 @@ const Projects = () => {
     : allProjects;
 
   const sectionBgClass = isDarkTheme ? "bg-[#030014]" : "bg-slate-50";
-  const titleGradient = isDarkTheme ? "from-purple-600 via-indigo-500 to-blue-600" : "from-green-600 via-emerald-500 to-teal-600";
+  const accentColor = isDarkTheme ? "text-cyan-400" : "text-emerald-600";
+  const accentGradient = isDarkTheme ? "from-purple-500 via-cyan-400 to-blue-500" : "from-emerald-600 to-teal-600";
 
   return (
-    <section id="projects" className={`py-24 relative overflow-hidden transition-colors duration-700 ${sectionBgClass}`}>
-      {/* Background Glows */}
-      <div className={`absolute top-1/4 right-0 w-[500px] h-[500px] rounded-full blur-[120px] opacity-20 pointer-events-none ${isDarkTheme ? 'bg-purple-600' : 'bg-green-400'}`} />
-      <div className={`absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full blur-[120px] opacity-20 pointer-events-none ${isDarkTheme ? 'bg-blue-600' : 'bg-teal-400'}`} />
+    <section id="projects" className={`py-24 relative overflow-hidden transition-colors duration-1000 ${sectionBgClass}`}>
 
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="text-center mb-16 space-y-4">
-          <h2 className={`text-4xl md:text-6xl font-black tracking-tighter ${isDarkTheme ? 'text-white' : 'text-slate-900'}`}>
-            Excelência em <span className={`bg-gradient-to-r ${titleGradient} bg-clip-text text-transparent`}>Cada Pixel</span>
+      {/* Background Cinético Padronizado */}
+      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] blur-[150px] opacity-10 pointer-events-none transition-colors duration-1000 ${isDarkTheme ? 'bg-indigo-600' : 'bg-emerald-200'}`} />
+
+      <div className="container mx-auto px-6 relative z-10">
+
+        {/* TÍTULO PADRONIZADO AQUI */}
+        <div className="mb-12 text-center lg:text-left">
+          <motion.p className={`font-mono text-xs tracking-[0.5em] uppercase mb-4 ${accentColor}`}>
+            Portfolio_Module // 2026
+          </motion.p>
+          <h2 className={`text-4xl lg:text-6xl font-black tracking-tighter ${isDarkTheme ? 'text-white' : 'text-slate-900'}`}>
+            PROJETOS <span className={`bg-gradient-to-r ${accentGradient} bg-clip-text text-transparent italic`}>EM DESTAQUE_</span>
           </h2>
-          <p className={`text-lg opacity-60 max-w-2xl mx-auto ${isDarkTheme ? 'text-slate-300' : 'text-slate-600'}`}>
-            Explore meu portfólio através desta experiência 3D interativa.
-          </p>
         </div>
 
         <Swiper
@@ -184,13 +188,13 @@ const Projects = () => {
                 {/* Background Image com Zoom */}
                 <div className="absolute inset-0 overflow-hidden">
                   <img src={project.image} alt={project.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#020817] via-[#020817]/60 to-transparent" />
+                  <div className={`absolute inset-0 bg-gradient-to-t ${isDarkTheme ? 'from-[#030014] via-[#030014]/60' : 'from-white via-white/40'} to-transparent`} />
                 </div>
 
                 {/* Badge Flutuante */}
                 <div className="absolute top-6 left-6 flex items-center gap-2">
                   <span className="flex items-center gap-1.5 px-4 py-1.5 text-[10px] font-bold uppercase bg-black/40 backdrop-blur-md border border-white/10 rounded-full text-white">
-                    <Trophy className="w-3 h-3 text-yellow-400" /> Featured
+                    <Trophy className="w-3 h-3 text-yellow-400" /> Case de Sucesso
                   </span>
                 </div>
 
@@ -199,7 +203,7 @@ const Projects = () => {
                   <a href={project.links.github} className="p-3 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white hover:text-black transition-all border border-white/20">
                     <Github className="w-5 h-5" />
                   </a>
-                  <a href={project.links.live} className="p-3 rounded-full bg-purple-600 text-white hover:scale-110 transition-all shadow-lg shadow-purple-500/30">
+                  <a href={project.links.live} className={`p-3 rounded-full ${isDarkTheme ? 'bg-cyan-500' : 'bg-emerald-600'} text-white hover:scale-110 transition-all shadow-lg`}>
                     <ExternalLink className="w-5 h-5" />
                   </a>
                 </div>
@@ -208,11 +212,11 @@ const Projects = () => {
                 <div className="absolute inset-x-0 bottom-0 p-6 sm:p-10 flex flex-col justify-end translate-y-[45%] group-hover:translate-y-0 transition-transform duration-500 ease-out z-10">
 
                   <div className="space-y-3 mb-6">
-                    <h3 className="text-2xl sm:text-4xl font-bold text-white flex items-center gap-3">
+                    <h3 className={`text-2xl sm:text-4xl font-bold flex items-center gap-3 ${isDarkTheme ? 'text-white' : 'text-slate-900'}`}>
                       {project.title}
-                      <ArrowUpRight className="w-6 h-6 text-purple-400 opacity-0 -translate-x-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0" />
+                      <ArrowUpRight className={`w-6 h-6 ${accentColor} opacity-0 -translate-x-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0`} />
                     </h3>
-                    <p className="text-slate-300 text-sm sm:text-base line-clamp-2 group-hover:line-clamp-none transition-all">
+                    <p className={`text-sm sm:text-base line-clamp-2 group-hover:line-clamp-none transition-all ${isDarkTheme ? 'text-slate-300' : 'text-slate-600'}`}>
                       {project.description}
                     </p>
                   </div>
@@ -220,17 +224,17 @@ const Projects = () => {
                   {/* Tech Stack */}
                   <div className="flex flex-wrap gap-2 mb-6">
                     {project.technologies.map((tech, i) => (
-                      <span key={i} className="px-3 py-1 text-[10px] font-semibold bg-white/10 backdrop-blur-md text-purple-200 rounded-lg border border-white/10">
+                      <span key={i} className={`px-3 py-1 text-[10px] font-semibold rounded-lg border ${isDarkTheme ? 'bg-white/10 border-white/10 text-cyan-400' : 'bg-slate-100 border-slate-200 text-emerald-700'}`}>
                         {tech}
                       </span>
                     ))}
                   </div>
 
                   {/* Divisor */}
-                  <div className="h-px w-full bg-gradient-to-r from-transparent via-white/20 to-transparent mb-6" />
+                  <div className={`h-px w-full bg-gradient-to-r from-transparent ${isDarkTheme ? 'via-white/20' : 'via-slate-200'} to-transparent mb-6`} />
 
                   {/* Lighthouse Scores */}
-                  <div className="grid grid-cols-4 gap-4 bg-black/40 backdrop-blur-xl rounded-2xl p-4 border border-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+                  <div className={`grid grid-cols-4 gap-4 backdrop-blur-xl rounded-2xl p-4 border opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 ${isDarkTheme ? 'bg-black/40 border-white/5' : 'bg-white/80 border-slate-100'}`}>
                     <CircularScore score={project.scores.performance} label="Performance" isMobileView={isMobileView} />
                     <CircularScore score={project.scores.accessibility} label="Acessibilidade" isMobileView={isMobileView} />
                     <CircularScore score={project.scores.bestPractices} label="Práticas" isMobileView={isMobileView} />
@@ -245,7 +249,7 @@ const Projects = () => {
 
       <style dangerouslySetInnerHTML={{
         __html: `
-        .swiper-pagination-bullet { background: ${isDarkTheme ? '#8b5cf6' : '#059669'} !important; opacity: 0.3; }
+        .swiper-pagination-bullet { background: ${isDarkTheme ? '#22d3ee' : '#059669'} !important; opacity: 0.3; }
         .swiper-pagination-bullet-active { opacity: 1; transform: scale(1.3); }
         .swiper-slide-shadow-left, .swiper-slide-shadow-right { border-radius: 2.5rem; }
       `}} />
@@ -253,4 +257,4 @@ const Projects = () => {
   );
 };
 
-export default Projects; 
+export default Projects;
