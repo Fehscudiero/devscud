@@ -57,7 +57,7 @@ const About = () => {
             style={{ x: textX }}
             className={`text-[15vw] font-black leading-none tracking-tighter uppercase opacity-[0.03] dark:opacity-[0.05] absolute -top-5 left-0 whitespace-nowrap pointer-events-none select-none ${isDarkTheme ? 'text-white' : 'text-black'}`}
           >
-            CODE & AESTHETICS • PIXEL PERFECT • CODE & AESTHETICS •
+            DEV SCUD
           </motion.h2>
 
           <motion.div
