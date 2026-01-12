@@ -265,7 +265,7 @@ const Footer = () => {
             </span>
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className=" flex items-center gap-6">
             {/* BUILD - Borda Azul Animada */}
             <div className="relative overflow-hidden flex items-center gap-3 group cursor-help bg-cyan-500/5 px-4 py-2 rounded-xl border border-cyan-500/50">
               <motion.div
@@ -273,10 +273,10 @@ const Footer = () => {
                 transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
                 className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent pointer-events-none"
               />
-              <Terminal className="w-4 h-4 text-cyan-500 animate-bounce" />
+              <Terminal className=" w-4 h-4 text-cyan-500 animate-bounce" />
               <div className="flex flex-col">
                 <span
-                  className={`text-[10px] font-mono font-black ${
+                  className={` text-[10px] font-mono font-black ${
                     isDarkTheme ? "text-white" : "text-slate-900"
                   }`}
                 >
@@ -289,10 +289,10 @@ const Footer = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 group cursor-help">
+            <div className="pt-8 flex items-center gap-2 group cursor-help">
               <Activity className="w-3 h-3 text-purple-500" />
               <span
-                className={`text-[10px] font-mono font-bold ${textColor} group-hover:text-purple-400 transition-colors`}
+                className={` text-[10px] font-mono font-bold ${textColor} group-hover:text-purple-400 transition-colors`}
               >
                 LATENCY: 14MS
               </span>

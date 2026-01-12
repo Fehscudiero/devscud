@@ -123,6 +123,16 @@ const Projects = () => {
       scores: { perf: 95, acc: 98, pract: 100, seo: 92 },
     },
     {
+      title: "Portal de Notícias SEO",
+      description:
+        "CMS robusto para mídia de alto tráfego com renderização ISR avançada.",
+      technologies: ["Next.js", "GraphQL", "Redis"],
+      image:
+        "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80",
+      links: { github: "#", live: "#" },
+      scores: { perf: 99, acc: 100, pract: 98, seo: 100 },
+    },
+    {
       title: "AI Landing Page",
       description:
         "Site institucional com animações complexas e storytelling interativo.",
@@ -131,6 +141,26 @@ const Projects = () => {
         "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80",
       links: { github: "#", live: "#" },
       scores: { perf: 100, acc: 100, pract: 100, seo: 100 },
+    },
+    {
+      title: "Sistema de Delivery",
+      description:
+        "Plataforma multi-tenant com rastreamento em tempo real via WebSocket.",
+      technologies: ["Vue.js", "Firebase", "Maps"],
+      image:
+        "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80",
+      links: { github: "#", live: "#" },
+      scores: { perf: 92, acc: 95, pract: 96, seo: 100 },
+    },
+    {
+      title: "Plataforma LMS",
+      description:
+        "Ambiente de aprendizado com gamificação e certificados automáticos.",
+      technologies: ["React", "Node.js", "Postgres"],
+      image:
+        "https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=800&q=80",
+      links: { github: "#", live: "#" },
+      scores: { perf: 96, acc: 98, pract: 100, seo: 95 },
     },
   ];
 
@@ -142,13 +172,13 @@ const Projects = () => {
         isDarkTheme ? "bg-[#030014]" : "bg-slate-50"
       }`}
     >
-      {/* BACKGROUND ELEMENTS */}
+      {/* MARCA D'ÁGUA CINÉTICA */}
       <div className="absolute top-0 left-0 w-full overflow-hidden pointer-events-none select-none z-0">
         <motion.h2
           style={{ x: textX }}
-          className="text-[15vw] font-black opacity-[0.03] dark:opacity-[0.05] whitespace-nowrap dark:text-white text-black"
+          className="text-[15vw] font-black opacity-[0.03] dark:opacity-[0.05] whitespace-nowrap dark:text-white text-black uppercase"
         >
-          PROJETOS
+          Projetos_Portfolio
         </motion.h2>
       </div>
 
@@ -188,7 +218,7 @@ const Projects = () => {
           {allProjects.map((project, index) => (
             <SwiperSlide
               key={index}
-              className="max-w-[380px] sm:max-w-[700px] group"
+              className="max-w-[320px] sm:max-w-[700px] group"
               onClick={() => swiperRef.current?.slideToLoop(index)}
             >
               <div
@@ -220,54 +250,54 @@ const Projects = () => {
                   <img
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#030014] via-[#030014]/40 to-transparent z-10" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#030014] via-[#030014]/60 to-transparent z-10" />
                 </div>
 
-                {/* HUD INFO (FIXO NO TOPO) */}
+                {/* HUD INFO */}
                 <div className="absolute top-6 left-8 right-8 flex justify-between items-start z-40">
                   <div className="flex items-center gap-3 bg-black/40 backdrop-blur-md p-2 rounded-lg border border-white/10">
-                    <ShieldCheck className="text-cyan-400 w-5 h-5" />
-                    <span className="text-[10px] font-mono text-white/70 uppercase tracking-widest">
+                    <ShieldCheck className="text-cyan-400 w-4 h-4 sm:w-5 sm:h-5" />
+                    <span className="text-[8px] sm:text-[10px] font-mono text-white/70 uppercase tracking-widest">
                       Secure_Access: Granted
                     </span>
                   </div>
                   <div className="flex gap-2">
                     <a
                       href={project.links.github}
-                      className="p-3 rounded-full bg-white/5 hover:bg-cyan-500 transition-colors border border-white/10"
+                      className="p-2 sm:p-3 rounded-full bg-white/5 hover:bg-cyan-500 transition-colors border border-white/10"
                     >
                       <Github size={18} className="text-white" />
                     </a>
                   </div>
                 </div>
 
-                {/* CARD CONTENT (REVELAÇÃO) */}
+                {/* CARD CONTENT */}
                 <motion.div
                   animate={{
                     y: activeIndex === index ? 0 : 150,
                     opacity: activeIndex === index ? 1 : 0,
                   }}
-                  className="absolute inset-x-0 bottom-0 p-8 sm:p-12 z-40 bg-gradient-to-t from-black via-black/90 to-transparent"
+                  className="absolute inset-x-0 bottom-0 p-6 sm:p-12 z-40 bg-gradient-to-t from-black via-black/90 to-transparent"
                 >
                   <div className="flex flex-col sm:flex-row justify-between items-end gap-6">
-                    <div className="flex-1 space-y-4">
-                      <h3 className="text-3xl sm:text-5xl font-black text-white tracking-tighter flex items-center gap-4">
-                        {project.title}{" "}
+                    <div className="flex-1 space-y-3">
+                      <h3 className="text-2xl sm:text-5xl font-black text-white tracking-tighter flex items-center gap-4">
+                        {project.title}
                         <Zap
-                          className="text-cyan-400 fill-cyan-400 animate-pulse"
+                          className="text-cyan-400 fill-cyan-400 animate-pulse hidden sm:block"
                           size={24}
                         />
                       </h3>
-                      <p className="text-slate-300 text-sm sm:text-base max-w-md font-medium leading-relaxed">
+                      <p className="text-slate-300 text-[12px] sm:text-base max-w-md font-medium leading-relaxed line-clamp-2 sm:line-clamp-none">
                         {project.description}
                       </p>
-                      <div className="flex gap-2">
+                      <div className="flex flex-wrap gap-2 pt-2">
                         {project.technologies.map((t, i) => (
                           <span
                             key={i}
-                            className="text-[9px] font-bold px-3 py-1 bg-cyan-500/10 text-cyan-400 rounded-full border border-cyan-500/20"
+                            className="text-[8px] sm:text-[9px] font-bold px-2 sm:px-3 py-1 bg-cyan-500/10 text-cyan-400 rounded-full border border-cyan-500/20 uppercase"
                           >
                             {t}
                           </span>
@@ -275,7 +305,7 @@ const Projects = () => {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-4 gap-4 p-4 bg-white/5 rounded-3xl border border-white/10 backdrop-blur-xl">
+                    <div className="grid grid-cols-4 gap-2 sm:gap-4 p-3 sm:p-4 bg-white/5 rounded-2xl sm:rounded-3xl border border-white/10 backdrop-blur-xl shrink-0">
                       <CircularScore score={project.scores.perf} label="PERF" />
                       <CircularScore score={project.scores.acc} label="ACC" />
                       <CircularScore

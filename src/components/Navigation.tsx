@@ -1,11 +1,15 @@
-import { useState, useEffect } from "react";
-import { Menu, X, ArrowUp, Moon, Sun } from "lucide-react";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { Menu, X, ArrowUp, Moon, Sun, Terminal, Cpu } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
-// --- MOCK THEME PROVIDER ---
-// import { useTheme } from "./theme-provider";
-
+// --- CUSTOM HOOK PARA TEMA (Sincronizado com o sistema) ---
 const useTheme = () => {
-  const [theme, setThemeState] = useState("dark");
+  const [theme, setThemeState] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("vite-ui-theme") || "dark";
+    }
+    return "dark";
+  });
 
   const setTheme = (newTheme: string) => {
     const root = window.document.documentElement;
@@ -18,151 +22,156 @@ const useTheme = () => {
   return { theme, setTheme };
 };
 
-// --- COMPONENTE LOGO (CORRIGIDO O BUG DO QUADRADO) ---
+// --- COMPONENTE LOGO (Identidade Visual Scudiero) ---
 const Logo = ({ isDarkTheme }: { isDarkTheme: boolean }) => {
   const textColor = isDarkTheme ? "#ffffff" : "#0f172a";
-  const gradientId = "logoGradientNav";
-  const colorStart = isDarkTheme ? "#9333ea" : "#059669";
-  const colorEnd = isDarkTheme ? "#2563eb" : "#0d9488";
+  const colorStart = isDarkTheme ? "#9333ea" : "#059669"; // Roxo (Dark) ou Esmeralda (Light)
+  const colorEnd = isDarkTheme ? "#2563eb" : "#0d9488"; // Azul (Dark) ou Teal (Light)
 
   return (
     <div className="flex items-center gap-2 font-sans select-none">
-      <svg
-        width="40"
-        height="40"
-        viewBox="0 0 40 40"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="transition-transform duration-300 hover:rotate-180"
-      >
-        <defs>
-          <linearGradient id={gradientId} x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor={colorStart} />
-            <stop offset="100%" stopColor={colorEnd} />
-          </linearGradient>
-        </defs>
-        <path
-          d="M12 20L4 12L12 4"
-          stroke={`url(#${gradientId})`}
-          strokeWidth="4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M28 20L36 28L28 36"
-          stroke={`url(#${gradientId})`}
-          strokeWidth="4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M22 4L18 36"
-          stroke={textColor}
-          strokeWidth="3"
-          strokeLinecap="round"
-          strokeOpacity="0.5"
-        />
-      </svg>
+      <div className="relative">
+        <svg
+          width="40"
+          height="40"
+          viewBox="0 0 40 40"
+          fill="none"
+          className="transition-transform duration-500 hover:rotate-180"
+        >
+          <defs>
+            <linearGradient
+              id="logoGradNav"
+              x1="0"
+              y1="0"
+              x2="40"
+              y2="40"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop offset="0%" stopColor={colorStart} />
+              <stop offset="100%" stopColor={colorEnd} />
+            </linearGradient>
+          </defs>
+          <path
+            d="M12 20L4 12L12 4"
+            stroke="url(#logoGradNav)"
+            strokeWidth="4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M28 20L36 28L28 36"
+            stroke="url(#logoGradNav)"
+            strokeWidth="4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M22 4L18 36"
+            stroke={textColor}
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeOpacity="0.5"
+          />
+        </svg>
+      </div>
       <div className="flex flex-col justify-center">
         <span
-          className="text-xl font-bold tracking-tighter leading-none transition-colors duration-300"
+          className="text-xl font-black tracking-tighter leading-none"
           style={{ color: textColor }}
         >
-          Dev
-          {/* CORREÇÃO AQUI: Usando backgroundImage e propriedades explícitas de clip */}
+          DEV
           <span
             style={{
               backgroundImage: `linear-gradient(to right, ${colorStart}, ${colorEnd})`,
-              backgroundClip: "text",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
-              color: "transparent" // Fallback
             }}
-            className="ml-0.5"
           >
-            Scud
+            SCUD
           </span>
         </span>
         <span
-          className="text-[9px] uppercase tracking-[0.2em] font-medium opacity-60 transition-colors duration-300"
+          className="text-[8px] uppercase tracking-[0.3em] font-bold opacity-50"
           style={{ color: textColor }}
         >
-          Felipe Scudiero
+          SYSTEMS v4.0
         </span>
       </div>
     </div>
   );
 };
 
-// --- COMPONENTE THEME TOGGLE ---
-const ThemeToggle = () => {
-  const { setTheme, theme } = useTheme();
-
-  return (
-    <button
-      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-      className="relative p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group"
-      aria-label="Toggle Theme"
-    >
-      <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 text-orange-500 group-hover:text-orange-600" />
-      <Moon className="absolute top-2 h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 text-purple-500 group-hover:text-purple-400" />
-      <span className="sr-only">Toggle theme</span>
-    </button>
-  );
-};
-
-// --- COMPONENTE NAVIGATION PRINCIPAL ---
 const Navigation = () => {
   const [activeSection, setActiveSection] = useState("home");
   const [scrolled, setScrolled] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDarkTheme, setIsDarkTheme] = useState(true);
+  const { setTheme, theme } = useTheme();
 
-  // Observer para atualizar o estado visual baseado na classe 'dark' no HTML
-  useEffect(() => {
-    const checkTheme = () => {
-      const root = window.document.documentElement;
-      const isDark = root.classList.contains("dark");
-      setIsDarkTheme(isDark);
-    };
+  // --- LOGICA DE SLA (Sincronizada com o horário comercial) ---
+  const [availabilityStatus, setAvailabilityStatus] = useState({
+    status: "LENTA",
+    color: "red",
+  });
 
-    checkTheme();
-    const observer = new MutationObserver(checkTheme);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
-    return () => observer.disconnect();
+  const checkSLA = useCallback(() => {
+    const now = new Date();
+    const isWorking =
+      now.getDay() >= 1 &&
+      now.getDay() <= 5 &&
+      now.getHours() >= 8 &&
+      now.getHours() < 17;
+    setAvailabilityStatus(
+      isWorking
+        ? { status: "ONLINE", color: "green" }
+        : { status: "OFFLINE", color: "red" }
+    );
   }, []);
 
+  useEffect(() => {
+    checkSLA();
+    const interval = setInterval(checkSLA, 60000);
+    const checkTheme = () =>
+      setIsDarkTheme(document.documentElement.classList.contains("dark"));
+    checkTheme();
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    return () => {
+      observer.disconnect();
+      clearInterval(interval);
+    };
+  }, [checkSLA]);
+
   const navItems = [
-    { id: "home", label: "Home" },
-    { id: "about", label: "Sobre" },
+    { id: "home", label: "Início" },
     { id: "servicos", label: "Serviços" },
     { id: "technologies", label: "Stack" },
     { id: "projects", label: "Projetos" },
-    { id: "testimonials", label: "Depoimentos" },
     { id: "contact", label: "Contato" },
   ];
 
+  // --- INTERSECTION OBSERVER PARA SCROLL ---
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
       setShowScrollTop(window.scrollY > 500);
-
-      // Lógica para marcar seção ativa
-      const sections = navItems.map(item => document.getElementById(item.id));
       const scrollPosition = window.scrollY + 100;
 
-      for (const section of sections) {
-        if (section) {
-          const top = section.offsetTop;
-          const height = section.offsetHeight;
-          if (scrollPosition >= top && scrollPosition < top + height) {
-            setActiveSection(section.id);
-          }
+      navItems.forEach((item) => {
+        const el = document.getElementById(item.id);
+        if (
+          el &&
+          scrollPosition >= el.offsetTop &&
+          scrollPosition < el.offsetTop + el.offsetHeight
+        ) {
+          setActiveSection(item.id);
         }
-      }
+      });
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -170,120 +179,226 @@ const Navigation = () => {
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
     if (el) {
-      const offset = 80;
-      const position = el.getBoundingClientRect().top + window.pageYOffset - offset;
-      window.scrollTo({ top: position, behavior: "smooth" });
+      window.scrollTo({ top: el.offsetTop - 80, behavior: "smooth" });
       setMobileMenuOpen(false);
     }
   };
 
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
-
-  // -- Estilos Dinâmicos --
-  const navBg = scrolled
-    ? (isDarkTheme ? "bg-[#020817]/80 border-b border-white/10 shadow-lg shadow-purple-900/5" : "bg-white/90 border-b border-slate-200 shadow-sm")
-    : "bg-transparent border-transparent";
-
-  const linkColor = isDarkTheme ? "text-slate-300 hover:text-white" : "text-slate-600 hover:text-emerald-700";
-  const activeLinkColor = isDarkTheme ? "text-purple-400" : "text-green-600";
-  const activeLineBg = isDarkTheme ? "bg-purple-500" : "bg-green-500";
-
-  const btnMobile = isDarkTheme
-    ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-purple-500/20"
-    : "bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-green-500/20";
-
-  const scrollTopClass = isDarkTheme
-    ? "bg-purple-600 hover:bg-purple-500 text-white shadow-purple-500/30"
-    : "bg-green-600 hover:bg-green-500 text-white shadow-green-500/30";
+  const isAvailable = availabilityStatus.color === "green";
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 backdrop-blur-md ${navBg}`}>
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
+      <nav
+        className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 backdrop-blur-md 
+        ${
+          scrolled
+            ? isDarkTheme
+              ? "bg-[#030014]/80 border-b border-white/10 shadow-2xl"
+              : "bg-white/90 border-b border-slate-200 shadow-lg"
+            : "bg-transparent border-transparent"
+        }`}
+      >
+        {/* LASER LINE ANIMATION (Top Bar) */}
+        <div className="absolute top-0 left-0 w-full h-[1px] overflow-hidden">
+          <motion.div
+            animate={{ x: ["-100%", "100%"] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+            className={`w-[150px] h-full shadow-[0_0_15px] ${
+              isDarkTheme
+                ? "bg-cyan-400 shadow-cyan-400"
+                : "bg-emerald-500 shadow-emerald-500"
+            }`}
+          />
+        </div>
 
-            {/* Logo Integrada */}
-            <button onClick={() => scrollToSection("home")} className="flex items-center gap-2 group relative z-50 focus:outline-none">
+        <div className="container mx-auto px-6 lg:px-12">
+          <div className="flex items-center justify-between h-20">
+            {/* LADO ESQUERDO: LOGO */}
+            <button
+              onClick={() => scrollToSection("home")}
+              className="hover:opacity-80 transition-all active:scale-95"
+            >
               <Logo isDarkTheme={isDarkTheme} />
             </button>
 
-            {/* Botão Fale comigo - mobile */}
-            <div className="md:hidden flex items-center gap-3 ml-auto mr-2">
-              <ThemeToggle />
+            {/* CENTRO: DESKTOP NAV */}
+            <div className="hidden md:flex items-center bg-white/5 border border-white/5 rounded-full px-2 py-1 backdrop-blur-sm">
+              <ul className="flex items-center gap-1">
+                {navItems.map(({ id, label }) => (
+                  <li key={id}>
+                    <button
+                      onClick={() => scrollToSection(id)}
+                      className={`text-[11px] font-black uppercase tracking-wider px-4 py-2 rounded-full transition-all relative group
+                        ${
+                          activeSection === id
+                            ? isDarkTheme
+                              ? "text-cyan-400"
+                              : "text-emerald-600"
+                            : isDarkTheme
+                            ? "text-slate-400 hover:text-white"
+                            : "text-slate-600 hover:text-black"
+                        }`}
+                    >
+                      {label}
+                      {activeSection === id && (
+                        <motion.div
+                          layoutId="nav-active-pill"
+                          className={`absolute inset-0 rounded-full border ${
+                            isDarkTheme
+                              ? "border-cyan-500/50 bg-cyan-500/5"
+                              : "border-emerald-500/50 bg-emerald-500/5"
+                          }`}
+                        />
+                      )}
+                    </button>
+                  </li>
+                ))}
+              </ul>
             </div>
 
-            {/* Menu Hamburguer */}
-            <div className="md:hidden flex items-center">
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className={`p-2 rounded-md transition-colors ${isDarkTheme ? 'text-slate-300 hover:text-white hover:bg-white/10' : 'text-slate-600 hover:text-black hover:bg-slate-100'}`}
+            {/* LADO DIREITO: STATUS & TOGGLE */}
+            <div className="flex items-center gap-4">
+              <div
+                className={`hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full border transition-colors duration-500 text-[9px] font-bold font-mono tracking-tighter
+                ${
+                  isAvailable
+                    ? "border-emerald-500/30 bg-emerald-500/5 text-emerald-500"
+                    : "border-red-500/30 bg-red-500/5 text-red-500"
+                }`}
               >
-                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
+                <div className="relative flex h-1.5 w-1.5">
+                  <span
+                    className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
+                      isAvailable ? "bg-emerald-400" : "bg-red-400"
+                    }`}
+                  ></span>
+                  <span
+                    className={`relative inline-flex rounded-full h-1.5 w-1.5 ${
+                      isAvailable ? "bg-emerald-500" : "bg-red-500"
+                    }`}
+                  ></span>
+                </div>
+                SLA: {availabilityStatus.status}
+              </div>
+
+              <div className="h-4 w-[1px] bg-white/10 hidden md:block" />
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+                  className={`p-2 rounded-xl border transition-all hover:scale-110 active:scale-90 ${
+                    isDarkTheme
+                      ? "border-white/5 bg-white/5 text-yellow-400"
+                      : "border-black/5 bg-black/5 text-indigo-600"
+                  }`}
+                >
+                  {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+                </button>
+                <button
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  className="md:hidden p-2 text-slate-400 hover:text-white transition-colors"
+                >
+                  {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                </button>
+              </div>
             </div>
-
-            {/* Menu Desktop */}
-            <ul className="hidden md:flex items-center gap-1 lg:gap-6">
-              {navItems.map(({ id, label }) => (
-                <li key={id}>
-                  <button
-                    onClick={() => scrollToSection(id)}
-                    className={`text-sm font-medium px-3 py-2 rounded-full transition-all duration-300 relative group ${activeSection === id ? activeLinkColor : linkColor}`}
-                  >
-                    {label}
-                    {/* Linha animada sofisticada */}
-                    <span className={`absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 rounded-full transition-all duration-300 ${activeLineBg} ${activeSection === id ? "w-4" : "w-0 group-hover:w-full opacity-50"}`} />
-                  </button>
-                </li>
-              ))}
-
-              {/* Divisor Vertical */}
-              <div className={`h-6 w-[1px] mx-2 ${isDarkTheme ? 'bg-white/10' : 'bg-slate-200'}`}></div>
-
-              {/* Toggle Desktop */}
-              <li>
-                <ThemeToggle />
-              </li>
-            </ul>
           </div>
         </div>
 
-        {/* Menu Mobile Overlay (Slide Down) */}
-        <div className={`md:hidden absolute top-full left-0 w-full border-b shadow-2xl transition-all duration-300 overflow-hidden ${mobileMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'} ${isDarkTheme ? 'bg-[#020817]/95 border-white/10' : 'bg-white/95 border-slate-200'}`}>
-          <ul className="flex flex-col items-center gap-2 py-6 backdrop-blur-xl">
-            {navItems.map(({ id, label }) => (
-              <li key={id} className="w-full text-center">
-                <button
-                  onClick={() => scrollToSection(id)}
-                  className={`text-lg font-medium py-3 w-full transition-colors ${activeSection === id ? activeLinkColor : linkColor}`}
+        {/* MOBILE MENU OVERLAY */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className={`md:hidden overflow-hidden border-b ${
+                isDarkTheme
+                  ? "bg-[#030014]/95 border-white/10"
+                  : "bg-white/95 border-slate-200"
+              }`}
+            >
+              <div className="flex flex-col p-6 gap-2">
+                {navItems.map(({ id, label }) => (
+                  <button
+                    key={id}
+                    onClick={() => scrollToSection(id)}
+                    className={`text-left text-sm font-black uppercase tracking-[0.2em] py-4 border-b border-white/5 transition-colors
+                      ${
+                        activeSection === id
+                          ? isDarkTheme
+                            ? "text-cyan-400"
+                            : "text-emerald-600"
+                          : "text-slate-500"
+                      }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+
+                <div
+                  className={`flex items-center justify-between p-4 rounded-xl border mt-4 ${
+                    isAvailable
+                      ? "border-emerald-500/20 bg-emerald-500/5"
+                      : "border-red-500/20 bg-red-500/5"
+                  }`}
                 >
-                  {label}
-                </button>
-              </li>
-            ))}
-            <li className="mt-4 w-full px-8">
-              <button
-                onClick={() => scrollToSection("contact")}
-                className={`w-full py-3 rounded-xl font-bold shadow-lg transition-transform active:scale-95 ${btnMobile}`}
-              >
-                Vamos Conversar
-              </button>
-            </li>
-          </ul>
-        </div>
+                  <div className="flex items-center gap-2">
+                    <Terminal
+                      size={14}
+                      className={
+                        isAvailable ? "text-emerald-500" : "text-red-500"
+                      }
+                    />
+                    <span className="text-[10px] font-mono text-slate-400">
+                      SYSTEM_STATUS
+                    </span>
+                  </div>
+                  <span
+                    className={`text-[10px] font-mono font-bold ${
+                      isAvailable ? "text-emerald-500" : "text-red-500"
+                    }`}
+                  >
+                    {availabilityStatus.status}
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
-      {/* Botão Scroll to Top (Fixo e Animado) */}
-      <button
-        onClick={scrollToTop}
-        className={`fixed bottom-6 right-2 p-3 rounded-full shadow-2xl transition-all duration-500 z-40 flex items-center justify-center group border border-transparent
-            ${showScrollTop ? "translate-y-0 opacity-100" : "translate-y-20 opacity-0 pointer-events-none"}
-            ${scrollTopClass}
-        `}
-        aria-label="Voltar ao topo"
+      {/* BOTÃO SCROLL TO TOP */}
+      <motion.button
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{
+          opacity: showScrollTop ? 1 : 0,
+          scale: showScrollTop ? 1 : 0,
+        }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        className={`fixed bottom-14 right-6 md:bottom-24 md:right-10 z-[90] p-4 rounded-2xl border shadow-2xl group transition-all
+          ${
+            isDarkTheme
+              ? "bg-[#030014]/80 border-cyan-500/50 text-cyan-400 shadow-cyan-400/20"
+              : "bg-white/80 border-emerald-500/50 text-emerald-600 shadow-emerald-500/20"
+          }`}
       >
-        <ArrowUp className="w-5 h-5 group-hover:-translate-y-1 transition-transform" />
-      </button>
+        <ArrowUp
+          size={20}
+          className="group-hover:-translate-y-1 transition-transform"
+        />
+
+        {/* Efeito visual de scanner no botão (opcional, para combinar com o tema) */}
+        <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
+          <motion.div
+            animate={{ top: ["-100%", "200%"] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            className="absolute w-full h-[2px] bg-cyan-400/30 blur-sm"
+          />
+        </div>
+      </motion.button>
     </>
   );
 };
