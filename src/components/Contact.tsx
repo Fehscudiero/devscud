@@ -1,39 +1,65 @@
 import { useEffect, useState, useRef } from "react";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  AnimatePresence,
+} from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail, User, Phone, MessageSquare, CheckCircle2, AlertCircle, Send } from "lucide-react";
+import {
+  Mail,
+  User,
+  Phone,
+  MessageSquare,
+  CheckCircle2,
+  AlertCircle,
+  Send,
+} from "lucide-react";
 
 const Contact = () => {
   const [isDarkTheme, setIsDarkTheme] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [status, setStatus] = useState<{ type: 'success' | 'error' | null; msg: string }>({ type: null, msg: "" });
+  const [status, setStatus] = useState<{
+    type: "success" | "error" | null;
+    msg: string;
+  }>({ type: null, msg: "" });
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Efeito de Parallax para a marca d'água (Padrão Testimonials)
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ["start end", "end start"]
+    offset: ["start end", "end start"],
   });
 
-  // Ajuste do range para o movimento lateral clássico
+  // Movimento lateral clássico para a marca d'água
   const textX = useTransform(scrollYProgress, [0, 1], [-100, 100]);
 
   useEffect(() => {
-    const checkTheme = () => setIsDarkTheme(document.documentElement.classList.contains("dark"));
+    const checkTheme = () =>
+      setIsDarkTheme(document.documentElement.classList.contains("dark"));
     checkTheme();
     const observer = new MutationObserver(checkTheme);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
     return () => observer.disconnect();
   }, []);
 
-  const [formData, setFormData] = useState({ name: "", phone: "", email: "", message: "" });
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    message: "",
+  });
 
   const formatPhone = (value: string) => {
     const numbers = value.replace(/\D/g, "");
     if (numbers.length <= 11) {
-      return numbers.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3").replace(/(-\d{4})\d+?$/, "$1");
+      return numbers
+        .replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3")
+        .replace(/(-\d{4})\d+?$/, "$1");
     }
     return value;
   };
@@ -43,17 +69,22 @@ const Contact = () => {
     setIsSubmitting(true);
     const data = new FormData(e.currentTarget);
     try {
-      const response = await fetch("https://formsubmit.co/ajax/scudiero.dev@yahoo.com", {
-        method: "POST",
-        body: data,
-        headers: { 'Accept': 'application/json' }
-      });
+      const response = await fetch(
+        "https://formsubmit.co/ajax/scudiero.dev@yahoo.com",
+        {
+          method: "POST",
+          body: data,
+          headers: { Accept: "application/json" },
+        }
+      );
       if (response.ok) {
-        setStatus({ type: 'success', msg: "PROPOSTA ENVIADA COM SUCESSO!" });
+        setStatus({ type: "success", msg: "PROPOSTA ENVIADA COM SUCESSO!" });
         setFormData({ name: "", phone: "", email: "", message: "" });
-      } else { throw new Error(); }
+      } else {
+        throw new Error();
+      }
     } catch {
-      setStatus({ type: 'error', msg: "ERRO CRÍTICO. TENTE NOVAMENTE." });
+      setStatus({ type: "error", msg: "ERRO CRÍTICO. TENTE NOVAMENTE." });
     } finally {
       setIsSubmitting(false);
       setTimeout(() => setStatus({ type: null, msg: "" }), 6000);
@@ -68,13 +99,17 @@ const Contact = () => {
     <section
       ref={sectionRef}
       id="contact"
-      className={`py-32 relative overflow-hidden transition-colors duration-1000 z-30 ${isDarkTheme ? 'bg-[#030014]' : 'bg-slate-50'}`}
+      className={`py-32 relative overflow-hidden transition-colors duration-1000 z-30 ${
+        isDarkTheme ? "bg-[#030014]" : "bg-slate-50"
+      }`}
     >
-      {/* MARCA D'ÁGUA PADRONIZADA (Implementação do Estilo Testimonials) */}
-      <div className="absolute bottom-0 left-0 w-full overflow-hidden pointer-events-none select-none z-0">
+      {/* MARCA D'ÁGUA POSICIONADA NO CANTO ESQUERDO CIMA (PADRÃO) */}
+      <div className="absolute top-0 left-0 w-full flex justify-start overflow-hidden pointer-events-none select-none z-0">
         <motion.h2
           style={{ x: textX }}
-          className={`text-[15vw] font-black leading-none tracking-tighter uppercase opacity-[0.03] dark:opacity-[0.05] whitespace-nowrap text-right pr-4 ${isDarkTheme ? 'text-white' : 'text-black'}`}
+          className={`text-[15vw] font-black leading-none tracking-tighter uppercase opacity-[0.03] dark:opacity-[0.05] whitespace-nowrap ${
+            isDarkTheme ? "text-white" : "text-black"
+          }`}
         >
           CONTATO
         </motion.h2>
@@ -82,7 +117,6 @@ const Contact = () => {
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-4xl mx-auto flex flex-col items-center text-center">
-
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -93,13 +127,26 @@ const Contact = () => {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
               </span>
-              <span className={`text-[10px] font-black uppercase tracking-[0.3em] ${isDarkTheme ? 'text-cyan-400' : 'text-emerald-600'}`}>
+              <span
+                className={`text-[10px] font-black uppercase tracking-[0.3em] ${
+                  isDarkTheme ? "text-cyan-400" : "text-emerald-600"
+                }`}
+              >
                 Disponível para Projetos
               </span>
             </div>
 
-            <h2 className={`text-6xl md:text-8xl font-black tracking-tighter ${isDarkTheme ? 'text-white' : 'text-slate-900'}`}>
-              COMECE UM <span className={`bg-gradient-to-r ${accentGradient} bg-clip-text text-transparent italic`}>PROJETO_</span>
+            <h2
+              className={`text-6xl md:text-8xl font-black tracking-tighter ${
+                isDarkTheme ? "text-white" : "text-slate-900"
+              }`}
+            >
+              COMECE UM{" "}
+              <span
+                className={`bg-gradient-to-r ${accentGradient} bg-clip-text text-transparent italic`}
+              >
+                PROJETO_
+              </span>
             </h2>
           </motion.div>
 
@@ -108,12 +155,12 @@ const Contact = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             className="relative w-full group"
           >
-            <div className={`absolute -inset-[2px] rounded-[3rem] opacity-70 group-hover:opacity-100 transition duration-1000 overflow-hidden`}>
-              <div className={`absolute inset-[-1000%] animate-[spin_5s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#00EAFF_0%,#FF00D4_50%,#00EAFF_100%)] opacity-40`} />
+            {/* Efeito de Borda Animada */}
+            <div className="absolute -inset-[2px] rounded-[3rem] opacity-70 group-hover:opacity-100 transition duration-1000 overflow-hidden">
+              <div className="absolute inset-[-1000%] animate-[spin_5s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#00EAFF_0%,#FF00D4_50%,#00EAFF_100%)] opacity-40" />
             </div>
 
-            {/* Fundo do Formulário Transparente e Acima de Tudo */}
-            <div className={`relative p-8 md:p-16 rounded-[3rem] backdrop-blur-3xl shadow-2xl z-20 bg-transparent`}>
+            <div className="relative p-8 md:p-16 rounded-[3rem] backdrop-blur-3xl shadow-2xl z-20 bg-transparent">
               <form onSubmit={handleSubmit} className="space-y-10">
                 <div className="grid md:grid-cols-2 gap-10">
                   <div className="relative group/input">
@@ -123,7 +170,9 @@ const Contact = () => {
                       placeholder="NOME"
                       required
                       value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, name: e.target.value })
+                      }
                       className="bg-transparent border-0 border-b border-white/10 rounded-none focus-visible:ring-0 focus:border-cyan-500 text-center text-xl font-bold uppercase tracking-widest h-14"
                     />
                   </div>
@@ -135,7 +184,12 @@ const Contact = () => {
                       placeholder="WHATSAPP"
                       required
                       value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: formatPhone(e.target.value) })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          phone: formatPhone(e.target.value),
+                        })
+                      }
                       className="bg-transparent border-0 border-b border-white/10 rounded-none focus-visible:ring-0 focus:border-cyan-500 text-center text-xl font-bold uppercase tracking-widest h-14"
                     />
                   </div>
@@ -149,7 +203,9 @@ const Contact = () => {
                     placeholder="E-MAIL"
                     required
                     value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
                     className="bg-transparent border-0 border-b border-white/10 rounded-none focus-visible:ring-0 focus:border-cyan-500 text-center text-xl font-bold uppercase tracking-widest h-14"
                   />
                 </div>
@@ -161,18 +217,29 @@ const Contact = () => {
                     placeholder="DESCREVA O PROJETO..."
                     required
                     value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, message: e.target.value })
+                    }
                     className="bg-transparent border-0 border-b border-white/10 rounded-none focus-visible:ring-0 focus:border-cyan-500 text-center text-xl font-bold uppercase tracking-widest min-h-[100px] resize-none overflow-hidden"
                   />
                 </div>
 
-                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
                   <Button
                     disabled={isSubmitting}
                     className={`w-full h-24 rounded-full text-lg md:text-2xl font-black uppercase tracking-widest md:tracking-[0.3em] px-4 transition-all duration-500 relative overflow-hidden
-                      ${isDarkTheme ? 'bg-white text-black hover:text-white' : 'bg-black text-white hover:text-white'}`}
+                      ${
+                        isDarkTheme
+                          ? "bg-white text-black hover:text-white"
+                          : "bg-black text-white hover:text-white"
+                      }`}
                   >
-                    <div className={`absolute inset-0 w-0 group-hover:w-full transition-all duration-700 bg-gradient-to-r ${accentGradient}`} />
+                    <div
+                      className={`absolute inset-0 w-0 group-hover:w-full transition-all duration-700 bg-gradient-to-r ${accentGradient}`}
+                    />
                     <span className="relative z-10 flex items-center justify-center gap-3 md:gap-4 w-full">
                       {isSubmitting ? "ENVIANDO..." : "ENVIAR AGORA"}
                       <Send className="w-5 h-5 md:w-6 md:h-6" />
@@ -187,10 +254,20 @@ const Contact = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
-                    className={`mt-10 p-6 rounded-2xl flex items-center justify-center gap-4 border-2 ${status.type === 'success' ? 'bg-cyan-500/10 border-cyan-500/50 text-cyan-400' : 'bg-red-500/10 border-red-500/50 text-red-400'}`}
+                    className={`mt-10 p-6 rounded-2xl flex items-center justify-center gap-4 border-2 ${
+                      status.type === "success"
+                        ? "bg-cyan-500/10 border-cyan-500/50 text-cyan-400"
+                        : "bg-red-500/10 border-red-500/50 text-red-400"
+                    }`}
                   >
-                    {status.type === 'success' ? <CheckCircle2 className="w-6 h-6" /> : <AlertCircle className="w-6 h-6" />}
-                    <p className="font-black text-sm uppercase tracking-widest">{status.msg}</p>
+                    {status.type === "success" ? (
+                      <CheckCircle2 className="w-6 h-6" />
+                    ) : (
+                      <AlertCircle className="w-6 h-6" />
+                    )}
+                    <p className="font-black text-sm uppercase tracking-widest">
+                      {status.msg}
+                    </p>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -198,12 +275,15 @@ const Contact = () => {
           </motion.div>
 
           <div className="mt-20 flex flex-col items-center gap-6">
-            <p className={`font-mono text-sm tracking-widest opacity-50 ${isDarkTheme ? 'text-white' : 'text-black'}`}>
+            <p
+              className={`font-mono text-sm tracking-widest opacity-50 ${
+                isDarkTheme ? "text-white" : "text-black"
+              }`}
+            >
               SCUDIERO.DEV@YAHOO.COM
             </p>
             <div className="h-20 w-[2px] bg-gradient-to-b from-cyan-500 to-transparent"></div>
           </div>
-
         </div>
       </div>
 
