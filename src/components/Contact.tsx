@@ -14,7 +14,6 @@ import {
   Mail,
   User,
   MessageSquare,
-  Send,
   CheckCircle2,
   ShieldCheck,
   Zap,
@@ -104,23 +103,23 @@ const Contact = () => {
     <section
       ref={sectionRef}
       id="contact"
-      className="py-40 md:py-60 relative overflow-hidden bg-background"
+      className="pt-10 pb-20 relative overflow-hidden bg-background"
     >
       {/* Background Text */}
-      <div className="absolute top-20 left-0 w-full opacity-[0.04] pointer-events-none z-0">
+      <div className="absolute top-0 left-0 w-full opacity-[0.04] pointer-events-none z-0">
         <motion.h2
           style={{ x: textX }}
-          className="text-[20vw] font-black uppercase whitespace-nowrap"
+          className="text-[20vw] font-black uppercase whitespace-nowrap leading-none"
         >
           CONTATO
         </motion.h2>
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
-        {/* Alinhamento da Grid alterado para items-end para descer a barra lateral */}
-        <div className="max-w-6xl mx-auto grid lg:grid-cols-[1fr_350px] gap-16 items-end">
-          <div className="space-y-16">
-            <div className="space-y-6">
+        {/* AJUSTE: items-center faz com que a barra lateral fique no meio vertical do formulário */}
+        <div className="max-w-6xl mx-auto grid lg:grid-cols-[1fr_350px] gap-8 lg:gap-16 items-center">
+          <div className="space-y-8 md:space-y-12">
+            <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <Zap
                   size={16}
@@ -130,7 +129,7 @@ const Contact = () => {
                   Iniciação de Protocolo
                 </span>
               </div>
-              <h2 className="text-6xl md:text-8xl font-black tracking-tighter leading-none">
+              <h2 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.85]">
                 VAMOS TIRAR <br /> DO{" "}
                 <span className="text-purple-600 italic">PAPEL?</span>
               </h2>
@@ -140,14 +139,15 @@ const Contact = () => {
               {!isSuccess ? (
                 <motion.div
                   key="form"
-                  initial={{ opacity: 0, y: 40 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20, filter: "blur(10px)" }}
-                  className="bg-card/20 backdrop-blur-2xl border border-white/10 rounded-[3rem] p-8 md:p-14 shadow-2xl"
+                  className="bg-card/20 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] md:rounded-[3rem] p-6 md:p-12 shadow-2xl"
                 >
-                  <form onSubmit={handleSubmit} className="space-y-10">
-                    <div className="grid md:grid-cols-2 gap-10">
-                      <div className="space-y-3">
+                  <form onSubmit={handleSubmit} className="space-y-8">
+                    {/* ... (campos do formulário permanecem iguais) */}
+                    <div className="grid md:grid-cols-2 gap-8">
+                      <div className="space-y-2">
                         <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                           <User size={14} /> Nome
                         </label>
@@ -157,11 +157,11 @@ const Contact = () => {
                           onChange={(e) =>
                             setFormData({ ...formData, name: e.target.value })
                           }
-                          className="bg-transparent border-0 border-b-2 rounded-none px-0 h-14 text-xl font-bold focus-visible:ring-0 focus:border-purple-500 transition-all"
+                          className="bg-transparent border-0 border-b-2 rounded-none px-0 h-12 text-xl font-bold focus-visible:ring-0 focus:border-purple-500 transition-all"
                           placeholder="Seu nome"
                         />
                       </div>
-                      <div className="space-y-3">
+                      <div className="space-y-2">
                         <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                           <WhatsAppIcon /> WhatsApp
                         </label>
@@ -172,12 +172,12 @@ const Contact = () => {
                           onChange={(e) =>
                             setFormData({ ...formData, phone: e.target.value })
                           }
-                          className="bg-transparent border-0 border-b-2 rounded-none px-0 h-14 text-xl font-bold focus-visible:ring-0 focus:border-[#25D366] transition-all"
+                          className="bg-transparent border-0 border-b-2 rounded-none px-0 h-12 text-xl font-bold focus-visible:ring-0 focus:border-[#25D366] transition-all"
                           placeholder="+55..."
                         />
                       </div>
                     </div>
-                    <div className="space-y-3">
+                    <div className="space-y-2">
                       <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                         <Mail size={14} /> E-mail
                       </label>
@@ -188,11 +188,11 @@ const Contact = () => {
                         onChange={(e) =>
                           setFormData({ ...formData, email: e.target.value })
                         }
-                        className="bg-transparent border-0 border-b-2 rounded-none px-0 h-14 text-xl font-bold focus-visible:ring-0 focus:border-purple-500 transition-all"
+                        className="bg-transparent border-0 border-b-2 rounded-none px-0 h-12 text-xl font-bold focus-visible:ring-0 focus:border-purple-500 transition-all"
                         placeholder="contato@empresa.com"
                       />
                     </div>
-                    <div className="space-y-3">
+                    <div className="space-y-2">
                       <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                         <MessageSquare size={14} /> Ideia
                       </label>
@@ -202,13 +202,13 @@ const Contact = () => {
                         onChange={(e) =>
                           setFormData({ ...formData, message: e.target.value })
                         }
-                        className="bg-transparent border-0 border-b-2 rounded-none px-0 min-h-[100px] text-xl font-bold focus-visible:ring-0 focus:border-purple-500 transition-all resize-none"
+                        className="bg-transparent border-0 border-b-2 rounded-none px-0 min-h-[80px] text-xl font-bold focus-visible:ring-0 focus:border-purple-500 transition-all resize-none"
                         placeholder="O que vamos construir hoje?"
                       />
                     </div>
                     <Button
                       disabled={isSubmitting}
-                      className="w-full h-24 rounded-[2rem] text-2xl font-black bg-white text-black hover:bg-purple-600 hover:text-white transition-all duration-500 shadow-xl active:scale-95"
+                      className="w-full h-20 rounded-[1.5rem] md:rounded-[2rem] text-xl md:text-2xl font-black bg-white text-black hover:bg-purple-600 hover:text-white transition-all duration-500 shadow-xl active:scale-95"
                     >
                       {isSubmitting ? "PROCESSANDO..." : "ENVIAR PROPOSTA"}
                     </Button>
@@ -219,36 +219,20 @@ const Contact = () => {
                   key="success"
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="h-[600px] flex flex-col items-center justify-center text-center bg-black/40 border-2 border-purple-500/50 rounded-[3rem] p-12 relative overflow-hidden shadow-[0_0_80px_rgba(147,51,234,0.2)]"
+                  className="h-[500px] flex flex-col items-center justify-center text-center bg-black/40 border-2 border-purple-500/50 rounded-[3rem] p-8 md:p-12"
                 >
-                  <motion.div
-                    animate={{ scale: [1, 1.1, 1] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="w-32 h-32 bg-purple-600 rounded-full flex items-center justify-center mb-8 shadow-[0_0_50px_rgba(147,51,234,0.5)]"
-                  >
-                    <CheckCircle2 size={60} className="text-white" />
-                  </motion.div>
-                  <h3 className="text-5xl font-black uppercase italic mb-4">
+                  <CheckCircle2 size={48} className="text-white mb-6" />
+                  <h3 className="text-4xl font-black uppercase italic mb-3">
                     Sistema Alimentado!
                   </h3>
-                  <p className="text-purple-400 font-mono text-sm uppercase tracking-[0.4em] mb-10">
-                    Celebrando sua nova jornada...
-                  </p>
-                  <div className="w-full max-w-xs h-2 bg-white/10 rounded-full overflow-hidden">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: "100%" }}
-                      transition={{ duration: 10 }}
-                      className="h-full bg-gradient-to-r from-purple-600 to-fuchsia-400"
-                    />
-                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
 
-          {/* Barra Lateral - pt-64 para garantir que fique bem abaixo, acompanhando o formulário */}
-          <div className="hidden lg:flex flex-col gap-10 border-l border-white/5 pl-12 pt-64">
+          {/* Barra Lateral Centralizada Verticalmente */}
+          {/* AJUSTE: Removido pt-4 para centralização perfeita via Flex/Grid */}
+          <div className="hidden lg:flex flex-col gap-8 border-l border-white/5 pl-12">
             <div className="space-y-6">
               <span className="text-[10px] font-black text-purple-500 uppercase tracking-[0.4em]">
                 Engine Status
@@ -260,9 +244,7 @@ const Contact = () => {
                   </span>
                   <motion.span
                     key={latency}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="text-emerald-400 font-bold tracking-tighter"
+                    className="text-emerald-400 font-bold"
                   >
                     {latency}ms
                   </motion.span>
@@ -270,18 +252,17 @@ const Contact = () => {
                 <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
                   <motion.div
                     animate={{ width: `${100 - latency * 2}%` }}
-                    transition={{ type: "spring", stiffness: 50 }}
                     className="h-full bg-emerald-500 shadow-[0_0_15px_#10b981]"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="p-8 rounded-[2.5rem] bg-white/[0.03] border border-white/10 space-y-4 backdrop-blur-sm">
-              <ShieldCheck className="text-purple-500" size={24} />
-              <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground leading-relaxed italic">
-                Criptografia de ponta a ponta ativa. Seus dados estão em um
-                ambiente 100% seguro.
+            <div className="p-6 rounded-[2rem] bg-white/[0.03] border border-white/10 space-y-4 backdrop-blur-sm">
+              <ShieldCheck className="text-purple-500" size={20} />
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground leading-relaxed italic">
+                Criptografia de ponta a ponta ativa. Seus dados estão
+                protegidos.
               </p>
             </div>
           </div>
