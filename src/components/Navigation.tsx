@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { Menu, X, ArrowUp, Moon, Sun, Terminal, Cpu } from "lucide-react";
+import { Menu, X, ArrowUp, Moon, Sun, Terminal } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 // --- CUSTOM HOOK PARA TEMA ---
@@ -22,7 +22,7 @@ const useTheme = () => {
   return { theme, setTheme };
 };
 
-// --- COMPONENTE LOGO (Identidade Visual Scudiero Adaptada) ---
+// --- COMPONENTE LOGO (Ajustado para Dark Mode) ---
 const Logo = () => {
   return (
     <div className="flex items-center gap-2 font-sans select-none">
@@ -68,20 +68,18 @@ const Logo = () => {
           <path
             d="M22 4L18 36"
             stroke="currentColor"
-            className="text-foreground/50"
+            className="text-foreground/30"
             strokeWidth="3"
             strokeLinecap="round"
           />
         </svg>
       </div>
-      <div className="flex flex-col justify-center">
-        <span className="text-xl font-black tracking-tighter leading-none text-foreground uppercase">
+      <div className="flex flex-col justify-center text-left">
+        <span className="text-xl font-black tracking-tighter leading-none uppercase text-foreground dark:text-white">
           DEV
-          <span className="bg-gradient-primary bg-clip-text text-transparent">
-            SCUD
-          </span>
+          <span className="text-primary ml-1 italic">SCUD</span>
         </span>
-        <span className="text-[8px] uppercase tracking-[0.3em] font-bold opacity-50 text-foreground">
+        <span className="text-[8px] uppercase tracking-[0.3em] font-bold opacity-50 text-foreground dark:text-white">
           SYSTEMS v4.0
         </span>
       </div>
@@ -148,7 +146,7 @@ const Navigation = () => {
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [navItems]);
 
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
@@ -168,7 +166,7 @@ const Navigation = () => {
             : "bg-transparent border-transparent"
         }`}
       >
-        {/* LASER LINE ANIMATION */}
+        {/* LINHA DE LASER ANIMADA */}
         <div className="absolute top-0 left-0 w-full h-[1px] overflow-hidden">
           <motion.div
             animate={{ x: ["-100%", "100%"] }}
@@ -186,7 +184,7 @@ const Navigation = () => {
               <Logo />
             </button>
 
-            {/* DESKTOP NAV */}
+            {/* NAV DESKTOP */}
             <div className="hidden md:flex items-center bg-foreground/5 border border-border/50 rounded-full px-2 py-1 backdrop-blur-sm">
               <ul className="flex items-center gap-1">
                 {navItems.map(({ id, label }) => (
@@ -218,12 +216,8 @@ const Navigation = () => {
                 className={`hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-card/40 text-[9px] font-bold font-mono tracking-tighter ${availabilityStatus.color}`}
               >
                 <div className="relative flex h-1.5 w-1.5">
-                  <span
-                    className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-current`}
-                  ></span>
-                  <span
-                    className={`relative inline-flex rounded-full h-1.5 w-1.5 bg-current`}
-                  ></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-current"></span>
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-current"></span>
                 </div>
                 SLA: {availabilityStatus.status}
               </div>
@@ -248,7 +242,7 @@ const Navigation = () => {
           </div>
         </div>
 
-        {/* MOBILE MENU */}
+        {/* MENU MOBILE */}
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div
@@ -276,7 +270,7 @@ const Navigation = () => {
                   className={`flex items-center justify-between p-4 rounded-xl border border-border mt-4 bg-card/50 ${availabilityStatus.color}`}
                 >
                   <div className="flex items-center gap-2">
-                    <Terminal size={14} className="bg-current" />
+                    <Terminal size={14} className="opacity-70" />
                     <span className="text-[10px] font-mono text-muted-foreground">
                       SYSTEM_STATUS
                     </span>
@@ -291,7 +285,7 @@ const Navigation = () => {
         </AnimatePresence>
       </nav>
 
-      {/* BOTÃO SCROLL TO TOP */}
+      {/* BOTÃO VOLTAR AO TOPO */}
       <motion.button
         initial={{ opacity: 0, scale: 0 }}
         animate={{
