@@ -107,7 +107,7 @@ const About = () => {
                 <span className="block text-3xl sm:text-4xl font-black text-foreground leading-none">
                   +3 ANOS
                 </span>
-                <span className="text-[8px] sm:text-[10px] font-bold uppercase text-primary tracking-widest block mt-1">
+                <span className="text-[8px] text-center sm:text-[10px] font-bold uppercase text-primary tracking-widest block mt-1">
                   DE RESULTADOS
                 </span>
               </div>
