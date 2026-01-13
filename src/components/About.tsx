@@ -55,7 +55,7 @@ const About = () => {
           style={{ x: textX }}
           className="text-[15vw] font-black uppercase opacity-[0.03] dark:opacity-[0.05] whitespace-nowrap text-right pr-10 text-foreground"
         >
-          HISTORY
+          SOBRE
         </motion.h2>
       </div>
 
@@ -90,7 +90,7 @@ const About = () => {
                   Felipe Scudiero
                 </p>
                 <p className="text-primary font-mono text-xs font-bold tracking-[0.3em]">
-                  FULLSTACK ENGINEER
+                  DESENVOLVEDOR
                 </p>
               </div>
             </motion.div>
