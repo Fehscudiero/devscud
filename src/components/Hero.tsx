@@ -107,6 +107,8 @@ const Hero = () => {
               }}
               className="text-5xl sm:text-7xl lg:text-8xl font-extrabold tracking-tighter text-foreground"
             >
+              {" "}
+              <br />
               Impulsione sua presença
               <br />
               <span className="block mt-2 bg-gradient-primary bg-clip-text text-transparent animate-gradient-x">
