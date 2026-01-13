@@ -34,59 +34,46 @@ const Logo = () => {
           fill="none"
           className="transition-transform duration-500 hover:rotate-180"
         >
-          <defs>
-            <linearGradient
-              id="logoGradNav"
-              x1="0"
-              y1="0"
-              x2="40"
-              y2="40"
-              gradientUnits="userSpaceOnUse"
-            >
-              <stop offset="0%" stopColor="var(--primary)" />
-              <stop
-                offset="100%"
-                stopColor="var(--primary)"
-                stopOpacity="0.6"
-              />
-            </linearGradient>
-          </defs>
+          {/* Ícone da esquerda < (Segue a cor do texto: preto ou branco) */}
           <path
             d="M12 20L4 12L12 4"
-            stroke="url(#logoGradNav)"
+            stroke="currentColor"
+            className="text-foreground"
             strokeWidth="4"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
+          {/* Ícone da direita > (Segue a cor do texto: preto ou branco) */}
           <path
             d="M28 20L36 28L28 36"
-            stroke="url(#logoGradNav)"
+            stroke="currentColor"
+            className="text-foreground"
             strokeWidth="4"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
+          {/* Barra central / (Destacada em ROXO) */}
           <path
             d="M22 4L18 36"
             stroke="currentColor"
-            className="text-foreground/30"
+            className="text-primary" /* Usa a cor roxa definida no seu tema */
             strokeWidth="3"
             strokeLinecap="round"
           />
         </svg>
       </div>
       <div className="flex flex-col justify-center text-left">
-        <span className="text-xl font-black tracking-tighter leading-none uppercase text-foreground dark:text-white">
+        <span className="text-xl font-black tracking-tighter leading-none uppercase text-foreground">
           DEV
           <span className="text-primary ml-1 italic">SCUD</span>
         </span>
-        <span className="text-[8px] uppercase tracking-[0.3em] font-bold opacity-50 text-foreground dark:text-white">
+        <span className="text-[8px] uppercase tracking-[0.3em] font-bold opacity-60 text-foreground">
           SYSTEMS v4.0
         </span>
       </div>
     </div>
   );
 };
-
 const Navigation = () => {
   const [activeSection, setActiveSection] = useState("home");
   const [scrolled, setScrolled] = useState(false);
