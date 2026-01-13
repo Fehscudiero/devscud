@@ -134,7 +134,7 @@ const Projects = () => {
               <span>Expertise Técnica v2.0</span>
             </div>
             <h2 className="text-5xl md:text-8xl font-black text-white tracking-tighter leading-none">
-              SOLUÇÕES<span className="text-zinc-800 italic">.WEB</span>
+              PROJETOS<span className="text-zinc-800 italic">.WEB</span>
             </h2>
           </div>
         </header>
