@@ -241,9 +241,6 @@ const Footer = () => {
 
             <div className="flex items-center gap-2 group cursor-help">
               <Activity className="w-3 h-3 text-primary" />
-              <span className="text-[10px] font-mono font-bold text-muted-foreground group-hover:text-primary transition-colors">
-                LATENCY: 4MS
-              </span>
             </div>
           </div>
         </div>
