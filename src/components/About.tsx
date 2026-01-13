@@ -95,15 +95,19 @@ const About = () => {
               </div>
             </motion.div>
 
+            {/* SELO DE EXPERIÊNCIA COM BORDA 3D E RESPONSIVIDADE */}
             <motion.div
               style={{ rotateZ: badgeRotate }}
-              className="absolute -bottom-6 -right-6 z-40"
+              className="absolute -bottom-8 -right-4 sm:-bottom-6 sm:-right-6 z-40 scale-75 sm:scale-100 origin-bottom-right"
             >
-              <div className="p-6 bg-card border-2 border-primary shadow-[8px_8px_0px_var(--primary)] rounded-2xl">
-                <span className="block text-4xl font-black text-foreground">
+              <div className="relative group/badge p-4 sm:p-6 bg-card border-2 border-primary rounded-2xl shadow-[4px_4px_0px_var(--primary)] sm:shadow-[8px_8px_0px_var(--primary)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all duration-300">
+                {/* Efeito de Borda Interna para Profundidade 3D */}
+                <div className="absolute inset-0 border-b-4 border-r-4 border-black/10 rounded-2xl pointer-events-none" />
+
+                <span className="block text-3xl sm:text-4xl font-black text-foreground leading-none">
                   +3 ANOS
                 </span>
-                <span className="text-[10px] font-bold uppercase text-primary tracking-widest">
+                <span className="text-[8px] sm:text-[10px] font-bold uppercase text-primary tracking-widest block mt-1">
                   DE RESULTADOS
                 </span>
               </div>
