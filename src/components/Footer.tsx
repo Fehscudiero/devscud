@@ -233,7 +233,7 @@ const Footer = () => {
                   BUILD: v{versionData.version}{" "}
                   <span className="text-primary">// PROD</span>
                 </span>
-                <span className="text-[8px] font-mono text-primary/80 font-bold uppercase">
+                <span className="text-[12px] font-mono text-primary/80 font-bold uppercase">
                   LAST DEPLOY: {versionData.lastUpdate}
                 </span>
               </div>
