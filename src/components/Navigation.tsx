@@ -22,7 +22,7 @@ const useTheme = () => {
   return { theme, setTheme };
 };
 
-// --- COMPONENTE LOGO (Ajustado para Dark Mode) ---
+// --- COMPONENTE LOGO ---
 const Logo = () => {
   return (
     <div className="flex items-center gap-2 font-sans select-none">
@@ -34,7 +34,6 @@ const Logo = () => {
           fill="none"
           className="transition-transform duration-500 hover:rotate-180"
         >
-          {/* Ícone da esquerda < (Segue a cor do texto: preto ou branco) */}
           <path
             d="M12 20L4 12L12 4"
             stroke="currentColor"
@@ -43,7 +42,6 @@ const Logo = () => {
             strokeLinecap="round"
             strokeLinejoin="round"
           />
-          {/* Ícone da direita > (Segue a cor do texto: preto ou branco) */}
           <path
             d="M28 20L36 28L28 36"
             stroke="currentColor"
@@ -52,11 +50,10 @@ const Logo = () => {
             strokeLinecap="round"
             strokeLinejoin="round"
           />
-          {/* Barra central / (Destacada em ROXO) */}
           <path
             d="M22 4L18 36"
             stroke="currentColor"
-            className="text-primary" /* Usa a cor roxa definida no seu tema */
+            className="text-primary"
             strokeWidth="3"
             strokeLinecap="round"
           />
@@ -74,6 +71,7 @@ const Logo = () => {
     </div>
   );
 };
+
 const Navigation = () => {
   const [activeSection, setActiveSection] = useState("home");
   const [scrolled, setScrolled] = useState(false);
@@ -85,6 +83,14 @@ const Navigation = () => {
     status: "LENTA",
     color: "text-destructive",
   });
+
+  const navItems = [
+    { id: "home", label: "Início" },
+    { id: "servicos", label: "Serviços" },
+    { id: "technologies", label: "Stack" },
+    { id: "projects", label: "Projetos" },
+    { id: "contact", label: "Contato" },
+  ];
 
   const checkSLA = useCallback(() => {
     const now = new Date();
@@ -106,28 +112,24 @@ const Navigation = () => {
     return () => clearInterval(interval);
   }, [checkSLA]);
 
-  const navItems = [
-    { id: "home", label: "Início" },
-    { id: "servicos", label: "Serviços" },
-    { id: "technologies", label: "Stack" },
-    { id: "projects", label: "Projetos" },
-    { id: "contact", label: "Contato" },
-  ];
-
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
       setShowScrollTop(window.scrollY > 500);
-      const scrollPosition = window.scrollY + 100;
+
+      const scrollPosition = window.scrollY + 120;
 
       navItems.forEach((item) => {
         const el = document.getElementById(item.id);
-        if (
-          el &&
-          scrollPosition >= el.offsetTop &&
-          scrollPosition < el.offsetTop + el.offsetHeight
-        ) {
-          setActiveSection(item.id);
+        if (el) {
+          const offsetTop = el.offsetTop;
+          const height = el.offsetHeight;
+          if (
+            scrollPosition >= offsetTop &&
+            scrollPosition < offsetTop + height
+          ) {
+            setActiveSection(item.id);
+          }
         }
       });
     };
@@ -135,10 +137,21 @@ const Navigation = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [navItems]);
 
+  // FUNÇÃO DE SCROLL CORRIGIDA
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
     if (el) {
-      window.scrollTo({ top: el.offsetTop - 80, behavior: "smooth" });
+      const offset = 80;
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = el.getBoundingClientRect().top;
+      const elementPosition = elementRect - bodyRect;
+      const offsetPosition = elementPosition - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+
       setMobileMenuOpen(false);
     }
   };
@@ -153,7 +166,6 @@ const Navigation = () => {
             : "bg-transparent border-transparent"
         }`}
       >
-        {/* LINHA DE LASER ANIMADA */}
         <div className="absolute top-0 left-0 w-full h-[1px] overflow-hidden">
           <motion.div
             animate={{ x: ["-100%", "100%"] }}
@@ -171,7 +183,7 @@ const Navigation = () => {
               <Logo />
             </button>
 
-            {/* NAV DESKTOP */}
+            {/* DESKTOP NAV */}
             <div className="hidden md:flex items-center bg-foreground/5 border border-border/50 rounded-full px-2 py-1 backdrop-blur-sm">
               <ul className="flex items-center gap-1">
                 {navItems.map(({ id, label }) => (
@@ -185,7 +197,7 @@ const Navigation = () => {
                             : "text-muted-foreground hover:text-foreground"
                         }`}
                     >
-                      {label}
+                      <span className="relative z-10">{label}</span>
                       {activeSection === id && (
                         <motion.div
                           layoutId="nav-active-pill"
@@ -209,8 +221,6 @@ const Navigation = () => {
                 SLA: {availabilityStatus.status}
               </div>
 
-              <div className="h-4 w-[1px] bg-border hidden md:block" />
-
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setTheme(theme === "light" ? "dark" : "light")}
@@ -229,21 +239,21 @@ const Navigation = () => {
           </div>
         </div>
 
-        {/* MENU MOBILE */}
+        {/* MOBILE MENU CORRIGIDO */}
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="md:hidden overflow-hidden border-b border-border bg-background/95 backdrop-blur-lg"
+              className="md:hidden overflow-hidden border-b border-border bg-background/95 backdrop-blur-xl"
             >
               <div className="flex flex-col p-6 gap-2">
                 {navItems.map(({ id, label }) => (
                   <button
                     key={id}
                     onClick={() => scrollToSection(id)}
-                    className={`text-left text-sm font-black uppercase tracking-[0.2em] py-4 border-b border-border transition-colors
+                    className={`text-left text-sm font-black uppercase tracking-[0.2em] py-5 border-b border-border/50 transition-colors w-full
                       ${
                         activeSection === id
                           ? "text-primary"
@@ -253,6 +263,7 @@ const Navigation = () => {
                     {label}
                   </button>
                 ))}
+
                 <div
                   className={`flex items-center justify-between p-4 rounded-xl border border-border mt-4 bg-card/50 ${availabilityStatus.color}`}
                 >
@@ -272,7 +283,7 @@ const Navigation = () => {
         </AnimatePresence>
       </nav>
 
-      {/* BOTÃO VOLTAR AO TOPO */}
+      {/* VOLTAR AO TOPO */}
       <motion.button
         initial={{ opacity: 0, scale: 0 }}
         animate={{
@@ -282,19 +293,9 @@ const Navigation = () => {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        className="fixed bottom-14 right-6 md:bottom-24 md:right-10 z-[90] p-4 rounded-2xl border border-primary/50 bg-background/80 text-primary shadow-2xl shadow-primary/20 group"
+        className="fixed bottom-10 right-6 z-[90] p-4 rounded-2xl border border-primary/50 bg-background/80 text-primary shadow-2xl shadow-primary/20"
       >
-        <ArrowUp
-          size={20}
-          className="group-hover:-translate-y-1 transition-transform"
-        />
-        <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
-          <motion.div
-            animate={{ top: ["-100%", "200%"] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-            className="absolute w-full h-[2px] bg-primary/30 blur-sm"
-          />
-        </div>
+        <ArrowUp size={20} />
       </motion.button>
     </>
   );
