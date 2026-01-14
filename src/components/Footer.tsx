@@ -78,7 +78,7 @@ const Footer = () => {
   }, []);
 
   return (
-    <footer className="relative pt-12 pb-6 border-t border-border bg-background transition-colors duration-1000 overflow-hidden">
+    <footer className="relative pt-4 pb-2 border-t border-border bg-background transition-colors duration-1000 overflow-hidden">
       {/* Laser Line Animation - Mantida */}
       <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/50 to-transparent">
         <motion.div

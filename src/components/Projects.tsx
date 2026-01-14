@@ -17,6 +17,13 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 
+import dominioImg from "../assets/dominio.webp";
+import ecommerceImg from "../assets/ecomerce.webp";
+import evolucaoImg from "../assets/evolucao.webp";
+import performanceImg from "../assets/performance.webp";
+import sistemawebImg from "../assets/sistemaweb.webp";
+import websiteImg from "../assets/website.webp";
+
 const MetricsBox = ({
   value,
   label,
@@ -47,8 +54,7 @@ const Projects = () => {
       service: "Criação de Websites",
       description:
         "Interfaces que vendem. Focamos em UX Design para guiar o usuário até a conversão final, com carregamento instantâneo.",
-      image:
-        "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?q=80&w=1200",
+      image: websiteImg, // Alterado
       metrics: { p: 100, a: 98, s: 100 },
       highlights: ["Design Exclusivo", "Mobile First", "Copywriting"],
       icon: Monitor,
@@ -60,8 +66,7 @@ const Projects = () => {
       service: "Otimização de Sites",
       description:
         "Sites que carregam em milissegundos. Transformamos lentidão em velocidade, melhorando o ranking no Google.",
-      image:
-        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200",
+      image: performanceImg, // Alterado
       metrics: { p: 100, a: 95, s: 99 },
       highlights: ["Lighthouse 100", "Compressão", "Cache Pro"],
       icon: Zap,
@@ -73,9 +78,7 @@ const Projects = () => {
       service: "Sistemas Web",
       description:
         "Automatize processos complexos com Dashboards e ERPs customizados integrados ao seu ecossistema de negócio.",
-      // Link de imagem atualizado e testado para Sistemas Web
-      image:
-        "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200",
+      image: sistemawebImg, // Alterado
       metrics: { p: 98, a: 100, s: 95 },
       highlights: ["Escalável", "API First", "Segurança"],
       icon: Settings,
@@ -87,8 +90,7 @@ const Projects = () => {
       service: "Suporte & Evolução",
       description:
         "Monitoramento 24/7 e evolução constante para garantir que sua tecnologia nunca fique obsoleta.",
-      image:
-        "https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=1200",
+      image: evolucaoImg, // Alterado
       metrics: { p: 99, a: 99, s: 100 },
       highlights: ["SLA Garantido", "Real-time", "Updates"],
       icon: CheckCircle2,
@@ -100,8 +102,7 @@ const Projects = () => {
       service: "SEO Técnico",
       description:
         "Apareça na primeira página. Técnicas estruturais para alcançar o topo do Google sem depender de anúncios.",
-      image:
-        "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?q=80&w=1200",
+      image: dominioImg, // Alterado
       metrics: { p: 96, a: 98, s: 100 },
       highlights: ["Indexação", "Link Building", "Rank+"],
       icon: Search,
@@ -113,8 +114,7 @@ const Projects = () => {
       service: "E-commerce High-End",
       description:
         "Venda com experiência de luxo. Checkout fluido e gestão de estoque inteligente para ticket médio alto.",
-      image:
-        "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1200",
+      image: ecommerceImg, // Alterado
       metrics: { p: 100, a: 97, s: 98 },
       highlights: ["One-Click Pay", "Inventário", "Upsell"],
       icon: ShoppingCart,
@@ -146,7 +146,7 @@ const Projects = () => {
           loop={true}
           speed={800}
           onSwiper={setSwiperInstance}
-          autoplay={{ delay: 5000 }}
+          autoplay={{ delay: 2500 }}
           onSlideChange={(swiper) => setActiveProject(swiper.realIndex)}
           className="w-full max-w-7xl rounded-[2rem] overflow-hidden border border-white/5 bg-zinc-950 shadow-2xl"
         >

@@ -236,9 +236,9 @@ const Contact = () => {
             </AnimatePresence>
           </div>
 
-          <div className="hidden lg:flex flex-col gap-8 border-l border-white/5 pl-12">
+          <div className="hidden pt-20 lg:flex flex-col gap-8 border-l border-white/5 pl-12">
             <div className="space-y-6">
-              <span className="text-[10px] font-black text-purple-500 uppercase tracking-[0.4em]">
+              <span className="text-[18px]font-black text-purple-500 uppercase tracking-[0.4em]">
                 Engine Status
               </span>
               <div className="space-y-3">
@@ -268,13 +268,13 @@ const Contact = () => {
               </div>
             </div>
 
-            <div className="p-6 rounded-[2rem] bg-white/[0.03] border border-white/10 space-y-4 backdrop-blur-sm">
+            <div className="text-center  p-4 rounded-[2rem] center bg-white/[0.03] border border-white/10 space-y-4 backdrop-blur-sm">
               <ShieldCheck
                 className="text-purple-500"
-                size={20}
+                size={40}
                 aria-hidden="true"
               />
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground leading-relaxed italic">
+              <p className="text-[18px] font-bold uppercase tracking-wider text-muted-foreground leading-relaxed italic">
                 Criptografia de ponta a ponta ativa. Seus dados estão
                 protegidos.
               </p>
