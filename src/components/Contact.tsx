@@ -6,7 +6,6 @@ import {
   useTransform,
   useSpring,
 } from "framer-motion";
-import confetti from "canvas-confetti";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -46,7 +45,6 @@ const Contact = () => {
     offset: ["start end", "end start"],
   });
 
-  // OTIMIZAÇÃO: Reduzi a complexidade da mola para evitar lag na thread principal
   const textX = useTransform(
     useSpring(scrollYProgress, { stiffness: 50, damping: 20 }),
     [0, 1],
@@ -63,17 +61,21 @@ const Contact = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // ... lógica de envio permanece igual
-    setIsSubmitting(false); // apenas para exemplo
+    // Simulação de envio
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setIsSuccess(true);
+    }, 1500);
   };
 
   return (
     <section
       ref={sectionRef}
       id="contact"
-      className="pt-10 pb-20 relative overflow-hidden bg-background"
+      className="py-20 relative overflow-hidden bg-background min-h-screen flex items-center"
       aria-labelledby="contact-title"
     >
+      {/* Background Text */}
       <div className="absolute top-0 left-0 w-full opacity-[0.04] pointer-events-none z-0">
         <motion.h2
           style={{ x: textX }}
@@ -84,7 +86,8 @@ const Contact = () => {
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="max-w-6xl mx-auto grid lg:grid-cols-[1fr_350px] gap-8 lg:gap-16 items-center">
+        <div className="max-w-6xl mx-auto grid lg:grid-cols-[1fr_380px] gap-8 lg:gap-16 items-center">
+          {/* Esquerda: Formulário e Título */}
           <div className="space-y-8 md:space-y-12">
             <div className="space-y-4">
               <div className="flex items-center gap-3">
@@ -110,7 +113,7 @@ const Contact = () => {
               {!isSuccess ? (
                 <motion.div
                   key="form"
-                  initial={{ opacity: 0 }} // Removi o y:20 para evitar Layout Shift (CLS)
+                  initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   className="bg-card/20 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] md:rounded-[3rem] p-6 md:p-12 shadow-2xl"
@@ -122,14 +125,12 @@ const Contact = () => {
                           htmlFor="name"
                           className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2"
                         >
-                          <User size={14} aria-hidden="true" /> Nome
+                          <User size={14} /> Nome
                         </label>
                         <Input
                           id="name"
-                          name="name"
                           required
                           value={formData.name}
-                          autoComplete="name"
                           onChange={(e) =>
                             setFormData({ ...formData, name: e.target.value })
                           }
@@ -146,10 +147,8 @@ const Contact = () => {
                         </label>
                         <Input
                           id="phone"
-                          name="phone"
                           required
                           type="tel"
-                          autoComplete="tel"
                           value={formData.phone}
                           onChange={(e) =>
                             setFormData({ ...formData, phone: e.target.value })
@@ -165,14 +164,12 @@ const Contact = () => {
                         htmlFor="email"
                         className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2"
                       >
-                        <Mail size={14} aria-hidden="true" /> E-mail
+                        <Mail size={14} /> E-mail
                       </label>
                       <Input
                         id="email"
-                        name="email"
                         required
                         type="email"
-                        autoComplete="email"
                         value={formData.email}
                         onChange={(e) =>
                           setFormData({ ...formData, email: e.target.value })
@@ -187,11 +184,10 @@ const Contact = () => {
                         htmlFor="message"
                         className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2"
                       >
-                        <MessageSquare size={14} aria-hidden="true" /> Ideia
+                        <MessageSquare size={14} /> Ideia
                       </label>
                       <Textarea
                         id="message"
-                        name="message"
                         required
                         value={formData.message}
                         onChange={(e) =>
@@ -205,11 +201,6 @@ const Contact = () => {
                     <Button
                       type="submit"
                       disabled={isSubmitting}
-                      aria-label={
-                        isSubmitting
-                          ? "Enviando sua proposta"
-                          : "Enviar proposta de projeto"
-                      }
                       className="w-full h-20 rounded-[1.5rem] md:rounded-[2rem] text-xl md:text-2xl font-black bg-white text-black hover:bg-purple-600 hover:text-white transition-all duration-500 shadow-xl active:scale-95"
                     >
                       {isSubmitting ? "PROCESSANDO..." : "ENVIAR PROPOSTA"}
@@ -223,22 +214,22 @@ const Contact = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   className="h-[500px] flex flex-col items-center justify-center text-center bg-black/40 border-2 border-purple-500/50 rounded-[3rem] p-8 md:p-12"
                 >
-                  <CheckCircle2
-                    size={48}
-                    className="text-white mb-6"
-                    aria-hidden="true"
-                  />
+                  <CheckCircle2 size={48} className="text-emerald-500 mb-6" />
                   <h3 className="text-4xl font-black uppercase italic mb-3">
                     Sistema Alimentado!
                   </h3>
+                  <p className="text-muted-foreground">
+                    Retornaremos em breve.
+                  </p>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
 
-          <div className="hidden pt-20 lg:flex flex-col gap-8 border-l border-white/5 pl-12">
+          {/* Direita: Status e Segurança (Centralizados) */}
+          <div className="hidden lg:flex flex-col mt-60 justify-center gap-10 border-l border-white/10 pl-12 h-[500px]">
             <div className="space-y-6">
-              <span className="text-[18px]font-black text-purple-500 uppercase tracking-[0.4em]">
+              <span className="text-[14px] text-center font-black text-purple-500 uppercase tracking-[0.4em]">
                 Engine Status
               </span>
               <div className="space-y-3">
@@ -253,13 +244,7 @@ const Contact = () => {
                     {latency}ms
                   </motion.span>
                 </div>
-                <div
-                  className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden"
-                  role="progressbar"
-                  aria-valuenow={100 - latency * 2}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                >
+                <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
                   <motion.div
                     animate={{ width: `${100 - latency * 2}%` }}
                     className="h-full bg-emerald-500 shadow-[0_0_15px_#10b981]"
@@ -268,15 +253,18 @@ const Contact = () => {
               </div>
             </div>
 
-            <div className="text-center  p-4 rounded-[2rem] center bg-white/[0.03] border border-white/10 space-y-4 backdrop-blur-sm">
+            {/* CARD DE SEGURANÇA AJUSTADO */}
+            <div className="flex flex-col items-center justify-center text-center p-8 rounded-[2.5rem] bg-white/[0.03] border border-white/10 space-y-4 backdrop-blur-sm min-h-[220px]">
               <ShieldCheck
-                className="text-purple-500"
-                size={40}
+                className="text-purple-500 mb-2"
+                size={48}
                 aria-hidden="true"
               />
-              <p className="text-[18px] font-bold uppercase tracking-wider text-muted-foreground leading-relaxed italic">
-                Criptografia de ponta a ponta ativa. Seus dados estão
-                protegidos.
+              <p className="text-[16px] font-bold uppercase tracking-wider text-muted-foreground leading-tight italic">
+                Criptografia de ponta a ponta ativa. <br />
+                <span className="text-white/60">
+                  Seus dados estão protegidos.
+                </span>
               </p>
             </div>
           </div>
