@@ -97,9 +97,9 @@ const Technologies = () => {
         </div>
 
         {/* Grid de Conteúdo */}
-        <div className="grid lg:grid-cols-12 gap-12 items-start">
+        <div className="grid lg:grid-cols-12 gap-6 order-2 items-start">
           {/* Menu Lateral */}
-          <div className="lg:col-span-4 space-y-3 order-2 lg:order-1">
+          <div className="lg:col-span-4 space-y-3 order-1 lg:order-1">
             {techCategories.map((item, idx) => (
               <button
                 key={idx}
