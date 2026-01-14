@@ -24,6 +24,7 @@ import performanceImg from "../assets/performance.webp";
 import sistemawebImg from "../assets/sistemaweb.webp";
 import websiteImg from "../assets/website.webp";
 
+// ... (MetricsBox continua igual)
 const MetricsBox = ({
   value,
   label,
@@ -54,11 +55,12 @@ const Projects = () => {
       service: "Criação de Websites",
       description:
         "Interfaces que vendem. Focamos em UX Design para guiar o usuário até a conversão final, com carregamento instantâneo.",
-      image: websiteImg, // Alterado
+      image: websiteImg,
       metrics: { p: 100, a: 98, s: 100 },
       highlights: ["Design Exclusivo", "Mobile First", "Copywriting"],
       icon: Monitor,
     },
+    // ... (os outros objetos permanecem iguais)
     {
       id: "PERF_02",
       shortName: "Performance",
@@ -66,7 +68,7 @@ const Projects = () => {
       service: "Otimização de Sites",
       description:
         "Sites que carregam em milissegundos. Transformamos lentidão em velocidade, melhorando o ranking no Google.",
-      image: performanceImg, // Alterado
+      image: performanceImg,
       metrics: { p: 100, a: 95, s: 99 },
       highlights: ["Lighthouse 100", "Compressão", "Cache Pro"],
       icon: Zap,
@@ -78,7 +80,7 @@ const Projects = () => {
       service: "Sistemas Web",
       description:
         "Automatize processos complexos com Dashboards e ERPs customizados integrados ao seu ecossistema de negócio.",
-      image: sistemawebImg, // Alterado
+      image: sistemawebImg,
       metrics: { p: 98, a: 100, s: 95 },
       highlights: ["Escalável", "API First", "Segurança"],
       icon: Settings,
@@ -90,7 +92,7 @@ const Projects = () => {
       service: "Suporte & Evolução",
       description:
         "Monitoramento 24/7 e evolução constante para garantir que sua tecnologia nunca fique obsoleta.",
-      image: evolucaoImg, // Alterado
+      image: evolucaoImg,
       metrics: { p: 99, a: 99, s: 100 },
       highlights: ["SLA Garantido", "Real-time", "Updates"],
       icon: CheckCircle2,
@@ -102,7 +104,7 @@ const Projects = () => {
       service: "SEO Técnico",
       description:
         "Apareça na primeira página. Técnicas estruturais para alcançar o topo do Google sem depender de anúncios.",
-      image: dominioImg, // Alterado
+      image: dominioImg,
       metrics: { p: 96, a: 98, s: 100 },
       highlights: ["Indexação", "Link Building", "Rank+"],
       icon: Search,
@@ -114,7 +116,7 @@ const Projects = () => {
       service: "E-commerce High-End",
       description:
         "Venda com experiência de luxo. Checkout fluido e gestão de estoque inteligente para ticket médio alto.",
-      image: ecommerceImg, // Alterado
+      image: ecommerceImg,
       metrics: { p: 100, a: 97, s: 98 },
       highlights: ["One-Click Pay", "Inventário", "Upsell"],
       icon: ShoppingCart,
@@ -146,26 +148,32 @@ const Projects = () => {
           loop={true}
           speed={800}
           onSwiper={setSwiperInstance}
-          autoplay={{ delay: 2500 }}
+          autoplay={{ delay: 3500 }} // Aumentado um pouco para reduzir carga de CPU constante
           onSlideChange={(swiper) => setActiveProject(swiper.realIndex)}
           className="w-full max-w-7xl rounded-[2rem] overflow-hidden border border-white/5 bg-zinc-950 shadow-2xl"
         >
           {services.map((project, index) => (
             <SwiperSlide key={index}>
               <div className="grid lg:grid-cols-2 min-h-[500px]">
-                {/* IMAGEM COM LOADING PLACEHOLDER */}
-                <div className="relative h-[250px] lg:h-auto bg-zinc-900 overflow-hidden">
+                {/* OTIMIZAÇÃO: Container com proporção fixa para evitar REFLOW */}
+                <div className="relative h-[250px] lg:h-auto bg-zinc-900 overflow-hidden aspect-video lg:aspect-auto">
                   <img
                     src={project.image}
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                     alt={project.title}
-                    loading="lazy"
+                    // OTIMIZAÇÃO CRÍTICA: Se for o primeiro slide, carrega com prioridade máxima
+                    // Se não, usa lazy load para não pesar o carregamento inicial.
+                    loading={index === 0 ? "eager" : "lazy"}
+                    // @ts-ignore - Atributo de performance moderno
+                    fetchpriority={index === 0 ? "high" : "low"}
+                    // Dimensões explícitas para o navegador reservar espaço (evita Reflow)
+                    width="800"
+                    height="600"
                   />
                   <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-transparent to-transparent hidden lg:block" />
                   <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 to-transparent lg:hidden" />
                 </div>
 
-                {/* CONTEÚDO */}
                 <div className="p-8 lg:p-12 flex flex-col justify-between">
                   <div className="space-y-6">
                     <div>
@@ -230,6 +238,8 @@ const Projects = () => {
             <button
               key={i}
               onClick={() => swiperInstance?.slideToLoop(i)}
+              // Acessibilidade: adicionado label para o botão não ser "anônimo"
+              aria-label={`Ver projeto: ${s.shortName}`}
               className={`p-3 rounded-xl border transition-all text-center flex flex-col items-center gap-1 group ${
                 activeProject === i
                   ? "bg-purple-600 border-purple-500 shadow-lg shadow-purple-900/20"
