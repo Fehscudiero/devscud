@@ -153,11 +153,11 @@ const About = () => {
             </div>
 
             {/* DIFERENCIAIS RÁPIDOS */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+            <div className="grid grid-cols-1 justify-items-center sm:grid-cols-2 gap-4 pt-4">
               {expertise.map((item, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-3 p-4 rounded-xl bg-card border border-border group hover:border-primary transition-colors"
+                  className="flex items-center gap-3 p-4 rounded-xl bg-card border border-border group hover:border-primary transition-colors min-w-[240px] flex-1 sm:flex-none"
                 >
                   <div className="text-primary group-hover:scale-110 transition-transform">
                     {item.icon}
