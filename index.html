@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
@@ -29,26 +29,42 @@
       rel="preload"
       href="/assets/index-DryUl5db.css"
       as="style"
-      onload="this.onload=null;this.rel='stylesheet'"
+      onload="
+        this.onload = null;
+        this.rel = 'stylesheet';
+      "
     />
     <link
       rel="preload"
       href="/assets/vendor-Oou9B2lG.css"
       as="style"
-      onload="this.onload=null;this.rel='stylesheet'"
+      onload="
+        this.onload = null;
+        this.rel = 'stylesheet';
+      "
     />
     <link
       rel="preload"
       href="/assets/index.css"
       as="style"
-      onload="this.onload=null;this.rel='stylesheet'"
+      onload="
+        this.onload = null;
+        this.rel = 'stylesheet';
+      "
     />
 
+    <link
+      rel="preload"
+      href="https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGkyMZhrib2Bg-4.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
       rel="stylesheet"
       media="print"
-      onload="this.media='all'"
+      onload="this.media = 'all'"
     />
 
     <noscript>
@@ -76,7 +92,33 @@
   </head>
 
   <body>
-    <div id="root"></div>
+    <body>
+      <div id="root">
+        <div
+          style="
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #050505;
+            text-align: center;
+            font-family: sans-serif;
+          "
+        >
+          <h1
+            style="
+              color: white;
+              font-size: 3rem;
+              font-weight: 900;
+              letter-spacing: -0.05em;
+              margin: 0;
+            "
+          >
+            Impulsione sua presença Digital com Estilo
+          </h1>
+        </div>
+      </div>
+    </body>
 
     <script>
       window.addEventListener("load", function () {
