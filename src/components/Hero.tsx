@@ -102,11 +102,13 @@ const Hero = () => {
         className="container mx-auto px-4 relative z-10"
       >
         <div className="max-w-4xl mx-auto text-center space-y-10">
-          <div className="relative space-y-4">
-            <h1 className="text-5xl sm:text-7xl lg:text-8xl font-extrabold tracking-tighter text-foreground">
+          {/* Aumentado o space-y aqui de 4 para 8 para separar o H1 do P */}
+          <div className="relative space-y-8">
+            <h1 className="text-5xl sm:text-7xl lg:text-8xl font-extrabold tracking-tighter text-foreground leading-[1.1]">
               Impulsione sua presença
               <br />
-              <span className="block mt-2 bg-gradient-primary bg-clip-text text-transparent">
+              {/* Aumentado mt-2 para mt-4 para descer a frase com gradiente */}
+              <span className="block mt-4 bg-gradient-primary bg-clip-text text-transparent pb-2">
                 Digital com Estilo
               </span>
             </h1>
