@@ -194,7 +194,7 @@ const Contact = () => {
                             setFormData({ ...formData, phone: e.target.value })
                           }
                           className="bg-transparent border-0 border-b-2 border-border rounded-none px-0 h-12 text-xl font-bold focus-visible:ring-0 focus:border-[#25D366] transition-all placeholder:opacity-30 text-foreground"
-                          placeholder="+55..."
+                          placeholder="+55(..) 9 9999-9999"
                         />
                       </div>
                     </div>
