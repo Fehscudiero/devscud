@@ -88,7 +88,7 @@ const Servicos = () => {
       id="servicos"
       className="py-32 min-h-[800px] flex items-center relative overflow-hidden transition-colors duration-1000"
     >
-      {/* MARCA D'ÁGUA PADRONIZADA (Igual ao Testimonials) */}
+      {/* MARCA D'ÁGUA PADRONIZADA */}
       <div className="absolute top-0 left-0 w-full overflow-hidden pointer-events-none select-none z-0">
         <motion.h2
           style={{ x: textX }}
@@ -99,7 +99,7 @@ const Servicos = () => {
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
-        {/* Header - Padronizado com Testimonials */}
+        {/* Header */}
         <div className="mb-20 text-center lg:text-left">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -118,10 +118,17 @@ const Servicos = () => {
 
         <div className="flex flex-col lg:flex-row gap-12 items-center">
           {/* Navegação Desktop */}
-          <div className="hidden lg:flex flex-col gap-4 w-1/3">
+          <div
+            className="hidden lg:flex flex-col gap-4 w-1/3"
+            role="tablist"
+            aria-orientation="vertical"
+          >
             {services.map((s, i) => (
               <button
                 key={i}
+                role="tab"
+                aria-selected={activeIndex === i}
+                aria-controls={`service-panel-${i}`}
                 onClick={() => setActiveIndex(i)}
                 className={`text-left p-6 rounded-2xl transition-all duration-300 border-l-4 ${
                   activeIndex === i
@@ -145,18 +152,19 @@ const Servicos = () => {
             ))}
           </div>
 
-          {/* Card em Foco - Padronizado com os Cards do Testimonials */}
+          {/* Card em Foco */}
           <div className="w-full lg:w-2/3 relative flex flex-col items-center">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeIndex}
+                role="tabpanel"
+                id={`service-panel-${activeIndex}`}
                 initial={{ opacity: 0, x: 50, scale: 0.95 }}
                 animate={{ opacity: 1, x: 0, scale: 1 }}
                 exit={{ opacity: 0, x: -50, scale: 0.95 }}
                 transition={{ duration: 0.4, ease: "circOut" }}
                 className="w-full max-w-[650px] p-10 lg:p-16 rounded-[3rem] border border-border shadow-2xl relative overflow-hidden bg-card/50 backdrop-blur-sm group hover:border-primary/50 transition-colors duration-500"
               >
-                {/* Glow interno igual ao Testimonials */}
                 <div className="absolute inset-0 rounded-[3rem] opacity-0 group-hover:opacity-[0.02] transition-opacity duration-500 pointer-events-none bg-primary" />
 
                 <div className="absolute top-10 right-10 text-[10px] font-mono opacity-30 uppercase tracking-widest text-foreground">
@@ -186,20 +194,23 @@ const Servicos = () => {
               </motion.div>
             </AnimatePresence>
 
-            {/* Controles Padronizados */}
+            {/* Controles Padronizados com ARIA-LABEL (Correção do Lighthouse) */}
             <div className="flex gap-6 mt-12 items-center">
               <button
                 onClick={prevService}
+                aria-label="Ver serviço anterior"
                 className="p-5 rounded-full border border-border bg-card/50 hover:bg-primary/10 hover:border-primary/50 transition-all text-foreground shadow-lg"
               >
                 <ChevronLeft size={28} />
               </button>
 
               <div className="flex items-center gap-3">
-                {services.map((_, i) => (
+                {services.map((s, i) => (
                   <button
                     key={i}
                     onClick={() => setActiveIndex(i)}
+                    aria-label={`Ir para serviço: ${s.title}`}
+                    aria-current={activeIndex === i ? "true" : "false"}
                     className={`h-2 transition-all duration-500 rounded-full ${
                       activeIndex === i
                         ? `w-12 bg-primary shadow-[0_0_15px_rgba(var(--primary),0.5)]`
@@ -211,6 +222,7 @@ const Servicos = () => {
 
               <button
                 onClick={nextService}
+                aria-label="Ver próximo serviço"
                 className="p-5 rounded-full border border-border bg-card/50 hover:bg-primary/10 hover:border-primary/50 transition-all text-foreground shadow-lg"
               >
                 <ChevronRight size={28} />
@@ -220,7 +232,6 @@ const Servicos = () => {
         </div>
       </div>
 
-      {/* Glow de fundo lateral igual ao Testimonials */}
       <div className="absolute top-0 right-0 w-[400px] h-[400px] rounded-full blur-[150px] opacity-[0.05] pointer-events-none bg-primary" />
     </section>
   );
