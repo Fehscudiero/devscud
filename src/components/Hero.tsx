@@ -4,17 +4,21 @@ import Particles from "react-tsparticles";
 import { loadSlim } from "tsparticles-slim";
 import { useCallback, useState, useEffect, useMemo } from "react";
 import { useTheme } from "@/components/theme-provider";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+  AnimatePresence,
+} from "framer-motion";
 
 const Hero = () => {
   const { theme } = useTheme();
   const [isDarkTheme, setIsDarkTheme] = useState(true);
   const [showParticles, setShowParticles] = useState(false);
 
-  // OTIMIZAÇÃO CRÍTICA PARA LCP E REFLOW:
-  // Adia o carregamento das partículas para garantir que a Thread Principal foque no H1 primeiro
   useEffect(() => {
-    const timer = setTimeout(() => setShowParticles(true), 1500);
+    const timer = setTimeout(() => setShowParticles(true), 1200);
     return () => clearTimeout(timer);
   }, []);
 
@@ -23,22 +27,20 @@ const Hero = () => {
   const mouseXSpring = useSpring(x, { stiffness: 50, damping: 20 });
   const mouseYSpring = useSpring(y, { stiffness: 50, damping: 20 });
 
-  // Reduzi a amplitude da rotação para evitar grandes saltos de layout
   const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["8deg", "-8deg"]);
   const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-8deg", "8deg"]);
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    // Desativa cálculos de mouse no mobile para evitar Reflow Forçado
     if (typeof window !== "undefined" && window.innerWidth < 768) return;
-
     const rect = e.currentTarget.getBoundingClientRect();
     x.set(e.clientX / rect.width - 0.5);
     y.set(e.clientY / rect.height - 0.5);
   };
 
   useEffect(() => {
-    const checkTheme = () =>
+    const checkTheme = () => {
       setIsDarkTheme(document.documentElement.classList.contains("dark"));
+    };
     checkTheme();
     const observer = new MutationObserver(checkTheme);
     observer.observe(document.documentElement, {
@@ -55,18 +57,28 @@ const Hero = () => {
   const particlesOptions = useMemo(
     () => ({
       fullScreen: { enable: false },
-      fpsLimit: 30, // Limitado a 30 FPS para salvar a Thread Principal no Mobile
+      fpsLimit: 30,
       particles: {
-        number: { value: 15, density: { enable: true, area: 1000 } }, // Menos partículas, mais área
+        number: { value: 25, density: { enable: true, area: 1000 } },
         color: {
-          value: isDarkTheme ? ["#a855f7", "#ffffff"] : ["#0ea5e9", "#0f172a"],
+          value: isDarkTheme
+            ? ["#9333ea", "#7c3aed", "#a855f7"]
+            : ["#1d4ed8", "#1e40af", "#2563eb"],
         },
-        opacity: { value: 0.15 },
-        size: { value: { min: 1, max: 2 } },
-        move: { enable: true, speed: 0.3, outModes: { default: "bounce" } },
+        opacity: { value: 0.4 },
+        size: { value: { min: 1, max: 3 } },
+        move: {
+          enable: true,
+          speed: 0.5,
+          outModes: { default: "bounce" },
+        },
         links: { enable: false },
+        collisions: { enable: false },
       },
-      detectRetina: false, // Performance otimizada para telas mobile
+      interactivity: {
+        events: { onHover: { enable: false }, onClick: { enable: false } },
+      },
+      detectRetina: false,
     }),
     [isDarkTheme],
   );
@@ -81,13 +93,14 @@ const Hero = () => {
     <section
       id="home"
       onMouseMove={handleMouseMove}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background"
-      style={{ contain: "paint" }} // Melhora a performance de renderização isolada
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background transition-colors duration-500"
+      style={{ contain: "paint" }}
     >
       <div className="absolute inset-0 z-0 pointer-events-none">
         {showParticles && (
           <Particles
             id="tsparticles"
+            key={isDarkTheme ? "hero-dark" : "hero-light"}
             init={particlesInit}
             options={particlesOptions as any}
             className="absolute inset-0"
@@ -108,7 +121,7 @@ const Hero = () => {
               : rotateY,
           transformStyle: "preserve-3d",
         }}
-        className="container mx-auto px-4 relative z-10 will-change-transform" // Avisa a GPU para acelerar
+        className="container mx-auto px-4 relative z-10 will-change-transform"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -130,19 +143,65 @@ const Hero = () => {
             </p>
           </div>
 
+          {/* IMPLEMENTAÇÃO DO BOTÃO TECH */}
           <div className="flex justify-center pt-4">
-            <Button
-              size="lg"
-              onClick={() => scrollToSection("contact")}
-              aria-label="Ir para seção de contato"
-              className="group relative px-10 py-7 text-xl font-bold rounded-2xl shadow-2xl bg-gradient-primary text-white border-none"
+            <motion.div
+              initial={{ scale: 1 }}
+              animate={{
+                boxShadow: isDarkTheme
+                  ? [
+                      "0 0 20px rgba(147,51,234,0.3)",
+                      "0 0 40px rgba(147,51,234,0.6)",
+                      "0 0 20px rgba(147,51,234,0.3)",
+                    ]
+                  : [
+                      "0 0 20px rgba(37,99,235,0.3)",
+                      "0 0 40px rgba(37,99,235,0.6)",
+                      "0 0 20px rgba(37,99,235,0.3)",
+                    ],
+              }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              className="relative p-[2px] rounded-2xl overflow-hidden group"
             >
-              <Mail
-                className="mr-2 w-6 h-6 group-hover:rotate-12 transition-transform"
-                aria-hidden="true"
-              />
-              Vamos Conversar?
-            </Button>
+              {/* Borda Neon Giratória */}
+              <div className="absolute inset-[-1000%] animate-[spin_4s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2E8F0_0%,#a855f7_50%,#E2E8F0_100%)] opacity-30 group-hover:opacity-100 transition-opacity" />
+
+              <Button
+                size="lg"
+                onClick={() => scrollToSection("contact")}
+                className="group relative px-10 py-8 text-xl md:text-2xl font-black rounded-2xl bg-gradient-primary text-white border-none transition-all duration-300 hover:scale-[1.02] active:scale-95 flex items-center gap-3 overflow-hidden shadow-2xl"
+              >
+                {/* Efeito Shimmer (Brilho que passa) */}
+                <motion.div
+                  initial={{ x: "-100%" }}
+                  animate={{ x: "100%" }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatDelay: 4,
+                    ease: "linear",
+                  }}
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12"
+                />
+
+                <div className="relative z-10 flex items-center gap-3">
+                  <motion.div
+                    animate={{ rotate: [0, 10, -10, 0] }}
+                    transition={{
+                      duration: 0.5,
+                      repeat: Infinity,
+                      repeatDelay: 2.5,
+                    }}
+                  >
+                    <Mail className="w-6 h-6 md:w-8 md:h-8" />
+                  </motion.div>
+                  <span className="tracking-tighter">VAMOS CONVERSAR?</span>
+                </div>
+
+                {/* Micro-partículas internas ao passar o mouse */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity bg-[radial-gradient(circle,white_1px,transparent_1px)] bg-[size:12px_12px]" />
+              </Button>
+            </motion.div>
           </div>
 
           <div className="flex items-center justify-center gap-4 pt-10">
@@ -168,10 +227,10 @@ const Hero = () => {
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`Ver perfil no ${label}`}
-                className="p-4 rounded-2xl border bg-card/50 border-border text-muted-foreground hover:text-primary transition-all"
+                aria-label={label}
+                className="p-4 rounded-2xl border bg-card/50 border-border text-muted-foreground hover:text-primary transition-all duration-300"
               >
-                <Icon className="h-6 w-6" aria-hidden="true" />{" "}
+                <Icon className="h-6 w-6" aria-hidden="true" />
               </a>
             ))}
           </div>
