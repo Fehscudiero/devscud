@@ -132,7 +132,7 @@ const Projects = () => {
         <header className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-purple-500 font-mono text-xs uppercase tracking-[0.3em]">
-              <Rocket className="w-4 h-4 fill-current" />
+              <Rocket className="w-4 h-4 fill-current" aria-hidden="true" />
               <span>Expertise Técnica v2.0</span>
             </div>
             <h2 className="text-5xl md:text-8xl font-black text-white tracking-tighter leading-none">
@@ -148,33 +148,31 @@ const Projects = () => {
           loop={true}
           speed={800}
           onSwiper={setSwiperInstance}
-          autoplay={{ delay: 3500 }} // Aumentado um pouco para reduzir carga de CPU constante
+          autoplay={{ delay: 4000 }}
           onSlideChange={(swiper) => setActiveProject(swiper.realIndex)}
           className="w-full max-w-7xl rounded-[2rem] overflow-hidden border border-white/5 bg-zinc-950 shadow-2xl"
         >
           {services.map((project, index) => (
             <SwiperSlide key={index}>
               <div className="grid lg:grid-cols-2 min-h-[500px]">
-                {/* OTIMIZAÇÃO: Container com proporção fixa para evitar REFLOW */}
-                <div className="relative h-[250px] lg:h-auto bg-zinc-900 overflow-hidden aspect-video lg:aspect-auto">
+                <div className="relative h-[250px] lg:h-auto bg-zinc-900 overflow-hidden">
                   <img
                     src={project.image}
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                    alt={project.title}
-                    // OTIMIZAÇÃO CRÍTICA: Se for o primeiro slide, carrega com prioridade máxima
-                    // Se não, usa lazy load para não pesar o carregamento inicial.
+                    alt={`Preview do projeto ${project.title}`}
+                    // OTIMIZAÇÃO: Primeira imagem carrega instantaneamente, as outras não
                     loading={index === 0 ? "eager" : "lazy"}
-                    // @ts-ignore - Atributo de performance moderno
+                    // @ts-ignore
                     fetchpriority={index === 0 ? "high" : "low"}
-                    // Dimensões explícitas para o navegador reservar espaço (evita Reflow)
+                    // Tamanhos explícitos para evitar Reflow forçado
                     width="800"
                     height="600"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-transparent to-transparent hidden lg:block" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 to-transparent lg:hidden" />
                 </div>
 
-                <div className="p-8 lg:p-12 flex flex-col justify-between">
+                <div className="p-8 lg:p-12 flex flex-col justify-between bg-zinc-950">
                   <div className="space-y-6">
                     <div>
                       <span className="text-purple-500 font-bold text-xs uppercase tracking-widest">
@@ -221,7 +219,6 @@ const Projects = () => {
                         icon={Trophy}
                       />
                     </div>
-
                     <button className="w-full sm:flex-1 bg-white text-black font-black py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-purple-600 hover:text-white transition-all group">
                       SOLICITAR ORÇAMENTO <ExternalLink className="w-4 h-4" />
                     </button>
@@ -232,31 +229,24 @@ const Projects = () => {
           ))}
         </Swiper>
 
-        {/* INDICADOR DE NAVEGAÇÃO PREMIUM */}
+        {/* Navegação inferior - Adicionado labels para acessibilidade */}
         <div className="mt-8 grid grid-cols-3 md:grid-cols-6 gap-2">
           {services.map((s, i) => (
             <button
               key={i}
               onClick={() => swiperInstance?.slideToLoop(i)}
-              // Acessibilidade: adicionado label para o botão não ser "anônimo"
               aria-label={`Ver projeto: ${s.shortName}`}
-              className={`p-3 rounded-xl border transition-all text-center flex flex-col items-center gap-1 group ${
+              className={`p-3 rounded-xl border transition-all text-center flex flex-col items-center gap-1 ${
                 activeProject === i
                   ? "bg-purple-600 border-purple-500 shadow-lg shadow-purple-900/20"
                   : "bg-zinc-900/50 border-white/5 hover:border-white/20"
               }`}
             >
               <s.icon
-                className={`w-4 h-4 ${
-                  activeProject === i
-                    ? "text-white"
-                    : "text-zinc-500 group-hover:text-purple-400"
-                }`}
+                className={`w-4 h-4 ${activeProject === i ? "text-white" : "text-zinc-500"}`}
               />
               <span
-                className={`text-[8px] font-black uppercase tracking-tighter ${
-                  activeProject === i ? "text-white" : "text-zinc-600"
-                }`}
+                className={`text-[8px] font-black uppercase tracking-tighter ${activeProject === i ? "text-white" : "text-zinc-600"}`}
               >
                 {s.shortName}
               </span>
