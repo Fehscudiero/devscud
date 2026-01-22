@@ -214,7 +214,7 @@ const Hero = () => {
               },
               {
                 icon: Instagram,
-                href: "https://www.instagram.com/scudiero.dev/",
+                href: "https://www.instagram.com/scudiero.tsx/",
                 label: "Instagram",
               },
             ].map(({ icon: Icon, href, label }, index) => (
