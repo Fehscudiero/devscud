@@ -4,7 +4,6 @@ import path from "path";
 
 // Plugins para Performance
 import { imagetools } from "vite-imagetools";
-import purgeCss from "vite-plugin-purgecss";
 import compression from "vite-plugin-compression";
 
 export default defineConfig({
@@ -15,20 +14,14 @@ export default defineConfig({
   },
   plugins: [
     react(),
-    // 1. CORREÇÃO: Ativando o PurgeCSS para limpar CSS inútil
-    purgeCss({
-      content: [`./src/**/*.tsx`, `./index.html`],
-      safelist: {
-        standard: [/active$/, /open$/, /visible$/], // Mantém classes dinâmicas
-      },
-    }),
-    // 2. Compressão máxima para Mobile
+    // Geração de imagens otimizadas
+    imagetools(),
+    // Compressão Brotli para Mobile (Zera o tempo de download)
     compression({
       algorithm: "brotliCompress",
       ext: ".br",
-      threshold: 512, // Comprime até arquivos menores
+      threshold: 512,
     }),
-    imagetools(),
   ],
   resolve: {
     alias: {
@@ -36,20 +29,21 @@ export default defineConfig({
     },
   },
   build: {
-    // 3. Upgrade para navegadores modernos (melhora performance mobile)
     target: "esnext",
     minify: "esbuild",
-    cssMinify: true, // Garante minificação agressiva de CSS
-    cssCodeSplit: true, // Divide o CSS por página/componente
-    assetsInlineLimit: 4096, // Não deixa arquivos muito grandes "sujarem" o JS
+    cssCodeSplit: true,
+    // ESTRATÉGIA CHAVE: Aumentamos para 10kb para embutir CSS pequeno no HTML
+    // Isso elimina o erro de "Bloqueio de Renderização" do PageSpeed
+    assetsInlineLimit: 10240,
     rollupOptions: {
       output: {
-        // 4. ESTRATÉGIA GRANULAR: Evita um único vendor.css gigante que bloqueia a tela
         manualChunks(id) {
           if (id.includes("node_modules")) {
-            if (id.includes("framer-motion")) return "motion";
-            if (id.includes("lucide-react")) return "icons";
-            if (id.includes("swiper")) return "carousel";
+            if (id.includes("framer-motion")) return "motion-engine";
+            if (id.includes("lucide-react")) return "icons-pack";
+            if (id.includes("swiper") || id.includes("dom7"))
+              return "swiper-carousel";
+            if (id.includes("tsparticles")) return "particles";
             return "vendor";
           }
         },
