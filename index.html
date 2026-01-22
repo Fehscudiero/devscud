@@ -30,10 +30,21 @@
 
     <link
       rel="preload"
-      href="https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGkyMZhrib2Bg-4.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
+      href="/assets/vendor-Oou9B2lG.css"
+      as="style"
+      onload="
+        this.onload = null;
+        this.rel = 'stylesheet';
+      "
+    />
+    <link
+      rel="preload"
+      href="/assets/index.css"
+      as="style"
+      onload="
+        this.onload = null;
+        this.rel = 'stylesheet';
+      "
     />
 
     <link
@@ -63,7 +74,6 @@
       content="https://storage.googleapis.com/gpt-engineer-file-uploads/AuqTsnQSFgVhHHAhulyuFsmlgaM2/social-images/social-1759953663541-Copilot_20251008_023948.png"
     />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="DEV Scudiero" />
   </head>
 
   <body>
@@ -82,11 +92,11 @@
         <h1
           style="
             color: white;
-            font-size: clamp(2rem, 8vw, 3.5rem);
-            font-weight: 900;
+            font-size: clamp(1.5rem, 5vw, 3rem);
+            font-weight: 800;
             letter-spacing: -0.05em;
             margin: 0;
-            padding: 0 20px;
+            padding: 20px;
           "
         >
           Impulsione sua presença Digital com Estilo
@@ -96,7 +106,6 @@
 
     <script>
       window.addEventListener("load", function () {
-        // Google Tag Manager (GTM)
         const gtmScript = document.createElement("script");
         gtmScript.async = true;
         gtmScript.src =
