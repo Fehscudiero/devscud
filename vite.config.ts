@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 
-// Plugins para Performance
+// Plugins de Performance
 import { imagetools } from "vite-imagetools";
 import compression from "vite-plugin-compression";
 
@@ -14,13 +14,13 @@ export default defineConfig({
   },
   plugins: [
     react(),
-    // Geração de imagens otimizadas
+    // 1. Geração de imagens responsivas (essencial para LCP mobile)
     imagetools(),
-    // Compressão Brotli para Mobile (Zera o tempo de download)
+    // 2. Compressão máxima Brotli para redes 4G lentas
     compression({
       algorithm: "brotliCompress",
       ext: ".br",
-      threshold: 512,
+      threshold: 512, // Comprime até arquivos menores para garantir leveza
     }),
   ],
   resolve: {
@@ -32,18 +32,18 @@ export default defineConfig({
     target: "esnext",
     minify: "esbuild",
     cssCodeSplit: true,
-    // ESTRATÉGIA CHAVE: Aumentamos para 10kb para embutir CSS pequeno no HTML
-    // Isso elimina o erro de "Bloqueio de Renderização" do PageSpeed
-    assetsInlineLimit: 10240,
+    // 3. ESTRATÉGIA PARA NOTA 100:
+    // Aumentamos para 15kb para embutir o CSS inicial direto no index.html.
+    // Isso elimina o aviso "Renderizar solicitações de bloqueio" do PageSpeed.
+    assetsInlineLimit: 15360,
     rollupOptions: {
       output: {
+        // 4. Divisão granular para evitar um "vendor.js" gigante que trava a thread principal
         manualChunks(id) {
           if (id.includes("node_modules")) {
             if (id.includes("framer-motion")) return "motion-engine";
-            if (id.includes("lucide-react")) return "icons-pack";
-            if (id.includes("swiper") || id.includes("dom7"))
-              return "swiper-carousel";
-            if (id.includes("tsparticles")) return "particles";
+            if (id.includes("lucide-react")) return "icons";
+            if (id.includes("swiper") || id.includes("dom7")) return "carousel";
             return "vendor";
           }
         },
