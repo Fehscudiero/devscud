@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Trophy,
   Zap,
@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay, EffectFade, Mousewheel } from "swiper/modules";
+import { useTheme } from "@/components/theme-provider";
 
 import "swiper/css";
 import "swiper/css/pagination";
@@ -31,18 +32,33 @@ const MetricsBox = ({
   labelDesktop: string;
   icon: any;
 }) => (
-  <div className="hidden sm:flex flex-1 border-r border-white/5 p-4 last:border-0 flex-col items-start">
-    <Icon className="w-4 h-4 text-purple-500 mb-1" />
-    <div className="text-xl font-black text-white">{value}%</div>
-    <div className="text-[9px] uppercase tracking-wider text-slate-500 font-bold text-left">
+  <div className="hidden sm:flex flex-1 border-r border-border p-4 last:border-0 flex-col items-start transition-colors">
+    <Icon className="w-4 h-4 text-primary mb-1" />
+    <div className="text-xl font-black text-foreground">{value}%</div>
+    <div className="text-[9px] uppercase tracking-wider text-muted-foreground font-bold text-left">
       {labelDesktop}
     </div>
   </div>
 );
 
 const Projects = () => {
+  const { theme } = useTheme();
   const [activeProject, setActiveProject] = useState(0);
   const [swiperInstance, setSwiperInstance] = useState<any>(null);
+  const [isDarkTheme, setIsDarkTheme] = useState(true);
+
+  // Monitora o tema da mesma forma que o seu Hero.tsx
+  useEffect(() => {
+    const checkTheme = () =>
+      setIsDarkTheme(document.documentElement.classList.contains("dark"));
+    checkTheme();
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    return () => observer.disconnect();
+  }, [theme]);
 
   const services = [
     {
@@ -115,55 +131,57 @@ const Projects = () => {
   return (
     <section
       id="projects"
-      className="py-24 bg-[#050505] min-h-screen relative overflow-hidden flex flex-col justify-center"
+      className="py-24 bg-background min-h-screen relative overflow-hidden flex flex-col justify-center transition-colors duration-500"
     >
       <div className="container mx-auto px-6">
         <header className="mb-12">
-          <h2 className="text-5xl md:text-8xl font-black text-white tracking-tighter">
-            PROJETOS<span className="text-zinc-800 italic">.WEB</span>
+          <h2 className="text-5xl md:text-8xl font-black text-foreground tracking-tighter">
+            PROJETOS
+            <span className="text-muted-foreground/30 italic">.WEB</span>
           </h2>
         </header>
 
         <Swiper
           modules={[Pagination, Autoplay, EffectFade, Mousewheel]}
           effect="fade"
-          fadeEffect={{ crossFade: true }} // CORREÇÃO: Evita a sobreposição de textos no Fade
+          fadeEffect={{ crossFade: true }}
           loop={true}
           speed={800}
           onSwiper={setSwiperInstance}
           autoplay={{ delay: 5000, disableOnInteraction: false }}
           onSlideChange={(swiper) => setActiveProject(swiper.realIndex)}
-          className="w-full max-w-7xl rounded-[2rem] border border-white/5 bg-zinc-950 overflow-hidden shadow-2xl"
+          className="w-full max-w-7xl rounded-[2rem] border border-border bg-card overflow-hidden shadow-2xl transition-colors"
         >
           {services.map((project, index) => (
-            <SwiperSlide key={index} className="bg-zinc-950">
-              {" "}
-              {/* CORREÇÃO: Fundo sólido em cada slide */}
-              <div className="grid lg:grid-cols-2 bg-zinc-950">
-                <div className="relative aspect-video lg:aspect-auto h-auto lg:h-[600px] bg-zinc-900 overflow-hidden">
+            <SwiperSlide key={index} className="bg-card">
+              <div className="grid lg:grid-cols-2 bg-card">
+                <div className="relative aspect-video lg:aspect-auto h-auto lg:h-[600px] bg-muted overflow-hidden">
                   <img
                     src={project.image}
                     alt={project.title}
                     className="w-full h-full object-cover"
                     loading={index === 0 ? "eager" : "lazy"}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/50 to-transparent lg:hidden" />
+                  {/* Overlay gradiente que se adapta ao tema */}
+                  <div
+                    className={`absolute inset-0 lg:hidden bg-gradient-to-t ${isDarkTheme ? "from-black/60" : "from-white/60"} to-transparent`}
+                  />
                 </div>
 
-                <div className="p-8 lg:p-12 flex flex-col justify-between bg-zinc-950">
+                <div className="p-8 lg:p-12 flex flex-col justify-between bg-card transition-colors">
                   <div className="space-y-6">
-                    <span className="text-purple-500 font-bold text-xs uppercase tracking-widest block">
+                    <span className="text-primary font-bold text-xs uppercase tracking-widest block">
                       {project.service}
                     </span>
-                    <h3 className="text-3xl lg:text-5xl font-black text-white leading-tight">
+                    <h3 className="text-3xl lg:text-5xl font-black text-card-foreground leading-tight">
                       {project.title}
                     </h3>
-                    <p className="text-slate-400 text-lg leading-relaxed">
+                    <p className="text-muted-foreground text-lg leading-relaxed">
                       {project.description}
                     </p>
                   </div>
 
-                  <div className="mt-8 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center gap-6">
+                  <div className="mt-8 pt-6 border-t border-border flex flex-col sm:flex-row items-center gap-6">
                     <div className="flex w-full">
                       <MetricsBox
                         value={project.metrics.p}
@@ -184,7 +202,7 @@ const Projects = () => {
 
                     <button
                       onClick={scrollToContact}
-                      className="w-full sm:flex-1 bg-white text-black font-black py-4 rounded-xl hover:bg-purple-600 hover:text-white transition-all duration-300 whitespace-nowrap px-4 active:scale-95"
+                      className="w-full sm:flex-1 bg-foreground text-background font-black py-4 rounded-xl hover:bg-primary hover:text-white transition-all duration-300 whitespace-nowrap px-4 active:scale-95 shadow-lg"
                     >
                       SOLICITAR ORÇAMENTO
                     </button>
@@ -195,7 +213,7 @@ const Projects = () => {
           ))}
         </Swiper>
 
-        {/* Miniaturas/Navegação inferior */}
+        {/* Paginação de miniaturas inferior */}
         <div className="mt-8 grid grid-cols-3 md:grid-cols-6 gap-2">
           {services.map((s, i) => (
             <button
@@ -204,15 +222,15 @@ const Projects = () => {
               className={`p-3 rounded-xl border transition-all duration-300 flex flex-col items-center gap-1 
                 ${
                   activeProject === i
-                    ? "bg-purple-600 border-purple-500 shadow-[0_0_15px_rgba(147,51,234,0.3)]"
-                    : "bg-zinc-900/50 border-white/5 hover:border-white/20"
+                    ? "bg-primary border-primary shadow-lg text-white"
+                    : "bg-card/50 border-border text-muted-foreground hover:border-primary/50"
                 }`}
             >
               <s.icon
-                className={`w-4 h-4 ${activeProject === i ? "text-white" : "text-zinc-500"}`}
+                className={`w-4 h-4 ${activeProject === i ? "text-white" : "text-muted-foreground"}`}
               />
               <span
-                className={`text-[8px] font-black uppercase tracking-tighter ${activeProject === i ? "text-white" : "text-zinc-600"}`}
+                className={`text-[8px] font-black uppercase tracking-tighter ${activeProject === i ? "text-white" : "text-muted-foreground"}`}
               >
                 {s.shortName}
               </span>
