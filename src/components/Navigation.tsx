@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Menu, X, ArrowUp, Moon, Sun, Terminal } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -77,10 +77,9 @@ const Navigation = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { setTheme, theme } = useTheme();
 
-  const [availabilityStatus, setAvailabilityStatus] = useState({
-    status: "OFFLINE",
-    color: "text-destructive",
-  });
+  const sectionsRef = useRef<{ id: string; offset: number; height: number }[]>(
+    [],
+  );
 
   const navItems = [
     { id: "home", label: "Início" },
@@ -90,53 +89,38 @@ const Navigation = () => {
     { id: "contact", label: "Contato" },
   ];
 
-  const checkSLA = useCallback(() => {
-    const now = new Date();
-    const isWorking =
-      now.getDay() >= 1 &&
-      now.getDay() <= 5 &&
-      now.getHours() >= 8 &&
-      now.getHours() < 17;
-    setAvailabilityStatus(
-      isWorking
-        ? { status: "ONLINE", color: "text-emerald-500" }
-        : { status: "OFFLINE", color: "text-destructive" },
-    );
-  }, []);
-
   useEffect(() => {
-    checkSLA();
-    const interval = setInterval(checkSLA, 60000);
-    return () => clearInterval(interval);
-  }, [checkSLA]);
+    const updateSectionCache = () => {
+      sectionsRef.current = navItems.map((item) => {
+        const el = document.getElementById(item.id);
+        return {
+          id: item.id,
+          offset: el?.offsetTop || 0,
+          height: el?.offsetHeight || 0,
+        };
+      });
+    };
 
-  useEffect(() => {
+    updateSectionCache();
+    window.addEventListener("resize", updateSectionCache);
+
     let ticking = false;
-
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           const scrollY = window.scrollY;
-
-          // Otimização de estado simples
           setScrolled(scrollY > 20);
           setShowScrollTop(scrollY > 500);
 
-          // Detecção de secção ativa com lógica otimizada
-          const scrollPosition = scrollY + 120;
-          for (const item of navItems) {
-            const el = document.getElementById(item.id);
-            if (el) {
-              const offsetTop = el.offsetTop;
-              const height = el.offsetHeight;
-              if (
-                scrollPosition >= offsetTop &&
-                scrollPosition < offsetTop + height
-              ) {
-                setActiveSection(item.id);
-                break; // Para o loop assim que encontrar a secção ativa
-              }
-            }
+          const scrollPosition = scrollY + 150;
+          const currentSection = sectionsRef.current.find(
+            (section) =>
+              scrollPosition >= section.offset &&
+              scrollPosition < section.offset + section.height,
+          );
+
+          if (currentSection && currentSection.id !== activeSection) {
+            setActiveSection(currentSection.id);
           }
           ticking = false;
         });
@@ -145,18 +129,27 @@ const Navigation = () => {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [navItems]);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", updateSectionCache);
+    };
+  }, [navItems, activeSection]);
 
+  // FUNÇÃO DE SCROLL CORRIGIDA
   const scrollToSection = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      window.scrollTo({
-        top: el.offsetTop - 80,
-        behavior: "smooth",
-      });
-      setMobileMenuOpen(false);
-    }
+    // Primeiro fecha o menu mobile
+    setMobileMenuOpen(false);
+
+    // Pequeno atraso para permitir que o menu comece a fechar antes do scroll (opcional, mas melhora UX)
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) {
+        window.scrollTo({
+          top: el.offsetTop - 80,
+          behavior: "smooth",
+        });
+      }
+    }, 10);
   };
 
   return (
@@ -169,7 +162,7 @@ const Navigation = () => {
           <div className="flex items-center justify-between h-20">
             <button
               onClick={() => scrollToSection("home")}
-              aria-label="Voltar ao início"
+              aria-label="Voltar para o topo"
               className="hover:opacity-80 transition-all active:scale-95"
             >
               <Logo />
@@ -182,7 +175,6 @@ const Navigation = () => {
                   <li key={id}>
                     <button
                       onClick={() => scrollToSection(id)}
-                      aria-label={`Ir para seção ${label}`}
                       className={`text-[11px] font-black uppercase tracking-wider px-4 py-2 rounded-full transition-all relative group
                         ${activeSection === id ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}
                     >
@@ -202,14 +194,14 @@ const Navigation = () => {
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-                aria-label={`Mudar para tema ${theme === "dark" ? "claro" : "escuro"}`}
-                className="p-2 rounded-xl border border-border bg-card/50 text-primary transition-all hover:scale-110 active:scale-90"
+                aria-label="Trocar tema"
+                className="p-2 rounded-xl border border-border bg-card/50 text-primary transition-all hover:scale-110"
               >
                 {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
               </button>
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                aria-label={mobileMenuOpen ? "Fechar menu" : "Abrir menu"}
+                aria-label="Abrir menu"
                 className="md:hidden p-2 text-muted-foreground hover:text-primary transition-colors"
               >
                 {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -218,7 +210,7 @@ const Navigation = () => {
           </div>
         </div>
 
-        {/* MOBILE MENU */}
+        {/* MOBILE MENU CORRIGIDO */}
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div
@@ -232,7 +224,6 @@ const Navigation = () => {
                   <button
                     key={id}
                     onClick={() => scrollToSection(id)}
-                    aria-label={`Ir para ${label}`}
                     className={`text-left text-sm font-black uppercase tracking-[0.2em] py-5 border-b border-border/50 transition-colors w-full
                       ${activeSection === id ? "text-primary" : "text-muted-foreground"}`}
                   >
@@ -245,18 +236,15 @@ const Navigation = () => {
         </AnimatePresence>
       </nav>
 
-      {/* BOTÃO VOLTAR AO TOPO */}
       <motion.button
         initial={{ opacity: 0, scale: 0 }}
         animate={{
           opacity: showScrollTop ? 1 : 0,
           scale: showScrollTop ? 1 : 0,
         }}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        aria-label="Voltar ao topo da página"
-        className="fixed bottom-10 right-6 z-[90] p-4 rounded-2xl border border-primary/50 bg-background/80 text-primary shadow-2xl shadow-primary/20"
+        aria-label="Voltar ao topo"
+        className="fixed bottom-10 right-6 z-[90] p-4 rounded-2xl border border-primary/50 bg-background/80 text-primary shadow-2xl"
       >
         <ArrowUp size={20} />
       </motion.button>
