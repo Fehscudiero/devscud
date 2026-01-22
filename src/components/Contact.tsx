@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useTheme } from "@/components/theme-provider"; // Importante para consistência
 import {
   Mail,
   User,
@@ -29,6 +30,7 @@ const WhatsAppIcon = () => (
 );
 
 const Contact = () => {
+  const { theme } = useTheme();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [latency, setLatency] = useState(4);
@@ -63,7 +65,6 @@ const Contact = () => {
     setIsSubmitting(true);
 
     try {
-      // 1. Envio para o E-mail via Web3Forms
       const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: {
@@ -84,7 +85,6 @@ const Contact = () => {
       const result = await response.json();
 
       if (result.success) {
-        // 2. Preparação do link do WhatsApp
         const meuWhats = "5511984623116";
         const mensagemWhats = encodeURIComponent(
           `Olá! Acabei de enviar um formulário no site:\n\n` +
@@ -95,19 +95,14 @@ const Contact = () => {
         );
 
         const whatsappUrl = `https://wa.me/${meuWhats}?text=${mensagemWhats}`;
-
-        // 3. Sucesso: Abre WhatsApp e mostra tela de confirmação
         window.open(whatsappUrl, "_blank");
         setIsSuccess(true);
-
-        // Limpa o formulário
         setFormData({ name: "", phone: "", email: "", message: "" });
       } else {
-        alert("Ocorreu um erro ao processar o formulário. Tente novamente.");
+        alert("Ocorreu um erro ao processar o formulário.");
       }
     } catch (error) {
-      console.error("Erro no envio:", error);
-      alert("Erro de conexão. Verifique sua internet.");
+      alert("Erro de conexão.");
     } finally {
       setIsSubmitting(false);
     }
@@ -117,14 +112,14 @@ const Contact = () => {
     <section
       ref={sectionRef}
       id="contact"
-      className="py-20 relative overflow-hidden bg-background min-h-screen flex items-center"
+      className="py-20 relative overflow-hidden bg-background min-h-screen flex items-center transition-colors duration-500"
       aria-labelledby="contact-title"
     >
-      {/* Background Text */}
-      <div className="absolute top-0 left-0 w-full opacity-[0.04] pointer-events-none z-0">
+      {/* Background Text - Opacidade ajustada para ambos os temas */}
+      <div className="absolute top-0 left-0 w-full opacity-[0.04] dark:opacity-[0.03] pointer-events-none z-0">
         <motion.h2
           style={{ x: textX }}
-          className="text-[20vw] font-black uppercase whitespace-nowrap leading-none"
+          className="text-[20vw] font-black uppercase whitespace-nowrap leading-none text-foreground"
         >
           CONTATO
         </motion.h2>
@@ -138,19 +133,19 @@ const Contact = () => {
               <div className="flex items-center gap-3">
                 <Zap
                   size={16}
-                  className="text-purple-500 fill-purple-500 animate-pulse"
+                  className="text-primary fill-primary animate-pulse"
                   aria-hidden="true"
                 />
-                <span className="text-purple-500 font-mono text-xs tracking-[0.6em] uppercase font-bold">
+                <span className="text-primary font-mono text-xs tracking-[0.6em] uppercase font-bold">
                   Iniciação de Protocolo
                 </span>
               </div>
               <h2
                 id="contact-title"
-                className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.85]"
+                className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.85] text-foreground"
               >
                 VAMOS TIRAR <br /> DO{" "}
-                <span className="text-purple-600 italic">PAPEL?</span>
+                <span className="text-primary italic">PAPEL?</span>
               </h2>
             </div>
 
@@ -161,7 +156,7 @@ const Contact = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="bg-card/20 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] md:rounded-[3rem] p-6 md:p-12 shadow-2xl"
+                  className="bg-card/40 dark:bg-card/20 backdrop-blur-2xl border border-border rounded-[2.5rem] md:rounded-[3rem] p-6 md:p-12 shadow-2xl transition-colors"
                 >
                   <form onSubmit={handleSubmit} className="space-y-8">
                     <div className="grid md:grid-cols-2 gap-8">
@@ -179,7 +174,7 @@ const Contact = () => {
                           onChange={(e) =>
                             setFormData({ ...formData, name: e.target.value })
                           }
-                          className="bg-transparent border-0 border-b-2 rounded-none px-0 h-12 text-xl font-bold focus-visible:ring-0 focus:border-purple-500 transition-all placeholder:opacity-30"
+                          className="bg-transparent border-0 border-b-2 border-border rounded-none px-0 h-12 text-xl font-bold focus-visible:ring-0 focus:border-primary transition-all placeholder:opacity-30 text-foreground"
                           placeholder="Seu nome"
                         />
                       </div>
@@ -198,7 +193,7 @@ const Contact = () => {
                           onChange={(e) =>
                             setFormData({ ...formData, phone: e.target.value })
                           }
-                          className="bg-transparent border-0 border-b-2 rounded-none px-0 h-12 text-xl font-bold focus-visible:ring-0 focus:border-[#25D366] transition-all placeholder:opacity-30"
+                          className="bg-transparent border-0 border-b-2 border-border rounded-none px-0 h-12 text-xl font-bold focus-visible:ring-0 focus:border-[#25D366] transition-all placeholder:opacity-30 text-foreground"
                           placeholder="+55..."
                         />
                       </div>
@@ -219,7 +214,7 @@ const Contact = () => {
                         onChange={(e) =>
                           setFormData({ ...formData, email: e.target.value })
                         }
-                        className="bg-transparent border-0 border-b-2 rounded-none px-0 h-12 text-xl font-bold focus-visible:ring-0 focus:border-purple-500 transition-all placeholder:opacity-30"
+                        className="bg-transparent border-0 border-b-2 border-border rounded-none px-0 h-12 text-xl font-bold focus-visible:ring-0 focus:border-primary transition-all placeholder:opacity-30 text-foreground"
                         placeholder="contato@empresa.com"
                       />
                     </div>
@@ -238,7 +233,7 @@ const Contact = () => {
                         onChange={(e) =>
                           setFormData({ ...formData, message: e.target.value })
                         }
-                        className="bg-transparent border-0 border-b-2 rounded-none px-0 min-h-[80px] text-xl font-bold focus-visible:ring-0 focus:border-purple-500 transition-all resize-none placeholder:opacity-30"
+                        className="bg-transparent border-0 border-b-2 border-border rounded-none px-0 min-h-[80px] text-xl font-bold focus-visible:ring-0 focus:border-primary transition-all resize-none placeholder:opacity-30 text-foreground"
                         placeholder="O que vamos construir hoje?"
                       />
                     </div>
@@ -246,7 +241,7 @@ const Contact = () => {
                     <Button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full h-20 rounded-[1.5rem] md:rounded-[2rem] text-xl md:text-2xl font-black bg-white text-black hover:bg-purple-600 hover:text-white transition-all duration-500 shadow-xl active:scale-95"
+                      className="w-full h-20 rounded-[1.5rem] md:rounded-[2rem] text-xl md:text-2xl font-black bg-foreground text-background hover:bg-primary hover:text-white transition-all duration-500 shadow-xl active:scale-95"
                     >
                       {isSubmitting ? "PROCESSANDO..." : "ENVIAR PROPOSTA"}
                     </Button>
@@ -257,10 +252,10 @@ const Contact = () => {
                   key="success"
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="h-[500px] flex flex-col items-center justify-center text-center bg-black/40 border-2 border-purple-500/50 rounded-[3rem] p-8 md:p-12"
+                  className="h-[500px] flex flex-col items-center justify-center text-center bg-card/40 border-2 border-primary/50 rounded-[3rem] p-8 md:p-12 shadow-2xl"
                 >
                   <CheckCircle2 size={48} className="text-emerald-500 mb-6" />
-                  <h3 className="text-4xl font-black uppercase italic mb-3">
+                  <h3 className="text-4xl font-black uppercase italic mb-3 text-foreground">
                     Sistema Alimentado!
                   </h3>
                   <p className="text-muted-foreground mb-8">
@@ -270,7 +265,7 @@ const Contact = () => {
                   <Button
                     onClick={() => setIsSuccess(false)}
                     variant="outline"
-                    className="rounded-full border-purple-500 text-purple-500 hover:bg-purple-500 hover:text-white"
+                    className="rounded-full border-primary text-primary hover:bg-primary hover:text-white"
                   >
                     Enviar outra mensagem
                   </Button>
@@ -280,24 +275,24 @@ const Contact = () => {
           </div>
 
           {/* Direita: Status e Segurança (Centralizados) */}
-          <div className="hidden lg:flex flex-col mt-60 justify-center gap-10 border-l border-white/10 pl-12 h-[500px]">
+          <div className="hidden lg:flex flex-col mt-60 justify-center gap-10 border-l border-border pl-12 h-[500px]">
             <div className="space-y-6">
-              <span className="text-[14px] text-center font-black text-purple-500 uppercase tracking-[0.4em]">
+              <span className="text-[14px] text-center font-black text-primary uppercase tracking-[0.4em]">
                 Engine Status
               </span>
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-[11px] font-mono uppercase">
-                  <span className="opacity-40 tracking-widest">
+                  <span className="opacity-40 tracking-widest text-foreground">
                     Site Latency
                   </span>
                   <motion.span
                     key={latency}
-                    className="text-emerald-400 font-bold"
+                    className="text-emerald-500 dark:text-emerald-400 font-bold"
                   >
                     {latency}ms
                   </motion.span>
                 </div>
-                <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
                   <motion.div
                     animate={{ width: `${100 - latency * 2}%` }}
                     className="h-full bg-emerald-500 shadow-[0_0_15px_#10b981]"
@@ -307,15 +302,15 @@ const Contact = () => {
             </div>
 
             {/* CARD DE SEGURANÇA */}
-            <div className="flex flex-col items-center justify-center text-center p-8 rounded-[2.5rem] bg-white/[0.03] border border-white/10 space-y-4 backdrop-blur-sm min-h-[220px]">
+            <div className="flex flex-col items-center justify-center text-center p-8 rounded-[2.5rem] bg-muted/30 border border-border space-y-4 backdrop-blur-sm min-h-[220px]">
               <ShieldCheck
-                className="text-purple-500 mb-2"
+                className="text-primary mb-2"
                 size={48}
                 aria-hidden="true"
               />
               <p className="text-[16px] font-bold uppercase tracking-wider text-muted-foreground leading-tight italic">
                 Criptografia de ponta a ponta ativa. <br />
-                <span className="text-white/60">
+                <span className="text-foreground/60">
                   Seus dados estão protegidos.
                 </span>
               </p>
