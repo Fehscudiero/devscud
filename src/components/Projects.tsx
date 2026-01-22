@@ -15,12 +15,19 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 
-import websiteImg from "../assets/website.webp";
-import performanceImg from "../assets/performance.webp";
-import sistemawebImg from "../assets/sistemaweb.webp";
-import evolucaoImg from "../assets/evolucao.webp";
-import dominioImg from "../assets/dominio.webp";
-import ecommerceImg from "../assets/ecomerce.webp";
+// CORREÇÃO: Sintaxe correta para gerar srcset (600w para mobile, 1200w para desktop)
+// @ts-ignore
+import websiteImg from "../assets/website.webp?w=600;1200&format=webp&as=srcset";
+// @ts-ignore
+import performanceImg from "../assets/performance.webp?w=600;1200&format=webp&as=srcset";
+// @ts-ignore
+import sistemawebImg from "../assets/sistemaweb.webp?w=600;1200&format=webp&as=srcset";
+// @ts-ignore
+import evolucaoImg from "../assets/evolucao.webp?w=600;1200&format=webp&as=srcset";
+// @ts-ignore
+import dominioImg from "../assets/dominio.webp?w=600;1200&format=webp&as=srcset";
+// @ts-ignore
+import ecommerceImg from "../assets/ecomerce.webp?w=600;1200&format=webp&as=srcset";
 
 const MetricsBox = ({
   value,
@@ -105,7 +112,7 @@ const Projects = () => {
       title: "E-commerce Boutique",
       service: "E-commerce High-End",
       description:
-        "Venda com experiência de luxo. Checkout fluido e gestão inteligente.",
+        "Venda com experiênca de luxo. Checkout fluido e gestão inteligente.",
       image: ecommerceImg,
       metrics: { p: 100, a: 97, s: 98 },
       highlights: ["One-Click Pay", "Upsell"],
@@ -140,13 +147,22 @@ const Projects = () => {
           {services.map((project, index) => (
             <SwiperSlide key={index}>
               <div className="grid lg:grid-cols-2 min-h-[500px]">
-                {/* Imagem com Proporção Fixa para evitar CLS */}
                 <div className="relative aspect-video lg:aspect-auto h-full bg-muted overflow-hidden">
                   <img
-                    src={project.image}
+                    // CORREÇÃO: Passando o srcset corretamente
+                    srcSet={
+                      typeof project.image === "string"
+                        ? project.image
+                        : (project.image as any).srcSet
+                    }
+                    sizes="(max-width: 768px) 100vw, 800px"
+                    // Fallback para navegadores antigos
+                    src={
+                      typeof project.image === "string"
+                        ? project.image
+                        : (project.image as any).src
+                    }
                     alt={`Preview do projeto ${project.title}`}
-                    width="800"
-                    height="600"
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                     loading={index === 0 ? "eager" : "lazy"}
                     // @ts-ignore
@@ -156,6 +172,7 @@ const Projects = () => {
                 </div>
 
                 <div className="p-8 lg:p-12 flex flex-col justify-between">
+                  {/* ... resto do conteúdo mantido ... */}
                   <div className="space-y-6">
                     <div>
                       <span className="text-primary font-bold text-xs uppercase tracking-widest">
@@ -168,7 +185,6 @@ const Projects = () => {
                         {project.description}
                       </p>
                     </div>
-
                     <div className="flex flex-wrap gap-2">
                       {project.highlights.map((h) => (
                         <div
@@ -214,20 +230,14 @@ const Projects = () => {
             </SwiperSlide>
           ))}
         </Swiper>
-
-        {/* Navegação inferior Otimizada */}
+        {/* ... botões de navegação ... */}
         <div className="mt-8 grid grid-cols-3 md:grid-cols-6 gap-2">
           {services.map((s, i) => (
             <button
               key={i}
               onClick={() => swiperInstance?.slideToLoop(i)}
               aria-label={`Ver projeto: ${s.shortName}`}
-              className={`p-3 rounded-xl border transition-all duration-300 flex flex-col items-center gap-1 
-                ${
-                  activeProject === i
-                    ? "bg-primary border-primary shadow-lg text-white"
-                    : "bg-card/50 border-border text-muted-foreground hover:border-primary/50"
-                }`}
+              className={`p-3 rounded-xl border transition-all duration-300 flex flex-col items-center gap-1 ${activeProject === i ? "bg-primary border-primary shadow-lg text-white" : "bg-card/50 border-border text-muted-foreground hover:border-primary/50"}`}
             >
               <s.icon
                 className={`w-4 h-4 ${activeProject === i ? "text-white" : "text-muted-foreground"}`}
