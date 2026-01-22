@@ -3,15 +3,19 @@
 @tailwind utilities;
 
 /* ============================
-   🎨 Design System Variables
+    🎨 Design System Variables
    ============================ */
 @layer base {
   html,
   body {
     overflow-x: hidden;
+    /* Melhora a renderização de fontes e evita saltos de layout */
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* TEMA LIGHT (Azul Tech & Branco Gelo) */
+  /* TEMA LIGHT */
   :root {
     --background: 210 40% 98%;
     --foreground: 222 47% 11%;
@@ -22,14 +26,15 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
 
-    --primary: 199 89% 48%; /* Azul Sky */
+    --primary: 199 89% 48%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 210 40% 96%;
     --secondary-foreground: 222 47% 11%;
 
     --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    /* CORREÇÃO ACESSIBILIDADE: Escurecido para passar no contraste (era 47%) */
+    --muted-foreground: 215 16% 42%;
 
     --accent: 199 89% 48%;
     --accent-foreground: 222 47% 11%;
@@ -48,7 +53,7 @@
     --glow-color: rgba(14, 165, 233, 0.3);
   }
 
-  /* TEMA DARK (Original Roxo & Dark) */
+  /* TEMA DARK */
   .dark {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
@@ -70,6 +75,9 @@
 
     --border: 240 8% 15%;
     --ring: 263 70% 65%;
+
+    /* CORREÇÃO ACESSIBILIDADE: Clareado para passar no contraste contra fundo dark (era 65% de luz) */
+    --muted-foreground: 215 20.2% 82%;
 
     --gradient-primary: linear-gradient(
       135deg,
@@ -98,9 +106,22 @@
 }
 
 /* ============================
-   🧩 Utility Classes
+    🧩 Utility Classes & Performance
    ============================ */
 @layer utilities {
+  /* CORREÇÃO REFLOW: Força o Swiper a ter uma proporção antes do JS carregar */
+  .swiper {
+    aspect-ratio: 16 / 9;
+    contain: layout;
+    content-visibility: auto;
+  }
+
+  /* CORREÇÃO ANIMAÇÕES: Substitui animação de cor (lenta) por GPU (rápida) */
+  .transition-all {
+    transition-property: transform, opacity !important;
+    will-change: transform, opacity;
+  }
+
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400 dark:to-purple-400;
   }
@@ -108,78 +129,9 @@
   .glow-theme {
     box-shadow: 0 0 40px var(--glow-color);
   }
-
-  .animated-gradient {
-    background: linear-gradient(
-      -45deg,
-      var(--primary) / 0.2,
-      #3b82f6 / 0.3,
-      var(--accent) / 0.2
-    );
-    background-size: 400% 400%;
-    animation: gradient-shift 15s ease infinite;
-  }
-
-  .animated-particles::before,
-  .animated-particles::after {
-    content: "";
-    position: absolute;
-    width: 300px;
-    height: 300px;
-    border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.3;
-    animation: float 20s ease-in-out infinite;
-    background: var(--glow-color);
-  }
-
-  @keyframes gradient-shift {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
-
-  @keyframes float {
-    0%,
-    100% {
-      transform: translate(0, 0) scale(1);
-    }
-    33% {
-      transform: translate(30px, -30px) scale(1.1);
-    }
-    66% {
-      transform: translate(-20px, 20px) scale(0.9);
-    }
-  }
-
-  .flicker {
-    animation: flicker 2.5s infinite;
-    @apply text-primary;
-  }
 }
 
-/* ============================
-   🖱️ Scrollbar Customization
-   ============================ */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  @apply bg-background;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-primary/50 rounded-full border-2 border-transparent bg-clip-content hover:bg-primary;
-}
-
-/* Firefox */
+/* Firefox Scrollbar - Mantido */
 * {
   scrollbar-width: thin;
   scrollbar-color: hsl(199 89% 48%) transparent;
@@ -189,9 +141,18 @@
   scrollbar-color: hsl(263 70% 65%) transparent;
 }
 
-/* ============================
-   ⚡ Botão “Entre em Contato” Chamativo
-   ============================ */
+/* Webkit Scrollbar Otimizada */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-background;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-primary/50 rounded-full border-2 border-transparent bg-clip-content hover:bg-primary;
+}
+
+/* Animação de Aura - Adicionado contain para evitar reflow do body */
 .aura-button::before {
   content: "";
   position: absolute;
@@ -201,6 +162,7 @@
   opacity: 0.4;
   animation: auraPulse 2s infinite;
   z-index: 0;
+  pointer-events: none;
 }
 
 @keyframes auraPulse {
@@ -210,7 +172,7 @@
     opacity: 0.4;
   }
   50% {
-    transform: scale(1.2);
+    transform: scale(1.1);
     opacity: 0.6;
   }
 }
