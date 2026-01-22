@@ -7,24 +7,32 @@ import {
   Activity,
   Cpu,
 } from "lucide-react";
-import Particles from "react-tsparticles";
-import { loadSlim } from "tsparticles-slim";
 import { useCallback, useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
+import Particles from "react-tsparticles";
+import { loadSlim } from "tsparticles-slim";
 
 const socialLinks = [
-  { icon: Github, label: "GitHub", href: "https://github.com/fehscudiero" },
+  {
+    icon: Github,
+    label: "Acesse meu perfil no GitHub", // Texto descritivo para Acessibilidade
+    href: "https://github.com/fehscudiero",
+  },
   {
     icon: Linkedin,
-    label: "LinkedIn",
+    label: "Conecte-se comigo no LinkedIn",
     href: "https://www.linkedin.com/in/devscud/",
   },
   {
     icon: Instagram,
-    label: "Instagram",
-    href: "https://www.instagram.com/scudiero.dev/",
+    label: "Siga-me no Instagram",
+    href: "https://www.instagram.com/scudiero.tsx/",
   },
-  { icon: Mail, label: "Email", href: "mailto:scudiero.dev@yahoo.com" },
+  {
+    icon: Mail,
+    label: "Envie um e-mail para contato",
+    href: "mailto:scudiero.dev@yahoo.com",
+  },
 ];
 
 const Footer = () => {
@@ -40,7 +48,7 @@ const Footer = () => {
     const weeksPassed = Math.floor(diffInMs / (1000 * 60 * 60 * 24 * 7));
     const lastDeploy = new Date(today);
     lastDeploy.setDate(
-      today.getDate() - (today.getDay() === 0 ? 6 : today.getDay() - 1)
+      today.getDate() - (today.getDay() === 0 ? 6 : today.getDay() - 1),
     );
 
     return {
@@ -63,7 +71,7 @@ const Footer = () => {
     setAvailabilityStatus(
       isWorking
         ? { status: "DISPONÍVEL", color: "green" }
-        : { status: "INDISPONÍVEL", color: "red" }
+        : { status: "INDISPONÍVEL", color: "red" },
     );
   }, []);
 
@@ -79,7 +87,7 @@ const Footer = () => {
 
   return (
     <footer className="relative pt-4 pb-2 border-t border-border bg-background transition-colors duration-1000 overflow-hidden">
-      {/* Laser Line Animation - Mantida */}
+      {/* Laser Line Animation */}
       <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/50 to-transparent">
         <motion.div
           animate={{ x: ["-100%", "100%"] }}
@@ -93,12 +101,13 @@ const Footer = () => {
         init={particlesInit}
         options={{
           fullScreen: { enable: false },
+          fpsLimit: 30, // Reduzido para salvar processamento no mobile
           particles: {
-            number: { value: 20 },
+            number: { value: 15, density: { enable: true, area: 800 } },
             color: { value: "var(--primary)" },
-            opacity: { value: 0.2 },
+            opacity: { value: 0.15 },
             size: { value: 1 },
-            move: { enable: true, speed: 0.3 },
+            move: { enable: true, speed: 0.2 },
           },
         }}
         className="absolute inset-0 pointer-events-none"
@@ -113,7 +122,7 @@ const Footer = () => {
                 <Cpu className="h-5 w-5 text-white animate-pulse" />
               </div>
               <div className="flex flex-col text-left">
-                <span className="text-xl font-black tracking-tighter text-foreground">
+                <span className="text-xl font-black tracking-tighter text-foreground uppercase">
                   FELIPE<span className="text-primary">.</span>SCUDIERO
                 </span>
                 <span className="text-[10px] font-mono tracking-[0.3em] uppercase opacity-50 text-foreground">
@@ -127,9 +136,8 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* CENTRO: SYSTEM STATUS (Efeitos Originais Mantidos) */}
+          {/* CENTRO: SYSTEM STATUS */}
           <div className="flex flex-col items-center gap-3">
-            {/* SLA - Borda Dinâmica */}
             <div
               className={`relative overflow-hidden flex items-center gap-4 px-5 py-2 rounded-2xl border bg-card/20 backdrop-blur-md transition-colors ${
                 availabilityStatus.color === "green"
@@ -137,29 +145,12 @@ const Footer = () => {
                   : "border-red-500/50"
               }`}
             >
-              <motion.div
-                animate={{ x: ["-100%", "200%"] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                className={`absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-transparent to-transparent opacity-30 pointer-events-none ${
-                  availabilityStatus.color === "green"
-                    ? "via-emerald-400"
-                    : "via-red-400"
-                }`}
-              />
               <div className="relative flex h-2 w-2">
                 <span
-                  className={`animate-ping absolute h-full w-full rounded-full opacity-75 ${
-                    availabilityStatus.color === "green"
-                      ? "bg-emerald-400"
-                      : "bg-red-400"
-                  }`}
+                  className={`animate-ping absolute h-full w-full rounded-full opacity-75 ${availabilityStatus.color === "green" ? "bg-emerald-400" : "bg-red-400"}`}
                 ></span>
                 <span
-                  className={`relative rounded-full h-2 w-2 ${
-                    availabilityStatus.color === "green"
-                      ? "bg-emerald-500"
-                      : "bg-red-500"
-                  }`}
+                  className={`relative rounded-full h-2 w-2 ${availabilityStatus.color === "green" ? "bg-emerald-500" : "bg-red-500"}`}
                 ></span>
               </div>
               <span className="text-[10px] font-black font-mono tracking-widest text-foreground uppercase">
@@ -176,13 +167,7 @@ const Footer = () => {
               </span>
             </div>
 
-            {/* CORE - Borda Azul Animada Original */}
             <div className="relative overflow-hidden flex items-center gap-4 px-5 py-2 rounded-2xl border border-primary/50 bg-card/20 backdrop-blur-md">
-              <motion.div
-                animate={{ x: ["-100%", "200%"] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-30 pointer-events-none"
-              />
               <div className="relative flex h-2 w-2">
                 <span className="animate-ping absolute h-full w-full rounded-full bg-primary opacity-75"></span>
                 <span className="relative rounded-full h-2 w-2 bg-primary"></span>
@@ -196,18 +181,19 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* LADO DIREITO: REDES SOCIAIS */}
+          {/* LADO DIREITO: REDES SOCIAIS (AQUI ESTAVA O ERRO DE ACESSIBILIDADE) */}
           <div className="flex justify-center md:justify-end gap-3">
             {socialLinks.map(({ icon: Icon, label, href }) => (
               <motion.a
                 whileHover={{ y: -5, scale: 1.1 }}
-                key={label}
+                key={href}
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label={label} // Adicionado para nota 100 de Acessibilidade
                 className="p-3 rounded-xl border border-border bg-card/50 hover:bg-primary/10 text-foreground transition-all"
               >
-                <Icon className="w-5 h-5" />
+                <Icon className="w-5 h-5" aria-hidden="true" />
               </motion.a>
             ))}
           </div>
@@ -220,13 +206,7 @@ const Footer = () => {
           </span>
 
           <div className="flex items-center gap-6">
-            {/* BUILD - Estilo Original */}
             <div className="relative overflow-hidden flex items-center gap-3 bg-primary/5 px-4 py-2 rounded-xl border border-primary/50">
-              <motion.div
-                animate={{ x: ["-100%", "200%"] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-primary/20 to-transparent pointer-events-none"
-              />
               <Terminal className="w-4 h-4 text-primary animate-bounce" />
               <div className="flex flex-col text-left">
                 <span className="text-[10px] font-mono font-black text-foreground">
@@ -240,7 +220,10 @@ const Footer = () => {
             </div>
 
             <div className="flex items-center gap-2 group cursor-help">
-              <Activity className="w-3 h-3 text-primary" />
+              <Activity
+                className="w-3 h-3 text-primary"
+                aria-label="Status de atividade"
+              />
             </div>
           </div>
         </div>
