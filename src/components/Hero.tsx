@@ -2,20 +2,23 @@ import { Button } from "@/components/ui/button";
 import { Github, Linkedin, Instagram, Mail } from "lucide-react";
 import Particles from "react-tsparticles";
 import { loadSlim } from "tsparticles-slim";
-import { useCallback, useState, useEffect, useMemo } from "react";
+import { useCallback, useState, useEffect, useMemo, useRef } from "react";
 import { useTheme } from "@/components/theme-provider";
-import {
-  motion,
-  useMotionValue,
-  useSpring,
-  useTransform,
-  AnimatePresence,
-} from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 
 const Hero = () => {
   const { theme } = useTheme();
   const [isDarkTheme, setIsDarkTheme] = useState(true);
   const [showParticles, setShowParticles] = useState(false);
+
+  // Refs para evitar Reflow Forçado
+  const sectionRef = useRef<HTMLElement>(null);
+  const rectRef = useRef<{
+    width: number;
+    height: number;
+    left: number;
+    top: number;
+  } | null>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => setShowParticles(true), 1200);
@@ -30,12 +33,35 @@ const Hero = () => {
   const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["8deg", "-8deg"]);
   const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-8deg", "8deg"]);
 
+  // OTIMIZAÇÃO: Cache do retângulo da seção para evitar getBoundingClientRect repetitivo
   const handleMouseMove = (e: React.MouseEvent) => {
     if (typeof window !== "undefined" && window.innerWidth < 768) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    x.set(e.clientX / rect.width - 0.5);
-    y.set(e.clientY / rect.height - 0.5);
+
+    if (!rectRef.current && sectionRef.current) {
+      const rect = sectionRef.current.getBoundingClientRect();
+      rectRef.current = {
+        width: rect.width,
+        height: rect.height,
+        left: rect.left,
+        top: rect.top,
+      };
+    }
+
+    if (rectRef.current) {
+      const { width, height, left, top } = rectRef.current;
+      x.set((e.clientX - left) / width - 0.5);
+      y.set((e.clientY - top) / height - 0.5);
+    }
   };
+
+  // Limpa o cache quando a janela muda de tamanho
+  useEffect(() => {
+    const handleResize = () => {
+      rectRef.current = null;
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const checkTheme = () => {
@@ -73,11 +99,8 @@ const Hero = () => {
           outModes: { default: "bounce" },
         },
         links: { enable: false },
-        collisions: { enable: false },
       },
-      interactivity: {
-        events: { onHover: { enable: false }, onClick: { enable: false } },
-      },
+      interactivity: { events: { onHover: { enable: false } } },
       detectRetina: false,
     }),
     [isDarkTheme],
@@ -91,6 +114,7 @@ const Hero = () => {
 
   return (
     <section
+      ref={sectionRef}
       id="home"
       onMouseMove={handleMouseMove}
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background transition-colors duration-500"
@@ -143,10 +167,8 @@ const Hero = () => {
             </p>
           </div>
 
-          {/* IMPLEMENTAÇÃO DO BOTÃO TECH */}
           <div className="flex justify-center pt-4">
             <motion.div
-              initial={{ scale: 1 }}
               animate={{
                 boxShadow: isDarkTheme
                   ? [
@@ -163,7 +185,6 @@ const Hero = () => {
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               className="relative p-[2px] rounded-2xl overflow-hidden group"
             >
-              {/* Borda Neon Giratória */}
               <div className="absolute inset-[-1000%] animate-[spin_4s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2E8F0_0%,#a855f7_50%,#E2E8F0_100%)] opacity-30 group-hover:opacity-100 transition-opacity" />
 
               <Button
@@ -171,35 +192,10 @@ const Hero = () => {
                 onClick={() => scrollToSection("contact")}
                 className="group relative px-10 py-8 text-xl md:text-2xl font-black rounded-2xl bg-gradient-primary text-white border-none transition-all duration-300 hover:scale-[1.02] active:scale-95 flex items-center gap-3 overflow-hidden shadow-2xl"
               >
-                {/* Efeito Shimmer (Brilho que passa) */}
-                <motion.div
-                  initial={{ x: "-100%" }}
-                  animate={{ x: "100%" }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    repeatDelay: 4,
-                    ease: "linear",
-                  }}
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12"
-                />
-
                 <div className="relative z-10 flex items-center gap-3">
-                  <motion.div
-                    animate={{ rotate: [0, 10, -10, 0] }}
-                    transition={{
-                      duration: 0.5,
-                      repeat: Infinity,
-                      repeatDelay: 2.5,
-                    }}
-                  >
-                    <Mail className="w-6 h-6 md:w-8 md:h-8" />
-                  </motion.div>
+                  <Mail className="w-6 h-6 md:w-8 md:h-8" />
                   <span className="tracking-tighter">VAMOS CONVERSAR?</span>
                 </div>
-
-                {/* Micro-partículas internas ao passar o mouse */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity bg-[radial-gradient(circle,white_1px,transparent_1px)] bg-[size:12px_12px]" />
               </Button>
             </motion.div>
           </div>
