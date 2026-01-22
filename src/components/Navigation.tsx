@@ -80,14 +80,15 @@ const Navigation = () => {
   const { setTheme, theme } = useTheme();
 
   const [availabilityStatus, setAvailabilityStatus] = useState({
-    status: "LENTA",
-    color: "text-destructive",
+    status: "ONLINE",
+    color: "text-emerald-500",
   });
 
+  // IMPORTANTE: Verifique se os IDs abaixo são exatamente iguais aos IDs nas suas seções
   const navItems = [
     { id: "home", label: "Início" },
     { id: "servicos", label: "Serviços" },
-    { id: "technologies", label: "Stack" },
+    { id: "technologies", label: "Stack" }, // Se sua seção de Stack tiver id="stack", mude aqui
     { id: "projects", label: "Projetos" },
     { id: "contact", label: "Contato" },
   ];
@@ -102,7 +103,7 @@ const Navigation = () => {
     setAvailabilityStatus(
       isWorking
         ? { status: "ONLINE", color: "text-emerald-500" }
-        : { status: "OFFLINE", color: "text-destructive" }
+        : { status: "OFFLINE", color: "text-destructive" },
     );
   }, []);
 
@@ -137,23 +138,26 @@ const Navigation = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [navItems]);
 
-  // FUNÇÃO DE SCROLL CORRIGIDA
+  // FUNÇÃO DE SCROLL OTIMIZADA PARA MOBILE
   const scrollToSection = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      const offset = 80;
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = el.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
+    // 1. Fecha o menu imediatamente para liberar o layout
+    setMobileMenuOpen(false);
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
+    // 2. Aguarda um pequeno delay para a animação de fechamento não travar o scroll
+    setTimeout(() => {
+      const element = document.getElementById(id);
+      if (element) {
+        const headerOffset = 85;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition =
+          elementPosition + window.pageYOffset - headerOffset;
 
-      setMobileMenuOpen(false);
-    }
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
+      }
+    }, 100);
   };
 
   return (
@@ -178,7 +182,7 @@ const Navigation = () => {
           <div className="flex items-center justify-between h-20">
             <button
               onClick={() => scrollToSection("home")}
-              className="hover:opacity-80 transition-all active:scale-95"
+              className="hover:opacity-80 transition-all active:scale-95 z-50"
             >
               <Logo />
             </button>
@@ -230,7 +234,7 @@ const Navigation = () => {
                 </button>
                 <button
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                  className="md:hidden p-2 text-muted-foreground hover:text-primary transition-colors"
+                  className="md:hidden p-2 text-muted-foreground hover:text-primary transition-colors z-[110]"
                 >
                   {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
@@ -239,21 +243,22 @@ const Navigation = () => {
           </div>
         </div>
 
-        {/* MOBILE MENU CORRIGIDO */}
+        {/* MOBILE MENU */}
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="md:hidden overflow-hidden border-b border-border bg-background/95 backdrop-blur-xl"
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="md:hidden overflow-hidden border-b border-border bg-background/95 backdrop-blur-xl absolute top-20 left-0 w-full"
             >
-              <div className="flex flex-col p-6 gap-2">
+              <div className="flex flex-col p-6 gap-2 bg-background">
                 {navItems.map(({ id, label }) => (
                   <button
                     key={id}
                     onClick={() => scrollToSection(id)}
-                    className={`text-left text-sm font-black uppercase tracking-[0.2em] py-5 border-b border-border/50 transition-colors w-full
+                    className={`text-left text-sm font-black uppercase tracking-[0.2em] py-5 border-b border-border/50 transition-colors w-full active:text-primary
                       ${
                         activeSection === id
                           ? "text-primary"
@@ -283,7 +288,7 @@ const Navigation = () => {
         </AnimatePresence>
       </nav>
 
-      {/* VOLTAR AO TOPO */}
+      {/* BOTÃO VOLTAR AO TOPO */}
       <motion.button
         initial={{ opacity: 0, scale: 0 }}
         animate={{
