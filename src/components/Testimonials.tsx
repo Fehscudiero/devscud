@@ -10,7 +10,7 @@ const Testimonials = () => {
     offset: ["start end", "end start"],
   });
 
-  // Parallax suave para a marca d'água (Otimizado com Spring)
+  // Parallax suave para a marca d'água
   const textX = useTransform(
     useSpring(scrollYProgress, { stiffness: 100, damping: 30 }),
     [0, 1],
@@ -49,7 +49,7 @@ const Testimonials = () => {
       ref={sectionRef}
       id="testimonials"
       className="py-32 relative z-30 overflow-hidden bg-background"
-      style={{ contain: "paint" }} // Isolamento de renderização para performance
+      style={{ contain: "paint" }}
     >
       {/* MARCA D'ÁGUA DINÂMICA */}
       <div className="absolute top-0 right-0 w-full flex justify-end overflow-hidden pointer-events-none select-none z-0">
@@ -99,9 +99,11 @@ const Testimonials = () => {
                 aria-hidden="true"
               />
 
+              {/* CORREÇÃO DO ARIA: role="img" valida o aria-label */}
               <div
                 className="flex gap-1 mb-8"
-                aria-label="Avaliação 5 estrelas"
+                role="img"
+                aria-label="Avaliação de 5 estrelas"
               >
                 {[...Array(5)].map((_, i) => (
                   <Star
@@ -113,7 +115,7 @@ const Testimonials = () => {
               </div>
 
               <blockquote className="relative z-10 mb-10">
-                <p className="text-lg leading-relaxed font-medium text-muted-foreground group-hover:text-foreground transition-colors duration-500">
+                <p className="text-lg leading-relaxed font-medium text-foreground/80 group-hover:text-foreground transition-colors duration-500">
                   "{testimonial.content}"
                 </p>
               </blockquote>
@@ -124,12 +126,14 @@ const Testimonials = () => {
                     {testimonial.initials}
                   </div>
                   <div className="absolute -bottom-2 -right-2 bg-background rounded-full p-1 shadow-lg border border-border">
-                    <BadgeCheck className="w-5 h-5 text-primary" />
+                    <BadgeCheck
+                      className="w-5 h-5 text-primary"
+                      aria-hidden="true"
+                    />
                   </div>
                 </div>
 
                 <div className="text-left">
-                  {/* CORREÇÃO DE ACESSIBILIDADE: h4 para h3 */}
                   <h3 className="font-bold text-lg text-foreground">
                     {testimonial.name}
                   </h3>
