@@ -9,11 +9,13 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 const Hero = () => {
   const { theme } = useTheme();
   const [isDarkTheme, setIsDarkTheme] = useState(true);
-  const [mounted, setMounted] = useState(false);
+  const [showParticles, setShowParticles] = useState(false);
 
-  // OTIMIZAÇÃO: Só renderiza partículas após o mount para evitar Hydration Mismatch e travas no LCP
+  // OTIMIZAÇÃO CRÍTICA PARA LCP:
+  // Adia o carregamento das partículas para depois da primeira pintura (LCP)
   useEffect(() => {
-    setMounted(true);
+    const timer = setTimeout(() => setShowParticles(true), 100);
+    return () => clearTimeout(timer);
   }, []);
 
   const x = useMotionValue(0);
@@ -21,11 +23,11 @@ const Hero = () => {
   const mouseXSpring = useSpring(x, { stiffness: 50, damping: 20 });
   const mouseYSpring = useSpring(y, { stiffness: 50, damping: 20 });
 
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["15deg", "-15deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-15deg", "15deg"]);
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (window.innerWidth < 768) return; // Desativa cálculos de mouse no mobile
+    if (window.innerWidth < 768) return;
     const rect = e.currentTarget.getBoundingClientRect();
     x.set(e.clientX / rect.width - 0.5);
     y.set(e.clientY / rect.height - 0.5);
@@ -52,22 +54,21 @@ const Hero = () => {
     await loadSlim(engine);
   }, []);
 
-  // OTIMIZAÇÃO: Memoize as opções para evitar re-renders pesados
   const particlesOptions = useMemo(
     () => ({
       fullScreen: { enable: false },
-      fpsLimit: 30, // Reduzido de 60 para 30 para economizar CPU no Mobile
+      fpsLimit: 30, // Reduzido para poupar CPU no Mobile
       particles: {
-        number: { value: 30, density: { enable: true, area: 800 } }, // Reduzido para performance
+        number: { value: 20, density: { enable: true, area: 800 } },
         color: {
           value: isDarkTheme ? ["#a855f7", "#ffffff"] : ["#0ea5e9", "#0f172a"],
         },
-        opacity: { value: 0.3 },
-        size: { value: { min: 1, max: 3 } },
-        move: { enable: true, speed: 0.5, outModes: { default: "bounce" } },
-        links: { enable: false }, // Desativado links (linhas) economiza MUITA CPU
+        opacity: { value: 0.2 },
+        size: { value: { min: 1, max: 2 } },
+        move: { enable: true, speed: 0.4 },
+        links: { enable: false },
       },
-      detectRetina: false, // Desativado para performance
+      detectRetina: false, // Performance melhor no mobile
     }),
     [isDarkTheme],
   );
@@ -83,10 +84,11 @@ const Hero = () => {
       id="home"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative min-h-[100vh] flex items-center justify-center overflow-hidden bg-background perspective-1000"
+      className="relative min-h-[100vh] flex items-center justify-center overflow-hidden bg-background"
+      style={{ contain: "content" }} // Dica para o navegador otimizar renderização
     >
       <div className="absolute inset-0 z-0">
-        {mounted && (
+        {showParticles && (
           <Particles
             id="tsparticles"
             init={particlesInit}
@@ -98,16 +100,22 @@ const Hero = () => {
       </div>
 
       <motion.div
-        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+        style={{
+          rotateX: window.innerWidth < 768 ? 0 : rotateX,
+          rotateY: window.innerWidth < 768 ? 0 : rotateY,
+          transformStyle: "preserve-3d",
+        }}
         className="container mx-auto px-4 relative z-10"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }} // Transição ultra rápida para não atrasar o LCP
       >
         <div className="max-w-4xl mx-auto text-center space-y-10">
-          {/* Aumentado o space-y aqui de 4 para 8 para separar o H1 do P */}
           <div className="relative space-y-8">
+            {/* H1 OTIMIZADO: Prioridade de renderização */}
             <h1 className="text-5xl sm:text-7xl lg:text-8xl font-extrabold tracking-tighter text-foreground leading-[1.1]">
               Impulsione sua presença
               <br />
-              {/* Aumentado mt-2 para mt-4 para descer a frase com gradiente */}
               <span className="block mt-4 bg-gradient-primary bg-clip-text text-transparent pb-2">
                 Digital com Estilo
               </span>
@@ -124,8 +132,8 @@ const Hero = () => {
             <Button
               size="lg"
               onClick={() => scrollToSection("contact")}
-              aria-label="Ir para seção de contato e iniciar conversa"
-              className="group relative px-10 py-7 text-xl font-bold rounded-2xl transition-all duration-500 hover:scale-105 active:scale-95 shadow-2xl bg-gradient-primary text-white border-none"
+              aria-label="Ir para seção de contato"
+              className="group relative px-10 py-7 text-xl font-bold rounded-2xl shadow-2xl bg-gradient-primary text-white border-none"
             >
               <Mail
                 className="mr-2 w-6 h-6 group-hover:rotate-12 transition-transform"
@@ -140,17 +148,17 @@ const Hero = () => {
               {
                 icon: Github,
                 href: "https://github.com/fehscudiero",
-                label: "Acessar meu Github",
+                label: "Github",
               },
               {
                 icon: Linkedin,
                 href: "https://www.linkedin.com/in/devscud/",
-                label: "Acessar meu LinkedIn",
+                label: "LinkedIn",
               },
               {
                 icon: Instagram,
                 href: "https://www.instagram.com/scudiero.dev/",
-                label: "Seguir no Instagram",
+                label: "Instagram",
               },
             ].map(({ icon: Icon, href, label }, index) => (
               <a
@@ -159,7 +167,7 @@ const Hero = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
-                className="p-4 rounded-2xl border backdrop-blur-md transition-all duration-300 hover:-translate-y-2 bg-card/50 border-border text-muted-foreground hover:border-primary hover:text-primary"
+                className="p-4 rounded-2xl border bg-card/50 border-border text-muted-foreground hover:text-primary transition-all"
               >
                 <Icon className="h-6 w-6" aria-hidden="true" />
               </a>
