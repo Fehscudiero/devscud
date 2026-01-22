@@ -1,8 +1,8 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
 
-// --- SEÇÕES EM LAZY LOADING (Carregam depois do Hero) ---
+// --- SEÇÕES EM LAZY LOADING ---
 const About = lazy(() => import("@/components/About"));
 const Stats = lazy(() => import("@/components/Stats"));
 const Servicos = lazy(() => import("@/components/Servicos"));
@@ -13,28 +13,41 @@ const Contact = lazy(() => import("@/components/Contact"));
 const Footer = lazy(() => import("@/components/Footer"));
 
 const Index = () => {
+  const [loadDeepContent, setLoadDeepContent] = useState(false);
+
+  useEffect(() => {
+    // Só permite o carregamento das seções pesadas após o Hero estar pronto
+    // Isso quebra a árvore de dependência da rede de forma agressiva
+    const timer = setTimeout(() => {
+      setLoadDeepContent(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       <Navigation />
       <main>
-        {/* Hero é prioridade máxima (LCP) */}
         <Hero />
 
-        {/* Suspense envolve o que não é essencial no primeiro segundo */}
-        <Suspense fallback={<div className="h-20" />}>
+        {/* Bloco 1: Conteúdo logo abaixo da dobra */}
+        <Suspense fallback={<div className="h-96" />}>
           <About />
           <Stats />
-          <Servicos />
-          <Technologies />
-          <Projects />
-          <Testimonials />
-          <Contact />
         </Suspense>
-      </main>
 
-      <Suspense fallback={<div className="h-10" />}>
-        <Footer />
-      </Suspense>
+        {/* Bloco 2: Conteúdo pesado só é montado após o sinal do useEffect */}
+        {loadDeepContent && (
+          <Suspense fallback={<div className="h-96" />}>
+            <Servicos />
+            <Technologies />
+            <Projects />
+            <Testimonials />
+            <Contact />
+            <Footer />
+          </Suspense>
+        )}
+      </main>
     </div>
   );
 };
