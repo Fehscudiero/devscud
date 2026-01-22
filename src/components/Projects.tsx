@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import {
   Trophy,
   Zap,
@@ -45,20 +45,6 @@ const Projects = () => {
   const { theme } = useTheme();
   const [activeProject, setActiveProject] = useState(0);
   const [swiperInstance, setSwiperInstance] = useState<any>(null);
-  const [isDarkTheme, setIsDarkTheme] = useState(true);
-
-  // Monitora o tema da mesma forma que o seu Hero.tsx
-  useEffect(() => {
-    const checkTheme = () =>
-      setIsDarkTheme(document.documentElement.classList.contains("dark"));
-    checkTheme();
-    const observer = new MutationObserver(checkTheme);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-    return () => observer.disconnect();
-  }, [theme]);
 
   const services = [
     {
@@ -155,6 +141,7 @@ const Projects = () => {
           {services.map((project, index) => (
             <SwiperSlide key={index} className="bg-card">
               <div className="grid lg:grid-cols-2 bg-card">
+                {/* CONTAINER DA IMAGEM LIMPO (SEM GRADIENTE) */}
                 <div className="relative aspect-video lg:aspect-auto h-auto lg:h-[600px] bg-muted overflow-hidden">
                   <img
                     src={project.image}
@@ -162,10 +149,7 @@ const Projects = () => {
                     className="w-full h-full object-cover"
                     loading={index === 0 ? "eager" : "lazy"}
                   />
-                  {/* Overlay gradiente que se adapta ao tema */}
-                  <div
-                    className={`absolute inset-0 lg:hidden bg-gradient-to-t ${isDarkTheme ? "from-black/60" : "from-white/60"} to-transparent`}
-                  />
+                  {/* O div do gradiente foi removido daqui */}
                 </div>
 
                 <div className="p-8 lg:p-12 flex flex-col justify-between bg-card transition-colors">
@@ -213,7 +197,6 @@ const Projects = () => {
           ))}
         </Swiper>
 
-        {/* Paginação de miniaturas inferior */}
         <div className="mt-8 grid grid-cols-3 md:grid-cols-6 gap-2">
           {services.map((s, i) => (
             <button
