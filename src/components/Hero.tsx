@@ -11,10 +11,10 @@ const Hero = () => {
   const [isDarkTheme, setIsDarkTheme] = useState(true);
   const [showParticles, setShowParticles] = useState(false);
 
-  // OTIMIZAÇÃO CRÍTICA PARA LCP:
-  // Adia o carregamento das partículas para depois da primeira pintura (LCP)
+  // OTIMIZAÇÃO CRÍTICA PARA LCP E REFLOW:
+  // Adia o carregamento das partículas para garantir que a Thread Principal foque no H1 primeiro
   useEffect(() => {
-    const timer = setTimeout(() => setShowParticles(true), 100);
+    const timer = setTimeout(() => setShowParticles(true), 1500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -23,19 +23,17 @@ const Hero = () => {
   const mouseXSpring = useSpring(x, { stiffness: 50, damping: 20 });
   const mouseYSpring = useSpring(y, { stiffness: 50, damping: 20 });
 
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
+  // Reduzi a amplitude da rotação para evitar grandes saltos de layout
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["8deg", "-8deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-8deg", "8deg"]);
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (window.innerWidth < 768) return;
+    // Desativa cálculos de mouse no mobile para evitar Reflow Forçado
+    if (typeof window !== "undefined" && window.innerWidth < 768) return;
+
     const rect = e.currentTarget.getBoundingClientRect();
     x.set(e.clientX / rect.width - 0.5);
     y.set(e.clientY / rect.height - 0.5);
-  };
-
-  const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
   };
 
   useEffect(() => {
@@ -57,18 +55,18 @@ const Hero = () => {
   const particlesOptions = useMemo(
     () => ({
       fullScreen: { enable: false },
-      fpsLimit: 30, // Reduzido para poupar CPU no Mobile
+      fpsLimit: 30, // Limitado a 30 FPS para salvar a Thread Principal no Mobile
       particles: {
-        number: { value: 20, density: { enable: true, area: 800 } },
+        number: { value: 15, density: { enable: true, area: 1000 } }, // Menos partículas, mais área
         color: {
           value: isDarkTheme ? ["#a855f7", "#ffffff"] : ["#0ea5e9", "#0f172a"],
         },
-        opacity: { value: 0.2 },
+        opacity: { value: 0.15 },
         size: { value: { min: 1, max: 2 } },
-        move: { enable: true, speed: 0.4 },
+        move: { enable: true, speed: 0.3, outModes: { default: "bounce" } },
         links: { enable: false },
       },
-      detectRetina: false, // Performance melhor no mobile
+      detectRetina: false, // Performance otimizada para telas mobile
     }),
     [isDarkTheme],
   );
@@ -83,11 +81,10 @@ const Hero = () => {
     <section
       id="home"
       onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="relative min-h-[100vh] flex items-center justify-center overflow-hidden bg-background"
-      style={{ contain: "content" }} // Dica para o navegador otimizar renderização
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background"
+      style={{ contain: "paint" }} // Melhora a performance de renderização isolada
     >
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 pointer-events-none">
         {showParticles && (
           <Particles
             id="tsparticles"
@@ -101,18 +98,23 @@ const Hero = () => {
 
       <motion.div
         style={{
-          rotateX: window.innerWidth < 768 ? 0 : rotateX,
-          rotateY: window.innerWidth < 768 ? 0 : rotateY,
+          rotateX:
+            typeof window !== "undefined" && window.innerWidth < 768
+              ? 0
+              : rotateX,
+          rotateY:
+            typeof window !== "undefined" && window.innerWidth < 768
+              ? 0
+              : rotateY,
           transformStyle: "preserve-3d",
         }}
-        className="container mx-auto px-4 relative z-10"
+        className="container mx-auto px-4 relative z-10 will-change-transform" // Avisa a GPU para acelerar
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.3 }} // Transição ultra rápida para não atrasar o LCP
+        transition={{ duration: 0.5 }}
       >
         <div className="max-w-4xl mx-auto text-center space-y-10">
           <div className="relative space-y-8">
-            {/* H1 OTIMIZADO: Prioridade de renderização */}
             <h1 className="text-5xl sm:text-7xl lg:text-8xl font-extrabold tracking-tighter text-foreground leading-[1.1]">
               Impulsione sua presença
               <br />
@@ -122,13 +124,13 @@ const Hero = () => {
             </h1>
 
             <p className="text-lg sm:text-2xl max-w-2xl mx-auto font-light leading-relaxed text-muted-foreground">
-              Desenvolvimento de alta performance para quem busca
+              Desenvolvimento de alta performance focado em
               <span className="text-primary font-medium"> autoridade </span> e
               resultados reais.
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-5 pt-4">
+          <div className="flex justify-center pt-4">
             <Button
               size="lg"
               onClick={() => scrollToSection("contact")}
@@ -166,10 +168,10 @@ const Hero = () => {
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={label}
+                aria-label={`Ver perfil no ${label}`}
                 className="p-4 rounded-2xl border bg-card/50 border-border text-muted-foreground hover:text-primary transition-all"
               >
-                <Icon className="h-6 w-6" aria-hidden="true" />
+                <Icon className="h-6 w-6" aria-hidden="true" />{" "}
               </a>
             ))}
           </div>
