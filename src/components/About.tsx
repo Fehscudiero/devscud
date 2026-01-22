@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import Eu from "../assets/eu.jpg";
+import Eu from "../assets/eu.webp";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { CheckCircle2, Rocket, Code2, Cpu } from "lucide-react"; // Importando ícones para autoridade
 
@@ -19,13 +19,13 @@ const About = () => {
   const clipPath = useTransform(
     smoothScroll,
     [0, 0.3],
-    ["inset(100% 0% 0% 0%)", "inset(0% 0% 0% 0%)"]
+    ["inset(100% 0% 0% 0%)", "inset(0% 0% 0% 0%)"],
   );
   const imageScale = useTransform(smoothScroll, [0, 0.5], [1.3, 1]);
   const filterEffect = useTransform(
     smoothScroll,
     [0.2, 0.5],
-    ["saturate(0) contrast(1.5)", "saturate(1.2) contrast(1)"]
+    ["saturate(0) contrast(1.5)", "saturate(1.2) contrast(1)"],
   );
   const badgeRotate = useTransform(smoothScroll, [0, 0.5], [-15, 0]);
 
