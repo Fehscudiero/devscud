@@ -48,7 +48,7 @@ const Contact = () => {
   const textX = useTransform(
     useSpring(scrollYProgress, { stiffness: 50, damping: 20 }),
     [0, 1],
-    [-50, 150]
+    [-50, 150],
   );
 
   useEffect(() => {
@@ -61,11 +61,56 @@ const Contact = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulação de envio
-    setTimeout(() => {
+
+    try {
+      // 1. Envio para o E-mail via Web3Forms
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: "2f1d1005-4dd2-40fa-983b-67a41e47ec1b",
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message,
+          subject: `🚀 Novo Lead: ${formData.name}`,
+          from_name: "Seu Portfólio",
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        // 2. Preparação do link do WhatsApp
+        const meuWhats = "5511984623116";
+        const mensagemWhats = encodeURIComponent(
+          `Olá! Acabei de enviar um formulário no site:\n\n` +
+            `*Nome:* ${formData.name}\n` +
+            `*E-mail:* ${formData.email}\n` +
+            `*Telefone:* ${formData.phone}\n` +
+            `*Ideia:* ${formData.message}`,
+        );
+
+        const whatsappUrl = `https://wa.me/${meuWhats}?text=${mensagemWhats}`;
+
+        // 3. Sucesso: Abre WhatsApp e mostra tela de confirmação
+        window.open(whatsappUrl, "_blank");
+        setIsSuccess(true);
+
+        // Limpa o formulário
+        setFormData({ name: "", phone: "", email: "", message: "" });
+      } else {
+        alert("Ocorreu um erro ao processar o formulário. Tente novamente.");
+      }
+    } catch (error) {
+      console.error("Erro no envio:", error);
+      alert("Erro de conexão. Verifique sua internet.");
+    } finally {
       setIsSubmitting(false);
-      setIsSuccess(true);
-    }, 1500);
+    }
   };
 
   return (
@@ -218,9 +263,17 @@ const Contact = () => {
                   <h3 className="text-4xl font-black uppercase italic mb-3">
                     Sistema Alimentado!
                   </h3>
-                  <p className="text-muted-foreground">
-                    Retornaremos em breve.
+                  <p className="text-muted-foreground mb-8">
+                    Seu e-mail foi enviado e o WhatsApp aberto. Retornaremos em
+                    breve.
                   </p>
+                  <Button
+                    onClick={() => setIsSuccess(false)}
+                    variant="outline"
+                    className="rounded-full border-purple-500 text-purple-500 hover:bg-purple-500 hover:text-white"
+                  >
+                    Enviar outra mensagem
+                  </Button>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -253,7 +306,7 @@ const Contact = () => {
               </div>
             </div>
 
-            {/* CARD DE SEGURANÇA AJUSTADO */}
+            {/* CARD DE SEGURANÇA */}
             <div className="flex flex-col items-center justify-center text-center p-8 rounded-[2.5rem] bg-white/[0.03] border border-white/10 space-y-4 backdrop-blur-sm min-h-[220px]">
               <ShieldCheck
                 className="text-purple-500 mb-2"
