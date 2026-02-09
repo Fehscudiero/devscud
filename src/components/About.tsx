@@ -105,7 +105,7 @@ const About = () => {
                 <div className="absolute inset-0 border-b-4 border-r-4 border-black/10 rounded-2xl pointer-events-none" />
 
                 <span className="block text-3xl sm:text-4xl font-black text-foreground leading-none">
-                  +3 ANOS
+                  +4 ANOS
                 </span>
                 <span className="text-[8px] text-center sm:text-[10px] font-bold uppercase text-primary tracking-widest block mt-1">
                   DE RESULTADOS
