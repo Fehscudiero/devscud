@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
-import Eu from "../assets/eu.webp";
+import Robot3D from "./Robot3D"; // IMPORTAR O NOVO COMPONENTE
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { CheckCircle2, Rocket, Code2, Cpu } from "lucide-react"; // Importando ícones para autoridade
+import { CheckCircle2, Rocket, Code2, Cpu } from "lucide-react";
 
 const About = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -20,12 +20,6 @@ const About = () => {
     smoothScroll,
     [0, 0.3],
     ["inset(100% 0% 0% 0%)", "inset(0% 0% 0% 0%)"],
-  );
-  const imageScale = useTransform(smoothScroll, [0, 0.5], [1.3, 1]);
-  const filterEffect = useTransform(
-    smoothScroll,
-    [0.2, 0.5],
-    ["saturate(0) contrast(1.5)", "saturate(1.2) contrast(1)"],
   );
   const badgeRotate = useTransform(smoothScroll, [0, 0.5], [-15, 0]);
 
@@ -72,20 +66,21 @@ const About = () => {
         </motion.div>
 
         <div className="grid lg:grid-cols-2 gap-16 items-center">
-          {/* LADO DA IMAGEM */}
+          {/* LADO DO ROBÔ 3D */}
           <div className="relative group mx-auto lg:mx-0 w-full max-w-[450px]">
+            {/* Glow de fundo - múltiplas camadas para efeito mais rico */}
             <div className="absolute -inset-4 rounded-[2.5rem] bg-primary opacity-10 blur-2xl group-hover:opacity-30 transition-opacity duration-700" />
+            <div className="absolute -inset-2 rounded-[2.5rem] bg-cyan-500 opacity-5 blur-xl group-hover:opacity-20 transition-opacity duration-700" />
 
+            {/* Container do Robô 3D */}
             <motion.div
-              style={{ clipPath, scale: imageScale, filter: filterEffect }}
-              className="relative aspect-[4/5] rounded-[2rem] overflow-hidden bg-card border border-border shadow-2xl"
+              style={{ clipPath }}
+              className="relative aspect-[4/5] rounded-[2rem] overflow-hidden bg-gradient-to-br from-background via-card to-background border-2 border-border group-hover:border-primary/50 shadow-2xl transition-all duration-500"
             >
-              <img
-                src={Eu}
-                alt="Felipe Scudiero"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-background via-background/80 to-transparent">
+              <Robot3D />
+              
+              {/* Label inferior */}
+              <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-background via-background/95 to-transparent pointer-events-none">
                 <p className="text-foreground font-black text-2xl uppercase tracking-tighter">
                   Felipe Scudiero
                 </p>
@@ -152,29 +147,71 @@ const About = () => {
               </p>
             </div>
 
-            {/* DIFERENCIAIS RÁPIDOS */}
-            <div className="grid grid-cols-1 justify-items-center sm:grid-cols-2 gap-4 pt-4">
+            {/* DIFERENCIAIS RÁPIDOS - MODERNIZADOS E CENTRALIZADOS */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6">
               {expertise.map((item, i) => (
-                <div
+                <motion.div
                   key={i}
-                  className="flex items-center gap-3 p-4 rounded-xl bg-card border border-border group hover:border-primary transition-colors min-w-[240px] flex-1 sm:flex-none"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1, duration: 0.5 }}
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  className="relative group"
                 >
-                  <div className="text-primary group-hover:scale-110 transition-transform">
-                    {item.icon}
+                  {/* Glow de fundo */}
+                  <div className="absolute inset-0 bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
+                  
+                  {/* Card */}
+                  <div className="relative flex flex-col items-center gap-3 p-6 rounded-2xl bg-gradient-to-br from-card via-card to-card/80 border-2 border-border group-hover:border-primary transition-all duration-300 backdrop-blur-sm">
+                    {/* Ícone */}
+                    <div className="p-3 rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 group-hover:scale-110 group-hover:rotate-6">
+                      {item.icon}
+                    </div>
+                    
+                    {/* Texto */}
+                    <span className="text-xs sm:text-sm font-bold text-foreground uppercase tracking-wider text-center leading-tight">
+                      {item.text}
+                    </span>
                   </div>
-                  <span className="text-sm font-bold text-foreground uppercase tracking-wider">
-                    {item.text}
-                  </span>
-                </div>
+                </motion.div>
               ))}
             </div>
 
-            <div className="pt-6">
-              <p className="italic text-primary font-medium flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5" />
-                Comprometido com a excelência técnica e prazos rigorosos.
-              </p>
-            </div>
+            {/* FRASE DE COMPROMETIMENTO - REDESENHADA */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4, duration: 0.6 }}
+              className="relative mt-8 group"
+            >
+              {/* Background animado */}
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-primary/10 to-transparent rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500" />
+              
+              {/* Card principal */}
+              <div className="relative p-6 rounded-2xl bg-gradient-to-br from-primary/5 via-transparent to-primary/5 border-2 border-primary/30 group-hover:border-primary/60 transition-all duration-300 backdrop-blur-sm">
+                <div className="flex items-start gap-4">
+                  {/* Ícone com animação */}
+                  <div className="flex-shrink-0">
+                    <div className="p-2 rounded-xl bg-primary/20 group-hover:bg-primary/30 transition-colors duration-300">
+                      <CheckCircle2 className="w-6 h-6 text-primary group-hover:scale-110 transition-transform duration-300" />
+                    </div>
+                  </div>
+                  
+                  {/* Texto */}
+                  <div className="flex-1">
+                    <p className="text-base sm:text-lg font-semibold text-foreground leading-relaxed">
+                      Comprometido com a{" "}
+                      <span className="text-primary font-bold">excelência técnica</span>
+                      {" "}e{" "}
+                      <span className="text-primary font-bold">prazos rigorosos</span>.
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Barra de ênfase inferior */}
+                <div className="mt-4 h-1 w-full bg-gradient-to-r from-primary via-primary/50 to-transparent rounded-full group-hover:from-primary group-hover:via-primary group-hover:to-primary/50 transition-all duration-500" />
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </div>
