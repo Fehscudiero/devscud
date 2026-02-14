@@ -78,7 +78,7 @@ const About = () => {
               className="relative aspect-[4/5] rounded-[2rem] overflow-hidden bg-gradient-to-br from-background via-card to-background border-2 border-border group-hover:border-primary/50 shadow-2xl transition-all duration-500"
             >
               <Robot3D />
-              
+
               {/* Label inferior */}
               <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-background via-background/95 to-transparent pointer-events-none">
                 <p className="text-foreground font-black text-2xl uppercase tracking-tighter">
@@ -129,7 +129,7 @@ const About = () => {
 
             <div className="space-y-6 text-lg text-muted-foreground leading-relaxed">
               <p>
-                Ao longo dos últimos 3 anos, refinei a arte de criar interfaces
+                Ao longo dos últimos 4 anos, refinei a arte de criar interfaces
                 que não apenas encantam os olhos, mas
                 <span className="text-foreground font-semibold">
                   {" "}
@@ -160,14 +160,14 @@ const About = () => {
                 >
                   {/* Glow de fundo */}
                   <div className="absolute inset-0 bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
-                  
+
                   {/* Card */}
                   <div className="relative flex flex-col items-center gap-3 p-6 rounded-2xl bg-gradient-to-br from-card via-card to-card/80 border-2 border-border group-hover:border-primary transition-all duration-300 backdrop-blur-sm">
                     {/* Ícone */}
                     <div className="p-3 rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 group-hover:scale-110 group-hover:rotate-6">
                       {item.icon}
                     </div>
-                    
+
                     {/* Texto */}
                     <span className="text-xs sm:text-sm font-bold text-foreground uppercase tracking-wider text-center leading-tight">
                       {item.text}
@@ -186,7 +186,7 @@ const About = () => {
             >
               {/* Background animado */}
               <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-primary/10 to-transparent rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500" />
-              
+
               {/* Card principal */}
               <div className="relative p-6 rounded-2xl bg-gradient-to-br from-primary/5 via-transparent to-primary/5 border-2 border-primary/30 group-hover:border-primary/60 transition-all duration-300 backdrop-blur-sm">
                 <div className="flex items-start gap-4">
@@ -196,18 +196,23 @@ const About = () => {
                       <CheckCircle2 className="w-6 h-6 text-primary group-hover:scale-110 transition-transform duration-300" />
                     </div>
                   </div>
-                  
+
                   {/* Texto */}
                   <div className="flex-1">
                     <p className="text-base sm:text-lg font-semibold text-foreground leading-relaxed">
                       Comprometido com a{" "}
-                      <span className="text-primary font-bold">excelência técnica</span>
-                      {" "}e{" "}
-                      <span className="text-primary font-bold">prazos rigorosos</span>.
+                      <span className="text-primary font-bold">
+                        excelência técnica
+                      </span>{" "}
+                      e{" "}
+                      <span className="text-primary font-bold">
+                        prazos rigorosos
+                      </span>
+                      .
                     </p>
                   </div>
                 </div>
-                
+
                 {/* Barra de ênfase inferior */}
                 <div className="mt-4 h-1 w-full bg-gradient-to-r from-primary via-primary/50 to-transparent rounded-full group-hover:from-primary group-hover:via-primary group-hover:to-primary/50 transition-all duration-500" />
               </div>
