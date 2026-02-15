@@ -9,15 +9,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useTheme } from "@/components/theme-provider"; // Importante para consistência
-import {
-  Mail,
-  User,
-  MessageSquare,
-  CheckCircle2,
-  ShieldCheck,
-  Zap,
-} from "lucide-react";
+import { useTheme } from "@/components/theme-provider";
+import { Mail, User, MessageSquare, Zap, ShieldCheck } from "lucide-react";
+
+// --- CONFIGURAÇÃO ---
+// URL DO SCRIPT (Certifique-se de pegar a URL nova após implantar a nova versão)
+const GOOGLE_SHEETS_URL =
+  "https://script.google.com/macros/s/AKfycbw9Y8rHr8l4M16tm7yCNkF4VAW2LQYNVMgNKH0kaBgCuOC3031JlN1YDyNpNZkdjcO-yQ/exec";
 
 const WhatsAppIcon = () => (
   <svg
@@ -35,6 +33,7 @@ const Contact = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [latency, setLatency] = useState(4);
   const sectionRef = useRef<HTMLElement>(null);
+
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -65,44 +64,36 @@ const Contact = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("https://api.web3forms.com/submit", {
+      // Envio para Google Sheets (Salva + Envia Email)
+      await fetch(GOOGLE_SHEETS_URL, {
         method: "POST",
+        mode: "no-cors",
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json",
         },
-        body: JSON.stringify({
-          access_key: "2f1d1005-4dd2-40fa-983b-67a41e47ec1b",
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          message: formData.message,
-          subject: `🚀 Novo Lead: ${formData.name}`,
-          from_name: "Seu Portfólio",
-        }),
+        body: JSON.stringify(formData),
       });
 
-      const result = await response.json();
+      // Lógica do WhatsApp
+      const meuWhats = "5511984623116";
 
-      if (result.success) {
-        const meuWhats = "5511984623116";
-        const mensagemWhats = encodeURIComponent(
-          `Olá! Acabei de enviar um formulário no site:\n\n` +
-            `*Nome:* ${formData.name}\n` +
-            `*E-mail:* ${formData.email}\n` +
-            `*Telefone:* ${formData.phone}\n` +
-            `*Ideia:* ${formData.message}`,
-        );
+      const textoHumanizado =
+        `Oi! Meu nome é *${formData.name}*.\n\n` +
+        `Estive no seu portfólio e gostaria de falar sobre: _${formData.message}_\n\n` +
+        `Podemos conversar?`;
 
-        const whatsappUrl = `https://wa.me/${meuWhats}?text=${mensagemWhats}`;
+      const mensagemEncoded = encodeURIComponent(textoHumanizado);
+      const whatsappUrl = `https://wa.me/${meuWhats}?text=${mensagemEncoded}`;
+
+      setTimeout(() => {
         window.open(whatsappUrl, "_blank");
-        setIsSuccess(true);
-        setFormData({ name: "", phone: "", email: "", message: "" });
-      } else {
-        alert("Ocorreu um erro ao processar o formulário.");
-      }
+      }, 800);
+
+      setIsSuccess(true);
+      setFormData({ name: "", phone: "", email: "", message: "" });
     } catch (error) {
-      alert("Erro de conexão.");
+      console.error(error);
+      alert("Erro de conexão. Verifique sua internet.");
     } finally {
       setIsSubmitting(false);
     }
@@ -115,7 +106,6 @@ const Contact = () => {
       className="py-20 relative overflow-hidden bg-background min-h-screen flex items-center transition-colors duration-500"
       aria-labelledby="contact-title"
     >
-      {/* Background Text - Opacidade ajustada para ambos os temas */}
       <div className="absolute top-0 left-0 w-full opacity-[0.04] dark:opacity-[0.03] pointer-events-none z-0">
         <motion.h2
           style={{ x: textX }}
@@ -127,7 +117,6 @@ const Contact = () => {
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-6xl mx-auto grid lg:grid-cols-[1fr_380px] gap-8 lg:gap-16 items-center">
-          {/* Esquerda: Formulário e Título */}
           <div className="space-y-8 md:space-y-12">
             <div className="space-y-4">
               <div className="flex items-center gap-3">
@@ -243,7 +232,7 @@ const Contact = () => {
                       disabled={isSubmitting}
                       className="w-full h-20 rounded-[1.5rem] md:rounded-[2rem] text-xl md:text-2xl font-black bg-foreground text-background hover:bg-primary hover:text-white transition-all duration-500 shadow-xl active:scale-95"
                     >
-                      {isSubmitting ? "PROCESSANDO..." : "ENVIAR PROPOSTA"}
+                      {isSubmitting ? "ENVIANDO..." : "ENVIAR PROPOSTA"}
                     </Button>
                   </form>
                 </motion.div>
@@ -254,13 +243,12 @@ const Contact = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   className="h-[500px] flex flex-col items-center justify-center text-center bg-card/40 border-2 border-primary/50 rounded-[3rem] p-8 md:p-12 shadow-2xl"
                 >
-                  <CheckCircle2 size={48} className="text-emerald-500 mb-6" />
+                  <ShieldCheck size={64} className="text-emerald-500 mb-6" />
                   <h3 className="text-4xl font-black uppercase italic mb-3 text-foreground">
-                    Sistema Alimentado!
+                    Tudo Pronto!
                   </h3>
                   <p className="text-muted-foreground mb-8">
-                    Seu e-mail foi enviado e o WhatsApp aberto. Retornaremos em
-                    breve.
+                    Seus dados foram salvos e nossa equipe notificada.
                   </p>
                   <Button
                     onClick={() => setIsSuccess(false)}
@@ -274,16 +262,15 @@ const Contact = () => {
             </AnimatePresence>
           </div>
 
-          {/* Direita: Status e Segurança (Centralizados) */}
           <div className="hidden lg:flex flex-col mt-60 justify-center gap-10 border-l border-border pl-12 h-[500px]">
             <div className="space-y-6">
               <span className="text-[14px] text-center font-black text-primary uppercase tracking-[0.4em]">
-                Engine Status
+                System Status
               </span>
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-[11px] font-mono uppercase">
                   <span className="opacity-40 tracking-widest text-foreground">
-                    Site Latency
+                    API Latency
                   </span>
                   <motion.span
                     key={latency}
@@ -301,7 +288,6 @@ const Contact = () => {
               </div>
             </div>
 
-            {/* CARD DE SEGURANÇA */}
             <div className="flex flex-col items-center justify-center text-center p-8 rounded-[2.5rem] bg-muted/30 border border-border space-y-4 backdrop-blur-sm min-h-[220px]">
               <ShieldCheck
                 className="text-primary mb-2"
@@ -309,9 +295,9 @@ const Contact = () => {
                 aria-hidden="true"
               />
               <p className="text-[16px] font-bold uppercase tracking-wider text-muted-foreground leading-tight italic">
-                Criptografia de ponta a ponta ativa. <br />
+                Secure Connection. <br />
                 <span className="text-foreground/60">
-                  Seus dados estão protegidos.
+                  Dados processados via Google Cloud.
                 </span>
               </p>
             </div>
